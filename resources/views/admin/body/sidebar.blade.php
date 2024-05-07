@@ -11,42 +11,79 @@
     </div>
     <div class="sidebar-body">
       <ul class="nav">
-        <li class="nav-item nav-category">Main</li>
+        <li class="nav-item nav-category">Principal</li>
         <li class="nav-item">
           <a href="{{route('admin.dashboard')}}" class="nav-link">
             <i class="link-icon" data-feather="box"></i>
             <span class="link-title">Dashboard</span>
           </a>
         </li>
-        <li class="nav-item nav-category">web apps</li>
+        <li class="nav-item nav-category">Copropriété</li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false" aria-controls="emails">
+          <a class="nav-link" data-bs-toggle="collapse" href="#residence" role="button" aria-expanded="false" aria-controls="residence">
             <i class="link-icon" data-feather="mail"></i>
-            <span class="link-title">Email</span>
+            <span class="link-title">Gestion Résidence </span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
-          <div class="collapse" id="emails">
+          <div class="collapse" id="residence">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="pages/email/inbox.html" class="nav-link">Inbox</a>
+                <a href="{{ route('all.residence') }}" class="nav-link">Lister Résidences</a>
               </li>
               <li class="nav-item">
-                <a href="pages/email/read.html" class="nav-link">Read</a>
+                <a href="{{ route('add.residence') }}" class="nav-link">Ajouter Résidence</a>
               </li>
-              <li class="nav-item">
-                <a href="pages/email/compose.html" class="nav-link">Compose</a>
-              </li>
+
             </ul>
           </div>
         </li>
 
         <li class="nav-item">
-          <a href="pages/apps/calendar.html" class="nav-link">
-            <i class="link-icon" data-feather="calendar"></i>
-            <span class="link-title">Calendar</span>
-          </a>
-        </li>
+            <a class="nav-link" data-bs-toggle="collapse" href="#immeuble" role="button" aria-expanded="false" aria-controls="immeuble">
+              <i class="link-icon" data-feather="mail"></i>
+              <span class="link-title">Gestion Immeuble </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="immeuble">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('all.immeuble') }}" class="nav-link">Lister Immeubles</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.immeuble') }}" class="nav-link">Ajouter Immeuble</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#appartement" role="button" aria-expanded="false" aria-controls="appartement">
+              <i class="link-icon" data-feather="mail"></i>
+              <span class="link-title">Gestion Appartement </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="appartement">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('all.appartement') }}" class="nav-link">Lister Appartements</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.appartement') }}" class="nav-link">Ajouter Immeuble</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+
         <li class="nav-item nav-category">Components</li>
+        <li class="nav-item">
+                <a href="pages/apps/calendar.html" class="nav-link">
+                    <i class="link-icon" data-feather="calendar"></i>
+                    <span class="link-title">Calendar</span>
+                </a>
+                </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
             <i class="link-icon" data-feather="feather"></i>
@@ -87,7 +124,7 @@
 
 
 
-        
+
         <li class="nav-item nav-category">Docs</li>
         <li class="nav-item">
           <a href="https://www.nobleui.com/html/documentation/docs.html" target="_blank" class="nav-link">

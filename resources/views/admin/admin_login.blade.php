@@ -11,6 +11,16 @@
 
 	<title>Admin Login Page</title>
 
+    <style type="text/css">
+
+    .authlogin-side-wrapper{
+        width: 100%;
+        height: 100%;
+        background-image: url({{asset('upload/login.png')}});
+    }
+
+    </style>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +55,7 @@
 						<div class="card">
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
-                  <div class="auth-side-wrapper">
+                  <div class="authlogin-side-wrapper">
 
                   </div>
                 </div>
@@ -60,8 +70,8 @@
                     <form class="forms-sample" method="post" action={{route('login')}}>
                         @csrf
                       <div class="mb-3">
-                        <label for="login" class="form-label">Email/Name/Phone</label>
-                        <input type="text" class="form-control" name="login" id="login" placeholder="Email/Name/Phone">
+                        <label for="login" class="form-label">Email / Name / Phone</label>
+                        <input type="text" class="form-control" name="login" id="login" placeholder="Email / Name / Phone">
                       </div>
                       <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -78,7 +88,7 @@
                           Login
                         </button>
                       </div>
-                      <a href="register.html" class="d-block mt-3 text-muted">Not a user? Sign up</a>
+                      <a href="register.html" class="d-block mt-3 text-muted">Not a user ? Sign up</a>
                     </form>
 
 
