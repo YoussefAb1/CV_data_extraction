@@ -15,8 +15,10 @@ class Syndic extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function immeuble()
+
+
+    public function immeubles()
     {
-        return $this->belongsTo(Immeuble::class);
+        return $this->hasMany(Immeuble::class);
     }
 }

@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'password' => hash::make('111'),
                 'role' => 'admin',
-                'status' => 'active',
+                'status' => 'actif',
             ],
             // Syndic
             [
@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'syndic@gmail.com',
                 'password' => hash::make('111'),
                 'role' => 'syndic',
-                'status' => 'active',
+                'status' => 'actif',
             ],
 
             // Copropriétaire
@@ -42,7 +42,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'coproprietaire@gmail.com',
                 'password' => hash::make('111'),
                 'role' => 'coproprietaire',
-                'status' => 'active',
+                'status' => 'inactif',
             ],
 
 

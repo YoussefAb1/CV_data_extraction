@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->enum('role',['admin','syndic','coproprietaire'])->default('coproprietaire');
-            $table->enum('status',['active','inactive'])->default('active');
+            $table->enum('status',['actif','inactif', 'En attente','Bloqué','Supprimé'])->default('actif');
 
             $table->rememberToken();
             $table->timestamps();

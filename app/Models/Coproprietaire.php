@@ -13,5 +13,10 @@ class Coproprietaire extends Model
     public function utilisateur()
     {
         return $this->belongsTo(User::class);
+}
+        public function appartements()
+    {
+        return $this->hasMany(Appartement::class);
     }
+
 }

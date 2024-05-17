@@ -7,6 +7,11 @@ use App\Http\Controllers\SyndicController;
 use App\Http\Controllers\Backend\ResidenceController;
 use App\Http\Controllers\Backend\ImmeubleController;
 use App\Http\Controllers\Backend\AppartementController;
+use App\Http\Controllers\Backend\FactureController;
+use App\Http\Controllers\Backend\ChargeController;
+use App\Http\Controllers\Backend\PaiementController;
+use App\Http\Controllers\Backend\UtilisateurController;
+use App\Http\Controllers\Backend\RoleController;
 
 
 
@@ -39,6 +44,9 @@ Route::post('/admin/update/password', [AdminController::class, 'AdminUpdatePassw
 Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'AdminLogin']);
 
+// Residence Routes
+
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/residence', [ResidenceController::class, 'AllResidence'])->name('all.residence');
     Route::get('add/residence', [ResidenceController::class, 'AddResidence'])->name('add.residence');
@@ -48,6 +56,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('delete/residence/{id}', [ResidenceController::class, 'DeleteResidence'])->name('delete.residence');
 
 });
+
+// Immeuble Routes
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/immeuble', [ImmeubleController::class, 'AllImmeuble'])->name('all.immeuble');
@@ -59,6 +69,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 });
 
+// Appartement Routes
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/appartement', [AppartementController::class, 'AllAppartement'])->name('all.appartement');
     Route::get('add/appartement', [AppartementController::class, 'AddAppartement'])->name('add.appartement');
@@ -69,10 +81,77 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 });
 
+// Facture Routes
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/facture', [FactureController::class, 'AllFacture'])->name('all.facture');
+    Route::get('add/facture', [FactureController::class, 'AddFacture'])->name('add.facture');
+    Route::post('store/facture', [FactureController::class, 'StoreFacture'])->name('store.facture');
+    Route::get('edit/facture/{id}', [FactureController::class, 'EditFacture'])->name('edit.facture');
+    Route::post('update/facture', [FactureController::class, 'UpdateFacture'])->name('update.facture');
+    Route::get('delete/facture/{id}', [FactureController::class, 'DeleteFacture'])->name('delete.facture');
 
+});
 
+// Charge Routes
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/charge', [ChargeController::class, 'AllCharge'])->name('all.charge');
+    Route::get('add/charge', [ChargeController::class, 'AddCharge'])->name('add.charge');
+    Route::post('store/charge', [ChargeController::class, 'StoreCharge'])->name('store.charge');
+    Route::get('edit/charge/{id}', [ChargeController::class, 'EditCharge'])->name('edit.charge');
+    Route::post('update/charge', [ChargeController::class, 'UpdateCharge'])->name('update.charge');
+    Route::get('delete/charge/{id}', [ChargeController::class, 'DeleteCharge'])->name('delete.charge');
+
+});
+
+// Paiement Routes
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/paiement', [PaiementController::class, 'AllPaiement'])->name('all.paiement');
+    Route::get('add/paiement', [PaiementController::class, 'AddPaiement'])->name('add.paiement');
+    Route::post('store/paiement', [PaiementController::class, 'StorePaiement'])->name('store.paiement');
+    Route::get('edit/paiement/{id}', [PaiementController::class, 'EditPaiement'])->name('edit.paiement');
+    Route::post('update/paiement', [PaiementController::class, 'UpdatePaiement'])->name('update.paiement');
+    Route::get('delete/paiement/{id}', [PaiementController::class, 'DeletePaiement'])->name('delete.paiement');
+
+});
+
+// Utlisateur Routes
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/utilisateur', [UtilisateurController::class, 'AllUtilisateur'])->name('all.utilisateur');
+    Route::get('add/utilisateur', [UtilisateurController::class, 'AddUtilisateur'])->name('add.utilisateur');
+    Route::post('store/utilisateur', [UtilisateurController::class, 'StoreUtilisateur'])->name('store.utilisateur');
+    Route::get('edit/utilisateur/{id}', [UtilisateurController::class, 'EditUtilisateur'])->name('edit.utilisateur');
+    Route::post('update/utilisateur', [UtilisateurController::class, 'UpdateUtilisateur'])->name('update.utilisateur');
+    Route::get('delete/utilisateur/{id}', [UtilisateurController::class, 'DeleteUtilisateur'])->name('delete.utilisateur');
+
+});
+
+// Permission Routes
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/permission', [RoleController::class, 'AllPermission'])->name('all.permission');
+    Route::get('add/permission', [RoleController::class, 'AddPermission'])->name('add.permission');
+    Route::post('store/permission', [RoleController::class, 'StorePermission'])->name('store.permission');
+    Route::get('edit/permission/{id}', [RoleController::class, 'EditPermission'])->name('edit.permission');
+    Route::post('update/permission', [RoleController::class, 'UpdatePermission'])->name('update.permission');
+    Route::get('delete/permission/{id}', [RoleController::class, 'DeletePermission'])->name('delete.permission');
+
+});
+
+// Role Routes
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/role', [RoleController::class, 'AllRole'])->name('all.role');
+    Route::get('add/role', [RoleController::class, 'AddRole'])->name('add.role');
+    Route::post('store/role', [RoleController::class, 'StoreRole'])->name('store.role');
+    Route::get('edit/role/{id}', [RoleController::class, 'EditRole'])->name('edit.role');
+    Route::post('update/role', [RoleController::class, 'UpdateRole'])->name('update.role');
+    Route::get('delete/role/{id}', [RoleController::class, 'DeleteRole'])->name('delete.role');
+
+});
 
 
 

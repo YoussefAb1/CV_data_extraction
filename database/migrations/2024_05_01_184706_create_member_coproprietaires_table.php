@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('syndics', function (Blueprint $table) {
-            $table->string('cin');
-            $table->date('date_affectation');
-            $table->date('date_fin');
+        Schema::create('member_coproprietaires', function (Blueprint $table) {
             $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
-            $table->foreignId('immeuble_id')->constrained('immeubles')->onDelete('cascade');
-            $table->timestamps();
+            $table->string('prenom');
+            $table->string('cin');
+            $table->enum('type', ['promoteur', 'proprietaire', 'locataire']);
 
+            $table->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('syndics');
+        Schema::dropIfExists('member_coproprietaires');
     }
 };

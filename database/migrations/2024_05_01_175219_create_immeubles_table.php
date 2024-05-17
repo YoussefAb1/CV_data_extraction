@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nom_immeuble');
             $table->integer('nombre_etages');
             $table->foreignId('id_residence')->constrained('residences');
+
             $table->timestamps();
         });
     }

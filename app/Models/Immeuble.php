@@ -17,5 +17,11 @@ class Immeuble extends Model
     public function appartements()
 {
     return $this->hasMany(Appartement::class);
+
 }
+
+public function syndic()
+    {
+        return $this->belongsTo(Syndic::class);
+    }
 }

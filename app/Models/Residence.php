@@ -13,5 +13,11 @@ class Residence extends Model
     public function immeubles()
     {
         return $this->hasMany(Immeuble::class, 'id_residence');
+
     }
+
+    public function factures()
+{
+    return $this->hasMany(Facture::class);
+}
 }

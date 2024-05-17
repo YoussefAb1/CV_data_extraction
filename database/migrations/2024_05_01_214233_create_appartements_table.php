@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('id_immeuble')->constrained('immeubles')->onDelete('cascade');
             $table->foreignId('id_residence')->constrained('residences')->onDelete('cascade');
             $table->timestamps();
+
         });
     }
 

@@ -21,8 +21,8 @@
         <li class="nav-item nav-category">Copropriété</li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#residence" role="button" aria-expanded="false" aria-controls="residence">
-            <i class="link-icon" data-feather="mail"></i>
-            <span class="link-title">Gestion Résidence </span>
+            <i class="link-icon" data-feather="home"></i>
+            <span class="link-title">Gestion Résidences </span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="residence">
@@ -41,7 +41,7 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#immeuble" role="button" aria-expanded="false" aria-controls="immeuble">
               <i class="link-icon" data-feather="mail"></i>
-              <span class="link-title">Gestion Immeuble </span>
+              <span class="link-title">Gestion Immeubles </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
             <div class="collapse" id="immeuble">
@@ -59,8 +59,8 @@
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#appartement" role="button" aria-expanded="false" aria-controls="appartement">
-              <i class="link-icon" data-feather="mail"></i>
-              <span class="link-title">Gestion Appartement </span>
+                <i class="link-icon" data-feather="home"></i>
+                <span class="link-title">Gestion Appartements </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
             <div class="collapse" id="appartement">
@@ -72,57 +72,106 @@
                   <a href="{{ route('add.appartement') }}" class="nav-link">Ajouter Immeuble</a>
                 </li>
 
+
               </ul>
             </div>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#facture" role="button" aria-expanded="false" aria-controls="facture">
+                <i class="link-icon" data-feather="file-text"></i>
+              <span class="link-title">Gestion Factures </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="facture">
+              <ul class="nav sub-menu">
 
-        <li class="nav-item nav-category">Components</li>
-        <li class="nav-item">
-                <a href="pages/apps/calendar.html" class="nav-link">
-                    <i class="link-icon" data-feather="calendar"></i>
-                    <span class="link-title">Calendar</span>
-                </a>
+                <li class="nav-item">
+                  <a href="{{ route('all.facture') }}" class="nav-link">Lister Factures</a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.facture') }}" class="nav-link">Ajouter Facture</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#charge" role="button" aria-expanded="false" aria-controls="charge">
+                <i class="link-icon" data-feather="dollar-sign"></i>
+                <span class="link-title">Gestion Charges </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="charge">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('all.charge') }}" class="nav-link">Lister Charges</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.charge') }}" class="nav-link">Ajouter Charge</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#paiement" role="button" aria-expanded="false" aria-controls="paiement">
+                <i class="link-icon" data-feather="credit-card"></i>
+                <span class="link-title">Gestion Paiements </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="paiement">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('all.paiement') }}" class="nav-link">Lister Paiements</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.paiement') }}" class="nav-link">Ajouter Paiement</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item nav-category">Utilisateurs</li>
+
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
-            <i class="link-icon" data-feather="feather"></i>
-            <span class="link-title">UI Kit</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="uiComponents">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="pages/ui-components/accordion.html" class="nav-link">Accordion</a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/ui-components/alerts.html" class="nav-link">Alerts</a>
-              </li>
+            <a class="nav-link" data-bs-toggle="collapse" href="#user" role="button" aria-expanded="false" aria-controls="user">
+                <i class="link-icon" data-feather="user"></i>
+                <span class="link-title">Gestion Utilisateurs</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="user">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{route('all.utilisateur')}}" class="nav-link">Lister Utilisateurs</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('add.utilisateur')}}" class="nav-link">Ajouter Utilisateur</a>
+                </li>
+              </ul>
+          </li>
 
-            </ul>
-          </div>
-        </li>
+        <li class="nav-item nav-category">Roles & Permissions</li>
+
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#advancedUI" role="button" aria-expanded="false" aria-controls="advancedUI">
-            <i class="link-icon" data-feather="anchor"></i>
-            <span class="link-title">Advanced UI</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="advancedUI">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="pages/advanced-ui/cropper.html" class="nav-link">Cropper</a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/advanced-ui/owl-carousel.html" class="nav-link">Owl carousel</a>
-              </li>
-
-            </ul>
-
-        </li>
-
-
-
+            <a class="nav-link" data-bs-toggle="collapse" href="#permission" role="button" aria-expanded="false" aria-controls="permission">
+                <i class="link-icon" data-feather="shield"></i>
+                <span class="link-title">Roles & Permissions</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="permission">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{route('all.permission')}}" class="nav-link">Permissions</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('all.role')}}" class="nav-link">Roles</a>
+                </li>
+              </ul>
+          </li>
 
 
         <li class="nav-item nav-category">Docs</li>
