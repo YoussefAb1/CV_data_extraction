@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateMemberCoproprietairesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('member_coproprietaires', function (Blueprint $table) {
-            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
-            $table->string('prenom');
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('cin');
             $table->enum('type', ['promoteur', 'proprietaire', 'locataire']);
-
             $table->timestamps();
         });
     }
@@ -28,4 +27,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('member_coproprietaires');
     }
-};
+}

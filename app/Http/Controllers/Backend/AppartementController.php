@@ -4,98 +4,117 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Appartement;
 use App\Models\Immeuble;
 use App\Models\Residence;
-
+use App\Models\MemberCoproprietaire;
 
 class AppartementController extends Controller
 {
     public function AllAppartement()
     {
-        // Récupérer tous les appartements avec les données d'immeuble et de résidence associées
-        $appartements = Appartement::with('immeuble.residence')->latest()->get();
+        // Récupérer tous les appartements avec les données d'immeuble, de résidence et de copropriétaire associées
+        $appartements = Appartement::with(['immeuble.residence', 'memberCoproprietaire.user'])->latest()->get();
 
         // Retourner la vue avec les données des appartements
         return view('backend.appartement.all_appartement', compact('appartements'));
     }
 
     public function AddAppartement()
-{
+    {
         $immeubles = Immeuble::all();
         $residences = Residence::all();
-        return view('backend.appartement.add_appartement', compact('immeubles', 'residences'));
-}
+        $coproprietaires = MemberCoproprietaire::all(); // Récupérer tous les copropriétaires
 
-     public function StoreAppartement(Request $request){
+        return view('backend.appartement.add_appartement', compact('immeubles', 'residences', 'coproprietaires'));
+    }
 
-         // validation
-         $request->validate([
-             'nom_appartement' => 'required|unique:appartements|max:20',
-             'etage' => 'required|numeric',
-             'surface' => 'required|numeric',
-             'id_immeuble' => 'required|exists:immeubles,id',
-             'id_residence' => 'required|exists:residences,id'
-         ]);
-
-         Appartement::insert([
-             'nom_appartement' => $request->nom_appartement,
-             'etage' => $request->etage,
-             'surface' => $request->surface,
-             'id_immeuble' => $request->id_immeuble,
-             'id_residence' => $request->id_residence
-         ]);
-
-         $notification = array(
-             'message'=> 'Appartement ajoutée avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->route('all.appartement')->with($notification);
-
-     }
-
-     public function EditAppartement($id)
+    public function StoreAppartement(Request $request)
 {
-    // Récupérer l'appartement à éditer
-    $appartements = Appartement::findOrFail($id);
+    // Validation
+    $request->validate([
+        'nom_appartement' => 'required|unique:appartements|max:255',
+        'etage' => 'required|numeric',
+        'surface' => 'required|numeric',
+        'immeuble_id' => 'required|exists:immeubles,id',
+        'residence_id' => 'required|exists:residences,id',
+        'member_coproprietaire_id' => 'nullable|exists:member_coproprietaires,id'
+    ]);
 
-    // Récupérer la liste des immeubles et des résidences disponibles
-    $immeubles = Immeuble::all();
-    $residences = Residence::all();
+    // Vérifiez si le champ member_coproprietaire_id est null avant de créer l'appartement
+    $data = [
+        'nom_appartement' => $request->nom_appartement,
+        'etage' => $request->etage,
+        'surface' => $request->surface,
+        'immeuble_id' => $request->immeuble_id,
+        'residence_id' => $request->residence_id,
+    ];
 
-    // Retourner la vue avec les données de l'appartement, des immeubles et des résidences
-    return view('backend.appartement.edit_appartement', compact('appartements', 'immeubles', 'residences'));
+    // Si member_coproprietaire_id n'est pas null, l'ajouter aux données
+    if ($request->has('member_coproprietaire_id')) {
+        $data['member_coproprietaire_id'] = $request->member_coproprietaire_id;
+    }
+
+    Appartement::create($data);
+
+    $notification = [
+        'message' => 'Appartement ajouté avec succès',
+        'alert-type' => 'success'
+    ];
+    return redirect()->route('all.appartement')->with($notification);
 }
 
-     public function UpdateAppartement(Request $request){
 
-         Appartement::findOrFail($request->id)->update([
-             'nom_appartement' => $request->nom_appartement,
-             'etage' => $request->etage,
-             'surface' => $request->surface,
-             'id_immeuble' => $request->id_immeuble,
-             'id_residence' => $request->id_residence,
-         ]);
+    public function EditAppartement($id)
+    {
+        // Récupérer l'appartement à éditer
+        $appartement = Appartement::findOrFail($id);
 
+        // Récupérer la liste des immeubles, des résidences et des copropriétaires disponibles
+        $immeubles = Immeuble::all();
+        $residences = Residence::all();
+        $coproprietaires = MemberCoproprietaire::all();
 
-         $notification = array(
-             'message'=> 'Appartement modifié avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->route('all.appartement')->with($notification);
+        // Retourner la vue avec les données de l'appartement, des immeubles, des résidences et des copropriétaires
+        return view('backend.appartement.edit_appartement', compact('appartement', 'immeubles', 'residences', 'coproprietaires'));
+    }
 
-     }
+    public function UpdateAppartement(Request $request, $id)
+    {
+        // Validation
+        $request->validate([
+            'nom_appartement' => 'required|unique:appartements|max:255',
+            'etage' => 'required|numeric',
+            'surface' => 'required|numeric',
+            'immeuble_id' => 'required|exists:immeubles,id',
+            'residence_id' => 'required|exists:residences,id',
+            'member_coproprietaire_id' => 'nullable|exists:member_coproprietaires,id' // Assurez-vous que ce champ est nullable s'il est possible de ne pas avoir de copropriétaire assigné
+        ]);
 
-     public function DeleteAppartement($id){
+        Appartement::findOrFail($id)->update([
+            'nom_appartement' => $request->nom_appartement,
+            'etage' => $request->etage,
+            'surface' => $request->surface,
+            'immeuble_id' => $request->immeuble_id,
+            'residence_id' => $request->residence_id,
+            'member_coproprietaire_id' => $request->member_coproprietaire_id
+        ]);
 
-         Appartement::findOrFail($id)->delete();
-         $notification = array(
-             'message'=> 'Appartement supprimée avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->back()->with($notification);
+        $notification = array(
+            'message' => 'Appartement modifié avec succès',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.appartement')->with($notification);
+    }
 
+    public function DeleteAppartement($id)
+    {
+        Appartement::findOrFail($id)->delete();
 
-     }
+        $notification = array(
+            'message' => 'Appartement supprimé avec succès',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
 }

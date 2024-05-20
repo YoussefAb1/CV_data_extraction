@@ -27,13 +27,12 @@ class UtilisateurController extends Controller
 {
     // Validation des données du formulaire
     $request->validate([
-        'name' => 'required|max:50',
-        'username' => 'required|unique:users|max:50',
-        'email' => 'required|unique:users|max:50',
+        'name' => 'required|max:255',
+        'username' => 'required|max:255|unique:users,username',
+        'email' => 'required|email|max:50|unique:users,email',
+        'password' => 'required|min:8',
         'role' => 'required|in:admin,syndic,coproprietaire',
-        'status' => 'required',
-        'nom_immeuble' => 'required_if:role,syndic', // Champ obligatoire si le rôle est syndic
-        // Ajoutez ici les autres règles de validation selon les besoins
+        'status' => 'required|in:actif,inactif,En attente,Bloqué,Supprimé',
     ]);
 
     // Création d'un nouvel utilisateur
@@ -42,43 +41,37 @@ class UtilisateurController extends Controller
     $user->name = $request->name;
     $user->username = $request->username;
     $user->email = $request->email;
+    $user->password = bcrypt($request->password); // Hash du mot de passe
     $user->status = $request->status;
 
     // Enregistrez l'utilisateur dans la base de données
     $user->save();
 
-    // Si c'est un syndic, associez-le à un immeuble
-    if ($request->role === 'syndic') {
-        $nom_immeuble = $request->input('nom_immeuble');
-        // Recherchez l'immeuble par son nom
-        $immeuble = Immeuble::where('nom_immeuble', $nom_immeuble)->first();
-        // Vérifiez si l'immeuble existe
-        if ($immeuble) {
-            // Mettre à jour le syndic avec l'ID de l'immeuble
-            $user->immeuble_id = $immeuble->id;
-            $user->save();
-        } else {
-            // Gérer le cas où l'immeuble n'est pas trouvé
-            return redirect()->back()->with('error', 'L\'immeuble spécifié n\'existe pas.');
-        }
+    // Redirigez l'utilisateur vers une autre page après l'ajout
+    return redirect()->route('all.utilisateur')->with('success', 'Utilisateur ajouté avec succès');
+}
+
+public function EditUtilisateur($id)
+{
+    // Recherche de l'utilisateur par ID
+    $utilisateur = User::find($id);
+
+    // Vérifie si l'utilisateur existe
+    if (!$utilisateur) {
+        // Redirige l'utilisateur avec un message d'erreur si l'utilisateur n'est pas trouvé
+        return redirect()->route('all.utilisateur')->with('error', 'Utilisateur non trouvé.');
     }
 
-    // Redirigez l'utilisateur vers une autre page après l'ajout
-    return redirect()->route('users.index')->with('success', 'Utilisateur ajouté avec succès');
+    // Rend la vue d'édition avec les données de l'utilisateur
+    return view('backend.utilisateur.edit_utilisateur', compact('utilisateur'));
 }
 
 
-    public function EditUtilisateur($id){
-        $utilisateurs = User::findOrFail($id);
-        return view('backend.utilisateur.edit_utilisateur', compact('utilisateurs'));
-
-    }
-
     public function UpdateUtilisateur(Request $request){
 
-        $rid=$request->id;
 
-        User::findOrFail($rid)->update([
+
+        User::findOrFail($request->id)->update([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,

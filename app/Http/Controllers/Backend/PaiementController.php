@@ -6,91 +6,76 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Paiement;
 use App\Models\Appartement;
-use App\Models\Facture;
+use App\Models\MemberCoproprietaire;
+use App\Models\MemberSyndic;
+use App\Models\Cotisation;
 
 class PaiementController extends Controller
 {
+    public function AllPaiement()
+    {
+        $paiements = Paiement::with(['appartement', 'member_coproprietaire', 'member_syndic', 'cotisation'])->latest()->get();
+        return view('backend.paiement.all_paiement', compact('paiements'));
+    }
 
-    public function AllPaiement(){
+    public function AddPaiement()
+    {
+        $appartements = Appartement::all();
+        $coproprietaires = MemberCoproprietaire::all();
+        $syndics = MemberSyndic::all();
+        $cotisations = Cotisation::all();
+        return view('backend.paiement.add_paiement', compact('appartements', 'coproprietaires', 'syndics', 'cotisations'));
+    }
 
-        // Récupérer tous les immeubles avec les données de résidence associées
-     $paiements = Paiement::with('facture')->latest()->get();
+    public function StorePaiement(Request $request)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_paiement' => 'required|date',
+            'methode_paiement' => 'required|string',
+            'appartement_id' => 'required|exists:appartements,id',
+            'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
+            'member_syndic_id' => 'required|exists:member_syndics,id',
+            'cotisation_id' => 'required|exists:cotisations,id'
+        ]);
 
-     // Retourner la vue avec les données des immeubles
-     return view('backend.paiement.all_paiement', compact('paiements'));
-     }
+        Paiement::create($request->all());
 
-     public function AddPaiement()
-     {
-        $paiements = Paiement::all();
-         $factures = Facture::all(); // Récupérer toutes les résidences
-         return view('backend.paiement.add_paiement', compact('paiements','factures'));
-     }
+        return redirect()->route('all.paiement')->with('success', 'Paiement ajouté avec succès');
+    }
 
-     public function StorePaiement(Request $request){
+    public function EditPaiement($id)
+    {
+        $paiement = Paiement::findOrFail($id);
+        $appartements = Appartement::all();
+        $coproprietaires = MemberCoproprietaire::all();
+        $syndics = MemberSyndic::all();
+        $cotisations = Cotisation::all();
+        return view('backend.paiement.edit_paiement', compact('paiement', 'appartements', 'coproprietaires', 'syndics', 'cotisations'));
+    }
 
-         // validation
-         $request->validate([
-             'montant' => 'required',
-             'date_paiement' => 'required',
-             'mode_paiement' => 'required',
-             'id_facture' => 'required|exists:factures,id'
-         ]);
+    public function UpdatePaiement(Request $request, $id)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_paiement' => 'required|date',
+            'methode_paiement' => 'required|string',
+            'appartement_id' => 'required|exists:appartements,id',
+            'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
+            'member_syndic_id' => 'required|exists:member_syndics,id',
+            'cotisation_id' => 'required|exists:cotisations,id'
+        ]);
 
-         Facture::insert([
-             'montant' => $request->montant,
-             'date_paiement' => $request->date_paiement,
-             'mode_paiement' => $request->mode_paiement,
-             'id_facture' => $request->id_facture
-         ]);
+        $paiement = Paiement::findOrFail($id);
+        $paiement->update($request->all());
 
-         $notification = array(
-             'message'=> 'Paiement ajoutée avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->route('all.paiement')->with($notification);
+        return redirect()->route('all.paiement')->with('success', 'Paiement modifié avec succès');
+    }
 
-     }
+    public function DeletePaiement($id)
+    {
+        Paiement::findOrFail($id)->delete();
 
-     public function EditPaiement($id){
-        // Récupérer l'immeuble à éditer
-     $paiements = Paiement::findOrFail($id);
-
-     // Récupérer la liste des résidences disponibles
-     $factures = Facture::all();
-
-     // Retourner la vue avec les données de l'immeuble et des résidences
-     return view('backend.facture.edit_facture', compact('paiements', 'factures'));
-
-     }
-
-     public function UpdatePaiement(Request $request){
-
-         Paiement::findOrFail($request->id)->update([
-            'montant' => $request->montant,
-            'date_paiement' => $request->date_paiement,
-            'mode_paiement' => $request->mode_paiement,
-            'id_facture' => $request->id_facture
-         ]);
-
-
-         $notification = array(
-             'message'=> 'Paiement modifié avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->route('all.paiements')->with($notification);
-
-     }
-
-     public function DeletePaiement($id){
-
-         Paiement::findOrFail($id)->delete();
-         $notification = array(
-             'message'=> 'Paiement supprimée avec succés',
-             'alert-type' => 'success'
-         );
-         return redirect()->back()->with($notification);
-
-
-     }
+        return redirect()->back()->with('success', 'Paiement supprimé avec succès');
+    }
 }

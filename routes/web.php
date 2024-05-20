@@ -3,17 +3,16 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\SyndicController;
 use App\Http\Controllers\Backend\ResidenceController;
 use App\Http\Controllers\Backend\ImmeubleController;
 use App\Http\Controllers\Backend\AppartementController;
 use App\Http\Controllers\Backend\FactureController;
 use App\Http\Controllers\Backend\ChargeController;
+use App\Http\Controllers\Backend\CotisationController;
 use App\Http\Controllers\Backend\PaiementController;
 use App\Http\Controllers\Backend\UtilisateurController;
 use App\Http\Controllers\Backend\RoleController;
-
-
+use App\Http\Controllers\MemberSyndicController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -105,6 +104,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 });
 
+
+// Cotisation Routes
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('all/cotisation', [CotisationController::class, 'AllCotisation'])->name('all.cotisation');
+    Route::get('add/cotisation', [CotisationController::class, 'AddCotisation'])->name('add.cotisation');
+    Route::post('store/cotisation', [CotisationController::class, 'StoreCotisation'])->name('store.cotisation');
+    Route::get('edit/cotisation/{id}', [CotisationController::class, 'EditCotisation'])->name('edit.cotisation');
+    Route::post('update/cotisation', [CotisationController::class, 'UpdateCotisation'])->name('update.cotisation');
+    Route::get('delete/cotisation/{id}', [CotisationController::class, 'DeleteCotisation'])->name('delete.cotisation');
+
+});
+
 // Paiement Routes
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -124,7 +136,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('add/utilisateur', [UtilisateurController::class, 'AddUtilisateur'])->name('add.utilisateur');
     Route::post('store/utilisateur', [UtilisateurController::class, 'StoreUtilisateur'])->name('store.utilisateur');
     Route::get('edit/utilisateur/{id}', [UtilisateurController::class, 'EditUtilisateur'])->name('edit.utilisateur');
-    Route::post('update/utilisateur', [UtilisateurController::class, 'UpdateUtilisateur'])->name('update.utilisateur');
+    Route::post('update/utilisateur/{id}', [UtilisateurController::class, 'UpdateUtilisateur'])->name('update.utilisateur');
     Route::get('delete/utilisateur/{id}', [UtilisateurController::class, 'DeleteUtilisateur'])->name('delete.utilisateur');
 
 });
@@ -161,4 +173,4 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 
-Route::get('/syndic/dashboard', [SyndicController::class, 'SyndicDashboard'])->name('syndic.dashboard');
+Route::get('/syndic/dashboard', [MemberSyndicController::class, 'SyndicDashboard'])->name('syndic.dashboard');

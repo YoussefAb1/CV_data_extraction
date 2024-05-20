@@ -9,7 +9,7 @@ use App\Models\Coproprietaire;
 
 
 
-class CoproprietaireController extends Controller
+class MemberCoproprietaireController extends Controller
 {
     //
 }

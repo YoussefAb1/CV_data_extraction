@@ -4,17 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateResidencesTable extends Migration
+class CreateComptesTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('residences', function (Blueprint $table) {
+        Schema::create('comptes', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_residence');
-            $table->text('adresse_residence');
+            $table->string('numero_compte')->unique();
+            $table->decimal('solde', 15, 2);
+            $table->string('type');
+            $table->morphs('compteable');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ class CreateResidencesTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('residences');
+        Schema::dropIfExists('comptes');
     }
 }

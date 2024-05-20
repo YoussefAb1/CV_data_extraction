@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateChargesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
-            $table->string('designation')->unique();
-            $table->date('date');
-            $table->float('montant');
-            $table->text('description')->nullable();
+            $table->string('designation');
             $table->string('type');
-            $table->enum('statut', ['Payee', 'Partiellement payee', 'En attente de paiement', 'En retard'])->default('En attente de paiement');
-
-            $table->foreignId('id_appartement')->constrained('appartements');
+            $table->date('date');
+            $table->decimal('montant', 10, 2);
+            $table->text('description')->nullable();
+            $table->string('statut');
+            $table->foreignId('appartement_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('immeuble_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('residence_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,4 +33,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('charges');
     }
-};
+}

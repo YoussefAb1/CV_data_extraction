@@ -4,8 +4,6 @@
 
 <div class="page-content">
     <div class="row profile-body">
-
-
         <div class="col-md-8 col-xl-8 middle-wrapper">
             <div class="row">
                 <div class="card rounded">
@@ -23,7 +21,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="nombre_etages" class="form-label">Nombre d'Etages</label>
+                                <label for="nombre_etages" class="form-label">Nombre d'Étages</label>
                                 <input type="text" name="nombre_etages" class="form-control @error('nombre_etages') is-invalid @enderror" id="nombre_etages">
                                 @error('nombre_etages')
                                     <span class="text-danger">{{ $message }}</span>
@@ -31,21 +29,33 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_residence" class="form-label">Nom de la Résidence</label>
-                                <select name="id_residence" class="form-control @error('id_residence') is-invalid @enderror" id="id_residence">
+                                <label for="residence_id" class="form-label">Nom de la Résidence</label>
+                                <select name="residence_id" class="form-control @error('residence_id') is-invalid @enderror" id="residence_id">
                                     <option value="">Sélectionner une résidence</option>
                                     @foreach($residences as $residence)
                                         <option value="{{ $residence->id }}">{{ $residence->nom_residence }}</option>
                                     @endforeach
                                 </select>
-                                @error('id_residence')
+                                @error('residence_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="member_syndic_id" class="form-label">Syndic</label>
+                                <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
+                                    <option value="">Sélectionner un syndic</option>
+                                    @foreach($syndics as $syndic)
+                                        <option value="{{ $syndic->id }}">{{ $syndic->user->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('member_syndic_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
                             <button type="submit" name="submit" class="btn btn-primary me-2">Valider</button>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -53,7 +63,4 @@
     </div>
 </div>
 
-
 @endsection
-
-

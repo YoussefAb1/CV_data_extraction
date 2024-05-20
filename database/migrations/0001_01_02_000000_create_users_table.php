@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role',['admin','syndic','coproprietaire'])->default('coproprietaire');
-            $table->enum('status',['actif','inactif', 'En attente','Bloqué','Supprimé'])->default('actif');
+            $table->enum('role', ['admin', 'syndic', 'coproprietaire'])->default('coproprietaire');
+            $table->enum('status', ['actif', 'inactif', 'En attente', 'Bloqué', 'Supprimé'])->default('actif');
 
             $table->rememberToken();
             $table->timestamps();
@@ -53,4 +53,4 @@ return new class extends Migration
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
-};
+}

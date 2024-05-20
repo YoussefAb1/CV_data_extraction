@@ -17,7 +17,37 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'password',
+        'photo',
+        'phone',
+        'adresse',
+        'role',
+        'status'
+    ];
+
+    public function appartements()
+    {
+        return $this->hasMany(Appartement::class);
+    }
+
+    public function memberCoproprietaire()
+    {
+        return $this->hasOne(MemberCoproprietaire::class);
+    }
+
+    public function memberSyndic()
+    {
+        return $this->hasOne(MemberSyndic::class);
+    }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

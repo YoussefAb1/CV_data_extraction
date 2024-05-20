@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateAppartementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('nom_appartement');
             $table->string('etage');
             $table->string('surface');
-            $table->foreignId('id_immeuble')->constrained('immeubles')->onDelete('cascade');
-            $table->foreignId('id_residence')->constrained('residences')->onDelete('cascade');
+            $table->foreignId('immeuble_id')->constrained()->onDelete('cascade');
+            $table->foreignId('residence_id')->constrained()->onDelete('cascade');
+            $table->foreignId('member_coproprietaire_id')->constrained('member_coproprietaires')->nullable()->onDelete('cascade');
             $table->timestamps();
-
         });
     }
 
@@ -30,4 +30,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('appartements');
     }
-};
+}

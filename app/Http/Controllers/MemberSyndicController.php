@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Syndic;
 
 
-class SyndicController extends Controller
+class MemberSyndicController extends Controller
 {
     public function SyndicDashboard(){
     return view('syndic.syndic_dashboard');

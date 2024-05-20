@@ -39,28 +39,41 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_immeuble" class="form-label">Nom de l'Immeuble</label>
-                                <select name="id_immeuble" class="form-control @error('id_immeuble') is-invalid @enderror">
+                                <label for="immeuble_id" class="form-label">Nom de l'Immeuble</label>
+                                <select name="immeuble_id" class="form-control @error('immeuble_id') is-invalid @enderror">
                                     <option value="">Sélectionner un immeuble</option>
                                     @foreach ($immeubles as $immeuble)
                                         <option value="{{ $immeuble->id }}">{{ $immeuble->nom_immeuble }}</option>
                                     @endforeach
                                 </select>
-                                @error('id_immeuble')
+                                @error('immeuble_id')
                                         <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_residence" class="form-label">Nom de la Résidence</label>
-                                <select name="id_residence" class="form-control @error('id_residence') is-invalid @enderror">
+                                <label for="residence_id" class="form-label">Nom de la Résidence</label>
+                                <select name="residence_id" class="form-control @error('residence_id') is-invalid @enderror">
                                     <option value="">Sélectionner une résidence</option>
                                     @foreach ($residences as $residence)
                                         <option value="{{ $residence->id }}">{{ $residence->nom_residence }}</option>
                                     @endforeach
                                 </select>
-                                @error('id_residence')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @error('residence_id')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="member_coproprietaire_id" class="form-label">Copropriétaire</label>
+                                <select name="member_coproprietaire_id" class="form-control @error('member_coproprietaire_id') is-invalid @enderror">
+                                    <option value="">Sélectionner un copropriétaire</option>
+                                    @foreach ($coproprietaires as $coproprietaire)
+                                        <option value="{{ $coproprietaire->id }}">{{ $coproprietaire->nom }}</option>
+                                    @endforeach
+                                </select>
+                                @error('member_coproprietaire_id')
+                                    <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
