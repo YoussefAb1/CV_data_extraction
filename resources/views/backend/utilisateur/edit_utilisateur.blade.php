@@ -14,9 +14,11 @@
                             <div class="mb-3">
                                 <label for="role">Rôle de l'utilisateur</label>
                                 <select name="role" id="role" class="form-control">
-                                    <option value="admin" {{ $utilisateur->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="syndic" {{ $utilisateur->role == 'syndic' ? 'selected' : '' }}>Syndic</option>
-                                    <option value="coproprietaire" {{ $utilisateur->role == 'coproprietaire' ? 'selected' : '' }}>Copropriétaire</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->name }}" {{ $utilisateur->role == $role->name ? 'selected' : '' }}>
+                                            {{ $role->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('role')
                                 <span class="text-danger">{{ $message }}</span>

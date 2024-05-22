@@ -42,9 +42,9 @@
                             <div class="mb-3">
                                 <label for="role">Rôle de l'utilisateur</label>
                                 <select name="role" id="role" class="form-control">
-                                    <option value="admin">Admin</option>
-                                    <option value="syndic">Syndic</option>
-                                    <option value="coproprietaire">Copropriétaire</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    @endforeach
                                 </select>
                                 @error('role')
                                 <span class="text-danger">{{ $message }}</span>
@@ -56,7 +56,6 @@
                                     <option value="actif">Actif</option>
                                     <option value="inactif">Inactif</option>
                                     <option value="En attente">En attente</option>
-                                    <option value="Bloqué">Bloqué</option>
                                     <option value="Supprimé">Supprimé</option>
                                 </select>
                                 @error('status')
@@ -107,9 +106,9 @@
                                 <div class="mb-3">
                                     <label for="type">Type de Copropriétaire</label>
                                     <select name="type" id="type" class="form-control">
-                                        <option value="promoteur">Promoteur</option>
-                                        <option value="proprietaire">Propriétaire</option>
-                                        <option value="locataire">Locataire</option>
+                                        <option value="Promoteur">Promoteur</option>
+                                        <option value="Proprietaire">Propriétaire</option>
+                                        <option value="Locataire">Locataire</option>
                                     </select>
                                     @error('type')
                                     <span class="text-danger">{{ $message }}</span>
@@ -122,10 +121,9 @@
 
                         <script>
                             document.getElementById('role').addEventListener('change', function() {
-                                var role = this.value;
+                                var role = this.value.toLowerCase();
                                 document.getElementById('syndic-fields').style.display = role === 'syndic' ? 'block' : 'none';
-                                document.getElementById('coproprietaire-fields').style.display = role === 'coproprietaire' ? 'block' : 'none';
+                                document.getElementById('coproprietaire-fields').style.display = role === 'copropriétaire' ? 'block' : 'none';
                             });
                         </script>
-                        @endsection
-
+@endsection

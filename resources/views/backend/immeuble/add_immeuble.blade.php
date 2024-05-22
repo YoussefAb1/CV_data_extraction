@@ -46,7 +46,7 @@
                                 <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
                                     <option value="">Sélectionner un syndic</option>
                                     @foreach($syndics as $syndic)
-                                        <option value="{{ $syndic->id }}">{{ $syndic->user->name }}</option>
+                                        <option value="{{ $syndic->id }}">{{ $syndic->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('member_syndic_id')
