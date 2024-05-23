@@ -18,7 +18,8 @@ class CreateAppartementsTable extends Migration
             $table->string('surface');
             $table->foreignId('immeuble_id')->constrained()->onDelete('cascade');
             $table->foreignId('residence_id')->constrained()->onDelete('cascade');
-            $table->foreignId('member_coproprietaire_id')->constrained('member_coproprietaires')->nullable()->onDelete('cascade');
+            $table->foreignId('member_coproprietaire_id')->nullable()->constrained('users')->onDelete('cascade'); // Utiliser la table 'users' ici
+
             $table->timestamps();
         });
     }

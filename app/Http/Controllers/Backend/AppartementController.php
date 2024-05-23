@@ -8,26 +8,42 @@ use App\Models\Appartement;
 use App\Models\Immeuble;
 use App\Models\Residence;
 use App\Models\MemberCoproprietaire;
+use App\Models\User;
 
 class AppartementController extends Controller
 {
-    public function AllAppartement()
+    public function AllAppartement(Request $request)
     {
-        // Récupérer tous les appartements avec les données d'immeuble, de résidence et de copropriétaire associées
-        $appartements = Appartement::with(['immeuble.residence', 'memberCoproprietaire.user'])->latest()->get();
+        $residences = Residence::all();
+        // Récupérer les utilisateurs ayant le rôle de copropriétaire
+        $coproprietaires = User::role('coproprietaire')->get();
 
-        // Retourner la vue avec les données des appartements
-        return view('backend.appartement.all_appartement', compact('appartements'));
+        $appartements = Appartement::query()
+            ->with(['immeuble.residence', 'memberCoproprietaire'])
+            ->when($request->residence_id, function ($query) use ($request) {
+                return $query->whereHas('immeuble.residence', function ($q) use ($request) {
+                    $q->where('id', $request->residence_id);
+                });
+            })
+            ->when($request->coproprietaire_id, function ($query) use ($request) {
+                return $query->where('member_coproprietaire_id', $request->coproprietaire_id);
+            })
+            ->latest()
+            ->get();
+
+        return view('backend.appartement.all_appartement', compact('appartements', 'residences', 'coproprietaires'));
     }
 
     public function AddAppartement()
     {
         $immeubles = Immeuble::all();
         $residences = Residence::all();
-        $coproprietaires = MemberCoproprietaire::all(); // Récupérer tous les copropriétaires
+        // Récupérer les utilisateurs ayant le rôle de copropriétaire
+        $coproprietaires = User::role('coproprietaire')->get();
 
         return view('backend.appartement.add_appartement', compact('immeubles', 'residences', 'coproprietaires'));
     }
+
 
     public function StoreAppartement(Request $request)
 {
@@ -38,10 +54,10 @@ class AppartementController extends Controller
         'surface' => 'required|numeric',
         'immeuble_id' => 'required|exists:immeubles,id',
         'residence_id' => 'required|exists:residences,id',
-        'member_coproprietaire_id' => 'nullable|exists:member_coproprietaires,id'
+        'member_coproprietaire_id' => 'nullable|exists:users,id' // Vérifier l'existence dans la table 'users'
     ]);
 
-    // Vérifiez si le champ member_coproprietaire_id est null avant de créer l'appartement
+    // Créez un tableau des données à enregistrer
     $data = [
         'nom_appartement' => $request->nom_appartement,
         'etage' => $request->etage,
@@ -50,17 +66,19 @@ class AppartementController extends Controller
         'residence_id' => $request->residence_id,
     ];
 
-    // Si member_coproprietaire_id n'est pas null, l'ajouter aux données
-    if ($request->has('member_coproprietaire_id')) {
+    // Ajoutez `member_coproprietaire_id` seulement s'il est présent
+    if ($request->filled('member_coproprietaire_id')) {
         $data['member_coproprietaire_id'] = $request->member_coproprietaire_id;
     }
 
+    // Créez l'appartement
     Appartement::create($data);
 
     $notification = [
         'message' => 'Appartement ajouté avec succès',
         'alert-type' => 'success'
     ];
+
     return redirect()->route('all.appartement')->with($notification);
 }
 

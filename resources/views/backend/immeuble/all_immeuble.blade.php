@@ -21,8 +21,8 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Nom de l'Immeuble</th>
-                                    <th>Nombre d'étages</th>
-                                    <th>Nom de la Résidence</th>
+                                    <th>Nombre d'Étages</th>
+                                    <th>Résidence</th>
                                     <th>Syndic</th>
                                     <th>Action</th>
                                 </tr>
@@ -34,7 +34,13 @@
                                         <td>{{ $immeuble->nom_immeuble }}</td>
                                         <td>{{ $immeuble->nombre_etages }}</td>
                                         <td>{{ $immeuble->residence->nom_residence }}</td>
-                                        <td>{{ optional(optional($immeuble->member_syndic)->user)->name ?? 'N/A' }}</td> <!-- Utilisation de optional pour éviter les erreurs -->
+                                        <td>
+                                            @if ($immeuble->memberSyndic)
+                                                {{ $immeuble->memberSyndic->name }}
+                                            @else
+                                                Aucun syndic
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('edit.immeuble', $immeuble->id) }}" class="btn btn-inverse-warning">Editer</a>
                                             <a href="{{ route('delete.immeuble', $immeuble->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
@@ -42,8 +48,6 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-
-
                         </table>
                     </div>
                 </div>

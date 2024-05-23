@@ -42,7 +42,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="member_syndic_id" class="form-label">Syndic</label>
+                                <label for="member_syndic_id" class="form-label">Syndic (optionnel)</label>
                                 <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
                                     <option value="">Sélectionner un syndic</option>
                                     @foreach($syndics as $syndic)

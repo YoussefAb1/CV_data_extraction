@@ -10,12 +10,11 @@
                         <h6 class="card-title">Modifier un Utilisateur</h6>
                         <form method="POST" action="{{ route('update.utilisateur', $utilisateur->id) }}" class="forms-sample">
                             @csrf
-                            {{-- <input type="hidden" name="_method" value="PUT"> --}}
                             <div class="mb-3">
                                 <label for="role">Rôle de l'utilisateur</label>
                                 <select name="role" id="role" class="form-control">
                                     @foreach($roles as $role)
-                                        <option value="{{ $role->name }}" {{ $utilisateur->role == $role->name ? 'selected' : '' }}>
+                                        <option value="{{ $role->name }}" {{ $utilisateur->hasRole($role->name) ? 'selected' : '' }}>
                                             {{ $role->name }}
                                         </option>
                                     @endforeach

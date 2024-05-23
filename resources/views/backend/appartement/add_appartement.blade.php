@@ -1,11 +1,10 @@
+<!-- add_appartement.blade.php -->
 @extends('admin.admin_dashboard')
 
 @section('admin')
 
 <div class="page-content">
     <div class="row profile-body">
-
-
         <div class="col-md-8 col-xl-8 middle-wrapper">
             <div class="row">
                 <div class="card rounded">
@@ -23,7 +22,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="etage" class="form-label">Etage</label>
+                                <label for="etage" class="form-label">Étage</label>
                                 <input type="text" name="etage" class="form-control @error('etage') is-invalid @enderror" id="etage">
                                 @error('etage')
                                     <span class="text-danger">{{ $message }}</span>
@@ -47,7 +46,7 @@
                                     @endforeach
                                 </select>
                                 @error('immeuble_id')
-                                        <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
@@ -60,7 +59,7 @@
                                     @endforeach
                                 </select>
                                 @error('residence_id')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
@@ -77,18 +76,12 @@
                                 @enderror
                             </div>
 
-
                             <button type="submit" name="submit" class="btn btn-primary me-2">Valider</button>
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 @endsection
-
-

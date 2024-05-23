@@ -21,9 +21,14 @@ class Immeuble extends Model
         return $this->hasMany(Appartement::class);
     }
 
+    // public function memberSyndic()
+    // {
+    //     return $this->belongsTo(MemberSyndic::class, 'member_syndic_id');
+    // }
+
     public function memberSyndic()
     {
-        return $this->belongsTo(MemberSyndic::class, 'member_syndic_id');
+        return $this->belongsTo(User::class, 'member_syndic_id');
     }
 
     public function compte()

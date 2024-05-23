@@ -49,50 +49,50 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="member_coproprietaire_id" class="form-label">Propriétaire</label>
-                                <select name="member_coproprietaire_id" class="form-control @error('member_coproprietaire_id') is-invalid @enderror" id="member_coproprietaire_id">
+                                <label for="coproprietaire_id" class="form-label">Propriétaire</label>
+                                <select name="coproprietaire_id" class="form-control @error('coproprietaire_id') is-invalid @enderror" id="coproprietaire_id">
                                     <option value="">Sélectionner un Propriétaire</option>
                                     @foreach($coproprietaires as $coproprietaire)
-                                        <option value="{{ $coproprietaire->id }}" {{ old('member_coproprietaire_id') == $coproprietaire->id ? 'selected' : '' }}>{{ $coproprietaire->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('member_coproprietaire_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                        <option value="{{ $coproprietaire->id }}" {{ old('coproprietaire_id') == $coproprietaire->id ? 'selected' : '' }}>{{ $coproprietaire->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('coproprietaire_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
 
-                                <div class="mb-3">
-                                    <label for="member_syndic_id" class="form-label">Syndic</label>
-                                    <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
-                                        <option value="">Sélectionner un Syndic</option>
-                                        @foreach($syndics as $syndic)
-                                            <option value="{{ $syndic->id }}" {{ old('member_syndic_id') == $syndic->id ? 'selected' : '' }}>{{ $syndic->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('member_syndic_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                            <div class="mb-3">
+                                <label for="syndic_id" class="form-label">Syndic</label>
+                                <select name="syndic_id" class="form-control @error('syndic_id') is-invalid @enderror" id="syndic_id">
+                                    <option value="">Sélectionner un Syndic</option>
+                                    @foreach($syndics as $syndic)
+                                        <option value="{{ $syndic->id }}" {{ old('syndic_id') == $syndic->id ? 'selected' : '' }}>{{ $syndic->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('syndic_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
 
-                                <div class="mb-3">
-                                    <label for="cotisation_id" class="form-label">Cotisation</label>
-                                    <select name="cotisation_id" class="form-control @error('cotisation_id') is-invalid @enderror" id="cotisation_id">
-                                        <option value="">Sélectionner une Cotisation</option>
-                                        @foreach($cotisations as $cotisation)
-                                            <option value="{{ $cotisation->id }}" {{ old('cotisation_id') == $cotisation->id ? 'selected' : '' }}>{{ $cotisation->description }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('cotisation_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                            <div class="mb-3">
+                                <label for="cotisation_id" class="form-label">Cotisation</label>
+                                <select name="cotisation_id" class="form-control @error('cotisation_id') is-invalid @enderror" id="cotisation_id">
+                                    <option value="">Sélectionner une Cotisation</option>
+                                    @foreach($cotisations as $cotisation)
+                                        <option value="{{ $cotisation->id }}" {{ old('cotisation_id') == $cotisation->id ? 'selected' : '' }}>{{ $cotisation->description }}</option>
+                                    @endforeach
+                                </select>
+                                @error('cotisation_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
 
-                                <button type="submit" class="btn btn-primary me-2">Valider</button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-primary me-2">Valider</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @endsection
+</div>
+@endsection
