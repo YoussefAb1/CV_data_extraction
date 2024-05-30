@@ -8,23 +8,25 @@ class CreateMemberSyndicsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('member_syndics', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('cin');
-            $table->date('date_affectation');
-            $table->date('date_fin');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('cin')->unique();
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('member_syndics');
     }

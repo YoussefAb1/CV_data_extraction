@@ -27,8 +27,7 @@ class UtilisateurController extends Controller
     }
 
     public function StoreUtilisateur(Request $request)
-{
-
+    {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
@@ -36,7 +35,6 @@ class UtilisateurController extends Controller
             'password' => 'required|string|min:8',
             'role' => 'required|string|exists:roles,name',
             'status' => 'required|string',
-            // Ajoutez d'autres validations nécessaires pour les champs supplémentaires
         ]);
 
         $user = User::create([
@@ -44,18 +42,14 @@ class UtilisateurController extends Controller
             'username' => $validatedData['username'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
+            'role' => $validatedData['role'], // Assurez-vous d'ajouter ce champ
             'status' => $validatedData['status'],
         ]);
 
         $user->assignRole($validatedData['role']);
 
-
-    // Enregistrez l'utilisateur dans la base de données
-    $user->save();
-
-    // Redirigez l'utilisateur vers une autre page après l'ajout
-    return redirect()->route('all.utilisateur')->with('success', 'Utilisateur ajouté avec succès');
-}
+        return redirect()->route('all.utilisateur')->with('success', 'Utilisateur ajouté avec succès');
+    }
 
 public function EditUtilisateur($id)
 {
@@ -78,16 +72,16 @@ public function EditUtilisateur($id)
 
 public function UpdateUtilisateur(Request $request)
 {
-    // Ajouter des règles de validation
     $request->validate([
         'name' => 'required|string|max:255',
         'username' => 'required|string|max:255',
         'email' => 'required|email|max:255',
-        'role' => 'required|string|max:50', // Assurez-vous que la longueur maximale correspond à la définition de votre colonne
+        'role' => 'required|string|exists:roles,name',
         'status' => 'required|string|max:255',
     ]);
 
-    User::findOrFail($request->id)->update([
+    $user = User::findOrFail($request->id);
+    $user->update([
         'name' => $request->name,
         'username' => $request->username,
         'email' => $request->email,
@@ -95,12 +89,10 @@ public function UpdateUtilisateur(Request $request)
         'status' => $request->status,
     ]);
 
-    $notification = array(
-        'message' => 'Utilisateur modifié avec succès',
-        'alert-type' => 'success'
-    );
+    // Assigner le rôle mis à jour
+    $user->syncRoles([$request->role]);
 
-    return redirect()->route('all.utilisateur')->with($notification);
+    return redirect()->route('all.utilisateur')->with('success', 'Utilisateur modifié avec succès');
 }
 
     public function DeleteUtilisateur($id){

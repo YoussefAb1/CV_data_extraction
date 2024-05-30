@@ -9,15 +9,47 @@ class MemberSyndic extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'cin', 'date_affectation', 'date_fin', 'immeuble_id'];
+    protected $fillable = [
+        'user_id', 'cin'
+    ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function immeuble()
+    public function immeubles()
     {
-        return $this->hasOne(Immeuble::class);
+        return $this->belongsToMany(Immeuble::class, 'immeuble_syndic')
+                    ->withPivot('start_date', 'end_date')
+                    ->withTimestamps();
     }
+
+
+    public function syndicHistories()
+    {
+        return $this->hasMany(SyndicHistory::class, 'syndic_id');
+    }
+
+    public function charges()
+    {
+        return $this->hasMany(Charge::class);
+    }
+
+    public function cotisations()
+    {
+        return $this->hasMany(Cotisation::class);
+    }
+
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
+
+    public function factures()
+    {
+        return $this->hasMany(Facture::class);
+    }
+
+
 }

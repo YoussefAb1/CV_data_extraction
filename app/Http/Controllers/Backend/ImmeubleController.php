@@ -7,26 +7,23 @@ use Illuminate\Http\Request;
 use App\Models\Immeuble;
 use App\Models\Residence;
 use App\Models\MemberSyndic;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
+use App\Models\SyndicHistory;
 
 class ImmeubleController extends Controller
 {
     public function AllImmeuble()
-    {
-        // Récupérer tous les immeubles avec les données de résidence associées
-        $immeubles = Immeuble::with('residence', 'memberSyndic.user')->latest()->get();
 
-        // Retourner la vue avec les données des immeubles
-        return view('backend.immeuble.all_immeuble', compact('immeubles'));
+    {
+        $residences = Residence::all();
+        $immeubles = Immeuble::with('currentSyndic.syndic.user')->get();
+        return view('backend.immeuble.all_immeuble', compact('immeubles','residences'));
+
     }
 
     public function AddImmeuble()
     {
-        $residences = Residence::all(); // Récupérer toutes les résidences
-        // Récupérer tous les utilisateurs qui ont le rôle "Syndic"
-        $syndics = User::role('Syndic')->get();
-        return view('backend.immeuble.add_immeuble', compact('residences', 'syndics'));
+        $residences = Residence::all();
+        return view('backend.immeuble.add_immeuble', compact('residences'));
     }
 
     public function StoreImmeuble(Request $request)
@@ -34,30 +31,19 @@ class ImmeubleController extends Controller
         $request->validate([
             'nom_immeuble' => 'required|unique:immeubles|max:255',
             'nombre_etages' => 'required|numeric',
-            'residence_id' => 'required|exists:residences,id',
-            'member_syndic_id' => 'nullable|exists:users,id' // Validation pour syndic
+            'residence_id' => 'required|exists:residences,id'
         ]);
 
-        Immeuble::create([
-            'nom_immeuble' => $request->nom_immeuble,
-            'nombre_etages' => $request->nombre_etages,
-            'residence_id' => $request->residence_id,
-            'member_syndic_id' => $request->member_syndic_id
-        ]);
+        Immeuble::create($request->all());
 
-        $notification = array(
-            'message' => 'Immeuble ajouté avec succès',
-            'alert-type' => 'success'
-        );
-        return redirect()->route('all.immeuble')->with($notification);
+        return redirect()->route('all.immeuble')->with('success', 'Immeuble ajouté avec succès');
     }
 
     public function EditImmeuble($id)
     {
         $immeuble = Immeuble::findOrFail($id);
         $residences = Residence::all();
-        $syndics = User::role('Syndic')->get();
-        return view('backend.immeuble.edit_immeuble', compact('immeuble', 'residences', 'syndics'));
+        return view('backend.immeuble.edit_immeuble', compact('immeuble', 'residences'));
     }
 
     public function UpdateImmeuble(Request $request, $id)
@@ -65,32 +51,66 @@ class ImmeubleController extends Controller
         $request->validate([
             'nom_immeuble' => 'required|max:255',
             'nombre_etages' => 'required|numeric',
-            'residence_id' => 'required|exists:residences,id',
-            'member_syndic_id' => 'exists:users,id'
+            'residence_id' => 'required|exists:residences,id'
         ]);
 
-        Immeuble::findOrFail($id)->update([
-            'nom_immeuble' => $request->nom_immeuble,
-            'nombre_etages' => $request->nombre_etages,
-            'residence_id' => $request->residence_id,
-            'member_syndic_id' => $request->member_syndic_id,
-        ]);
+        Immeuble::findOrFail($id)->update($request->all());
 
-        $notification = array(
-            'message' => 'Immeuble modifié avec succès',
-            'alert-type' => 'success'
-        );
-        return redirect()->route('all.immeuble')->with($notification);
+        return redirect()->route('all.immeuble')->with('success', 'Immeuble modifié avec succès');
     }
 
     public function DeleteImmeuble($id)
     {
         Immeuble::findOrFail($id)->delete();
-
-        $notification = array(
-            'message' => 'Immeuble supprimé avec succès',
-            'alert-type' => 'success'
-        );
-        return redirect()->back()->with($notification);
+        return redirect()->back()->with('success', 'Immeuble supprimé avec succès');
     }
+
+
+
+    public function AddSyndicToImmeuble($immeubleId)
+    {
+        $immeuble = Immeuble::findOrFail($immeubleId);
+        $syndics = MemberSyndic::with('user')->get();
+        return view('backend.immeuble.add_syndic_to_immeuble', compact('immeuble', 'syndics'));
+    }
+
+    public function StoreSyndicToImmeuble(Request $request, $immeubleId)
+{
+    $immeuble = Immeuble::findOrFail($immeubleId);
+
+    // Terminer l'association précédente si elle existe
+    $currentHistory = $immeuble->syndicHistory()->whereNull('end_date')->first();
+    if ($currentHistory) {
+        $currentHistory->end_date = $request->start_date;
+        $currentHistory->save();
+    }
+
+    // Créer une nouvelle association
+    SyndicHistory::create([
+        'immeuble_id' => $immeuble->id,
+        'syndic_id' => $request->member_syndic_id,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    return redirect()->route('all.immeuble')->with('success', 'Syndic ajouté avec succès');
+}
+
+    public function index()
+    {
+        $immeubles = Immeuble::with('syndicHistory.syndic.user')->get();
+        return view('backend.immeuble.all_immeuble', compact('immeubles'));
+    }
+
+
+public function syndicHistory($immeubleId)
+{
+$immeuble = Immeuble::findOrFail($immeubleId);
+$syndicHistory = $immeuble->syndicHistory()->with('memberSyndic.user')->get();
+
+return view('backend.immeuble.history_syndic', compact('immeuble', 'syndicHistory'));
+}
+
+
+
 }

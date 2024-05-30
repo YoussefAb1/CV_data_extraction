@@ -43,13 +43,14 @@
                                 <label for="role">Rôle de l'utilisateur</label>
                                 <select name="role" id="role" class="form-control">
                                     @foreach($roles as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                        <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('role')
-                                <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
                             <div class="mb-3">
                                 <label for="status" class="form-label">Statut</label>
                                 <select name="status" id="status" class="form-control">
@@ -63,7 +64,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Champs spécifiques aux rôles -->
+                            {{-- <!-- Champs spécifiques aux rôles -->
                             <div id="syndic-fields" style="display: none;">
                                 <div class="mb-3">
                                     <label for="cin" class="form-label">CIN</label>
@@ -114,16 +115,16 @@
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <button type="submit" name="submit" class="btn btn-primary me-2">Valider</button>
                         </form>
 
-                        <script>
+                        {{-- <script>
                             document.getElementById('role').addEventListener('change', function() {
                                 var role = this.value.toLowerCase();
                                 document.getElementById('syndic-fields').style.display = role === 'syndic' ? 'block' : 'none';
                                 document.getElementById('coproprietaire-fields').style.display = role === 'copropriétaire' ? 'block' : 'none';
                             });
-                        </script>
+                        </script> --}}
 @endsection

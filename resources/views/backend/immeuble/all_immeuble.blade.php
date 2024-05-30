@@ -1,12 +1,10 @@
 @extends('admin.admin_dashboard')
 
 @section('admin')
-
 <div class="page-content">
-
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <a href="{{ route('add.immeuble') }}" class="btn btn-inverse-primary">Ajouter un Immeuble</a>
+            <li class="breadcrumb-item"><a href="{{ route('add.immeuble') }}" class="btn btn-inverse-primary">Ajouter un Immeuble</a></li>
         </ol>
     </nav>
 
@@ -19,11 +17,11 @@
                         <table id="dataTableExample" class="table">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th>ID</th>
                                     <th>Nom de l'Immeuble</th>
                                     <th>Nombre d'étages</th>
-                                    <th>Nom de la Résidence</th>
-                                    <th>Syndic</th>
+                                    <th>Résidence</th>
+                                    <th>Syndic Actuel</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -34,23 +32,27 @@
                                         <td>{{ $immeuble->nom_immeuble }}</td>
                                         <td>{{ $immeuble->nombre_etages }}</td>
                                         <td>{{ $immeuble->residence->nom_residence }}</td>
-                                        <td>{{ optional(optional($immeuble->member_syndic)->user)->name ?? 'N/A' }}</td> <!-- Utilisation de optional pour éviter les erreurs -->
+                                        <td>
+                                            @if($immeuble->syndicHistories()->whereNull('end_date')->exists())
+                                                {{ optional($immeuble->syndicHistories()->whereNull('end_date')->first()->syndic->user)->name ?? 'N/A' }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('edit.immeuble', $immeuble->id) }}" class="btn btn-inverse-warning">Editer</a>
                                             <a href="{{ route('delete.immeuble', $immeuble->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                            <a href="{{ route('add.syndic_to_immeuble', $immeuble->id) }}" class="btn btn-inverse-primary">Associer Syndic</a>
+                                            <a href="{{ route('history.syndic_immeuble', $immeuble->id) }}" class="btn btn-inverse-info">Historique Syndic</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
-
-
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-
 @endsection

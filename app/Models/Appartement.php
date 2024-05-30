@@ -9,14 +9,7 @@ class Appartement extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nom_appartement',
-        'etage',
-        'surface',
-        'immeuble_id',
-        'residence_id',
-        'member_coproprietaire_id'
-    ];
+    protected $fillable = ['nom_appartement', 'etage', 'surface', 'immeuble_id', 'residence_id'];
 
     public function immeuble()
     {
@@ -46,5 +39,10 @@ class Appartement extends Model
     public function compte()
     {
         return $this->morphOne(Compte::class, 'compteable');
+    }
+
+    public function coproprietaireHistories()
+    {
+        return $this->hasMany(CoproprietaireHistory::class);
     }
 }

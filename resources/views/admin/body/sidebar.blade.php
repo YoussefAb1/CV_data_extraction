@@ -156,6 +156,47 @@
             </div>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#syndic" role="button" aria-expanded="false" aria-controls="syndic">
+                <i class="link-icon" data-feather="user"></i>
+                <span class="link-title">Gestion Syndics </span>
+                <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="syndic">
+                <ul class="nav sub-menu">
+                    <li class="nav-item">
+                        <a href="{{ route('all.memberSyndic') }}" class="nav-link">Lister Syndics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('add.memberSyndic') }}" class="nav-link">Ajouter Syndic</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+
+
+
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#coproprietaire" role="button" aria-expanded="false" aria-controls="coproprietaire">
+                <i class="link-icon" data-feather="user"></i>
+              <span class="link-title">Gestion Copropriétaires </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="coproprietaire">
+              <ul class="nav sub-menu">
+
+                <li class="nav-item">
+                  <a href="{{ route('all.memberCoproprietaire') }}" class="nav-link">Lister Copropriétaires</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.memberCoproprietaire') }}" class="nav-link">Ajouter Copropriétaire</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
 
 
 

@@ -12,11 +12,15 @@ class CreateMemberCoproprietairesTable extends Migration
     public function up(): void
     {
         Schema::create('member_coproprietaires', function (Blueprint $table) {
+
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('cin');
+            $table->unsignedBigInteger('user_id');
+            $table->string('cin')->unique();
+            $table->string('name');
             $table->enum('type', ['promoteur', 'proprietaire', 'locataire']);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

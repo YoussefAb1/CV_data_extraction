@@ -59,7 +59,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Champs spécifiques au rôle de syndic -->
+                            {{-- <!-- Champs spécifiques au rôle de syndic -->
                             <div id="syndic-fields" style="display: none;">
                                 <div class="mb-3">
                                     <label for="cin" class="form-label">CIN</label>
@@ -111,7 +111,7 @@
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <button type="submit" name="submit" class="btn btn-primary me-2">Valider</button>
                         </form>

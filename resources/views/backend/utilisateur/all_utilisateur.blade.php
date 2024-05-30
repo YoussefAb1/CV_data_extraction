@@ -1,59 +1,51 @@
+
+
 @extends('admin.admin_dashboard')
+
+
 
 @section('admin')
 
 <style>
+    .badge {
+        --bs-badge-font-weight: 300 !important;
+        --bs-badge-border-radius: 0.25rem !important;
+        line-height: .75 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+    }
 
-.badge {
+    .bg-label-success {
+        background-color: #36483f !important;
+        color: #71dd37 !important;
+        padding: 0.5em 0.6em !important;
+        border-radius: 0.30rem !important;
+    }
 
-    --bs-badge-font-weight: 300;
-    --bs-badge-border-radius: 0.25rem;
-    line-height: .75;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+    .bg-label-secondary {
+        background-color: #393c50 !important;
+        color: #8592a3 !important;
+        padding: 0.5em 0.6em !important;
+        border-radius: 0.30rem !important;
+    }
 
+    .bg-label-warning {
+        background-color: #4d4036 !important;
+        color: #ffab00 !important;
+        padding: 0.5em 0.6em !important;
+        border-radius: 0.30rem !important;
+    }
 
-.bg-label-success {
-    background-color: #36483f!important;
-    color: #71dd37!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-
-.bg-label-secondary {
-    background-color: #393c50!important;
-    color: #8592a3!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-
-.bg-label-warning {
-    background-color: #4d4036!important;
-    color: #ffab00!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-
-.bg-label-dark {
-    background-color: #343a40;
-    color: #000;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-
-.bg-label-dark {
-    background-color: #343a40;
-    color: #fff;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
+    .bg-label-danger {
+        background-color: #343a40 !important;
+        color: #000 !important;
+        padding: 0.5em 0.6em !important;
+        border-radius: 0.30rem !important;
+    }
 
 </style>
 
-
 <div class="page-content">
-
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
             <a href="{{route('add.utilisateur')}}" class="btn btn-inverse-primary">Ajouter un Utilisateur</a>
@@ -87,13 +79,13 @@
                                         <td>{{$utilisateur->email}}</td>
                                         <td>{{$utilisateur->role}}</td>
                                         <td>
-                                            @if ($utilisateur->status == 'Actif')
+                                            @if ($utilisateur->status == 'actif')
                                                 <span class="badge bg-success">Actif</span>
-                                            @elseif ($utilisateur->status == 'Inactif')
+                                            @elseif ($utilisateur->status == 'inactif')
                                                 <span class="badge bg-secondary">Inactif</span>
                                             @elseif ($utilisateur->status == 'En attente')
                                                 <span class="badge bg-warning">En attente</span>
-                                                @elseif ($utilisateur->status == 'Supprimé')
+                                            @elseif ($utilisateur->status == 'Supprimé')
                                                 <span class="badge bg-danger">Supprimé</span>
                                             @else
                                                 <span class="badge bg-dark">Inconnu</span>
@@ -112,7 +104,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @endsection

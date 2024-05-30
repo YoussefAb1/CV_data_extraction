@@ -12,13 +12,13 @@ class CreateAppartementsTable extends Migration
     public function up(): void
     {
         Schema::create('appartements', function (Blueprint $table) {
+
             $table->id();
             $table->string('nom_appartement');
             $table->string('etage');
             $table->string('surface');
             $table->foreignId('immeuble_id')->constrained()->onDelete('cascade');
             $table->foreignId('residence_id')->constrained()->onDelete('cascade');
-            $table->foreignId('member_coproprietaire_id')->constrained('member_coproprietaires')->nullable()->onDelete('cascade');
             $table->timestamps();
         });
     }
