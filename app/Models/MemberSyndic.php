@@ -49,7 +49,11 @@ class MemberSyndic extends Model
     public function factures()
     {
         return $this->hasMany(Facture::class);
-    }
+        }
 
+        public function appartements()
+        {
+            return $this->hasMany(Appartement::class);
+        }
 
 }

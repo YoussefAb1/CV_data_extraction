@@ -14,7 +14,7 @@ class PaiementController extends Controller
 {
     public function AllPaiement()
     {
-        $paiements = Paiement::with(['appartement', 'member_coproprietaire', 'member_syndic', 'cotisation'])->latest()->get();
+        $paiements = Paiement::with(['appartement', 'appartement.immeuble', 'appartement.residence', 'member_coproprietaire', 'member_syndic', 'cotisation'])->latest()->get();
         return view('backend.paiement.all_paiement', compact('paiements'));
     }
 

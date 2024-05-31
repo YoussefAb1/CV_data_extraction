@@ -9,16 +9,14 @@ class Facture extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id',
+
         'numero_facture',
-        'appartement_id',
-        'member_coproprietaire_id',
-        'member_syndic_id',
-        'charge_id',
+
         'date_emission',
         'date_echeance',
         'montant_total',
         'description',
+        'paiement_id',
         'etat'
     ];
 
@@ -55,6 +53,11 @@ class Facture extends Model
     public function paiements()
     {
         return $this->hasMany(Paiement::class, 'facture_id');
+    }
+
+    public function paiement()
+    {
+        return $this->belongsTo(Paiement::class);
     }
 }
 

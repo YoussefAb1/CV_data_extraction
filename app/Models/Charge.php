@@ -20,17 +20,17 @@ class Charge extends Model
 
     public function appartement()
     {
-        return $this->belongsTo(Appartement::class, 'appartement_id');
+        return $this->belongsTo(Appartement::class);
     }
 
     public function immeuble()
     {
-        return $this->belongsTo(Immeuble::class, 'appartement_id');
+        return $this->appartement->immeuble;
     }
 
     public function residence()
     {
-        return $this->belongsTo(Residence::class, 'appartement_id');
+        return $this->appartement->immeuble->residence; 
     }
 
     public function compte()

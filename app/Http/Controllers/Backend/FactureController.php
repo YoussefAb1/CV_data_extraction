@@ -8,6 +8,8 @@ use App\Models\Facture;
 use App\Models\Appartement;
 use App\Models\Charge;
 use App\Models\Paiement;
+use PDF;
+
 
 class FactureController extends Controller
 {
@@ -116,4 +118,12 @@ class FactureController extends Controller
         // Redirection après suppression
         return redirect()->back()->with($notification);
     }
+
+
+    // public function downloadPDF($id)
+    // {
+    //     $facture = Facture::findOrFail($id);
+    //     $pdf = PDF::loadView('factures.pdf', compact('facture'));
+    //     return $pdf->download('facture.pdf');
+    // }
 }

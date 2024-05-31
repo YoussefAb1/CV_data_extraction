@@ -17,10 +17,20 @@ class Cotisation extends Model
         'member_syndic_id',
         'description'
     ];
-
+    
     public function appartement()
     {
-        return $this->belongsTo(Appartement::class, 'appartement_id');
+        return $this->belongsTo(Appartement::class);
+    }
+
+    public function immeuble()
+    {
+        return $this->appartement->immeuble;
+    }
+
+    public function residence()
+    {
+        return $this->appartement->immeuble->residence;
     }
 
     public function memberCoproprietaire()

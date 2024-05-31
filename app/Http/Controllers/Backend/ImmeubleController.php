@@ -106,7 +106,7 @@ class ImmeubleController extends Controller
 public function syndicHistory($immeubleId)
 {
 $immeuble = Immeuble::findOrFail($immeubleId);
-$syndicHistory = $immeuble->syndicHistory()->with('memberSyndic.user')->get();
+$syndicHistory = $immeuble->syndicHistories()->with('memberSyndic.user')->get();
 
 return view('backend.immeuble.history_syndic', compact('immeuble', 'syndicHistory'));
 }

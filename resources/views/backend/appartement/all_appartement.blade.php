@@ -20,7 +20,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Appartement</th>
-                                    <th>Surface</th>
+                                    {{-- <th>Surface</th> --}}
                                     <th>Immeuble</th>
                                     <th>Residence</th>
                                     <th>Copropriétaire Actuel</th>
@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{{ $appartement->id }}</td>
                                     <td>{{ $appartement->nom_appartement }}</td>
-                                    <td>{{ $appartement->surface }}</td>
+                                    {{-- <td>{{ $appartement->surface }}</td> --}}
                                     <td>{{ $appartement->immeuble->nom_immeuble }}</td>
                                     <td>{{ $appartement->residence->nom_residence }}</td>
 

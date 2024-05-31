@@ -5,17 +5,16 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cotisation;
-use App\Models\Residence;
-use App\Models\Immeuble;
 use App\Models\Appartement;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
 
 class CotisationController extends Controller
 {
+
     public function AllCotisation()
     {
-        $cotisations = Cotisation::with(['appartement', 'member_coproprietaire', 'member_syndic'])->latest()->get();
+        $cotisations = Cotisation::with(['appartement.immeuble', 'appartement.residence'])->latest()->get();
         return view('backend.cotisation.all_cotisation', compact('cotisations'));
     }
 
@@ -23,7 +22,8 @@ class CotisationController extends Controller
     {
         $appartements = Appartement::all();
         $coproprietaires = MemberCoproprietaire::all();
-        $syndics = MemberSyndic::all();
+        $syndics = MemberSyndic::with('user')->get();
+
         return view('backend.cotisation.add_cotisation', compact('appartements', 'coproprietaires', 'syndics'));
     }
 
@@ -48,7 +48,8 @@ class CotisationController extends Controller
         $cotisation = Cotisation::findOrFail($id);
         $appartements = Appartement::all();
         $coproprietaires = MemberCoproprietaire::all();
-        $syndics = MemberSyndic::all();
+        $syndics = MemberSyndic::with('user')->get();
+
         return view('backend.cotisation.edit_cotisation', compact('cotisation', 'appartements', 'coproprietaires', 'syndics'));
     }
 
@@ -72,7 +73,6 @@ class CotisationController extends Controller
     public function DeleteCotisation($id)
     {
         Cotisation::findOrFail($id)->delete();
-
         return redirect()->back()->with('success', 'Cotisation supprimée avec succès');
     }
 }

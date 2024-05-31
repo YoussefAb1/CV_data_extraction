@@ -52,7 +52,6 @@
                                 @enderror
                             </div>
 
-
                             <div class="mb-3">
                                 <label for="appartement_id" class="form-label">Nom de l'Appartement</label>
                                 <select name="appartement_id" class="form-control @error('appartement_id') is-invalid @enderror" id="appartement_id">

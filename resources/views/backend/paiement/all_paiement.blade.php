@@ -24,9 +24,11 @@
                                     <th>Date de Paiement</th>
                                     <th>Méthode de Paiement</th>
                                     <th>Appartement</th>
+                                    <th>Immeuble</th>
+                                    <th>Résidence</th>
                                     <th>Propriétaire</th>
                                     <th>Syndic</th>
-                                    <th>Description</th>
+                                    {{-- <th>Description</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -38,9 +40,11 @@
                                     <td>{{ $paiement->date_paiement }}</td>
                                     <td>{{ $paiement->methode_paiement }}</td>
                                     <td>{{ $paiement->appartement->name }}</td>
+                                    <td>{{ $paiement->appartement->immeuble->name }}</td>
+                                    <td>{{ $paiement->appartement->residence->name }}</td>
                                     <td>{{ $paiement->member_coproprietaire->name }}</td>
                                     <td>{{ $paiement->member_syndic->name }}</td>
-                                    <td>{{ $paiement->cotisation->description }}</td>
+                                    {{-- <td>{{ $paiement->cotisation->description }}</td> --}}
                                     <td>
                                         <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-primary">Modifier</a>
                                         <form action="{{ route('delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
