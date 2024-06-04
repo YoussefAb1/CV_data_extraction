@@ -13,9 +13,9 @@ class Paiement extends Model
         'montant',
         'date_paiement',
         'methode_paiement',
-        'appartement_id',
-        'member_coproprietaire_id',
-        'member_syndic_id'
+        'coproprietaire_history_id',
+        'syndic_history_id',
+        'cotisation_id',
     ];
 
     public function compte()
@@ -41,5 +41,20 @@ class Paiement extends Model
     public function memberSyndic()
     {
         return $this->belongsTo(MemberSyndic::class, 'member_syndic_id');
+    }
+
+    public function cotisation()
+    {
+        return $this->belongsTo(Cotisation::class, 'cotisation_id');
+    }
+
+    public function coproprietaireHistory()
+    {
+        return $this->belongsTo(CoproprietaireHistory::class, 'coproprietaire_history_id');
+    }
+
+    public function syndicHistory()
+    {
+        return $this->belongsTo(SyndicHistory::class, 'syndic_history_id');
     }
 }

@@ -18,6 +18,9 @@
         background-image: url({{asset('upload/login.png')}});
     }
 
+    /* *{
+        background-color: deepskyblue;
+    } */
     </style>
 
   <!-- Fonts -->
@@ -60,8 +63,8 @@
                 </div>
                 <div class="col-md-8 ps-md-0">
                   <div class="auth-form-wrapper px-4 py-5">
-                    <a href="{{ route('welcome') }}" class="noble-ui-logo logo-light d-block mb-2">Digi<span>Syndic</span></a>
-                    <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
+                    <a href="#" class="noble-ui-logo logo-light d-block mb-2">Digi<span>Syndic</span></a>
+                    <h5 class="text-muted fw-normal mb-4">Bienvenue de retour ! Connectez-vous à votre compte.</h5>
 
 
 
@@ -69,17 +72,19 @@
                     <form class="forms-sample" method="post" action={{route('login')}}>
                         @csrf
                       <div class="mb-3">
-                        <label for="login" class="form-label">Email / Name / Phone</label>
-                        <input type="text" class="form-control" name="login" id="login" placeholder="Email / Name / Phone">
+                        <label for="login" class="form-label">Email / Nom / Téléphone</label>
+                        <input type="text" class="form-control" name="login" id="login" placeholder="Email / Nom / Téléphone">
                       </div>
                       <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" placeholder="Password">
+                        <label for="password" class="form-label">Mot de passe
+                        </label>
+                        <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" placeholder="Mot de passe
+                        ">
                       </div>
                       <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="authCheck">
                         <label class="form-check-label" for="authCheck">
-                          Remember me
+                            Se souvenir de moi
                         </label>
                       </div>
                       <div>

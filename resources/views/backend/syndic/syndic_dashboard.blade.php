@@ -8,7 +8,7 @@
   <meta name="description" content="Responsive HTML Admin Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="NobleUI">
 
-	<title>Admin Panel - Copropriété</title>
+	<title>Syndic Panel - Copropriété</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,7 @@
 	<div class="main-wrapper">
 
 		<!-- partial:partials/_sidebar.html -->
-            @include('admin.body.sidebar');
+            @include('backend.syndic.sidebar');
 		<!-- partial -->
 
 		<div class="page-wrapper">

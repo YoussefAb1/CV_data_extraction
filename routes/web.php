@@ -14,11 +14,16 @@ use App\Http\Controllers\Backend\UtilisateurController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\MemberSyndicController;
 use App\Http\Controllers\Backend\MemberCoproprietaireController;
-use App\Models\MemberCoproprietaire;
+use App\Http\Controllers\SyndicController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
+
+Route::get('/index2', function () {
+    return view('index2');
+})->name('index2');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -207,4 +212,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 
-Route::get('/syndic/dashboard', [MemberSyndicController::class, 'SyndicDashboard'])->name('syndic.dashboard');
+Route::middleware(['auth','role:syndic'])->group(function(){
+    Route::get('/syndic/dashboard', [SyndicController::class, 'SyndicDashboard'])->name('syndic.dashboard');
+    Route::get('/syndic/logout', [SyndicController::class, 'SyndicLogout'])->name('syndic.logout');
+    Route::get('/syndic/profile', [SyndicController::class, 'SyndicProfile'])->name('syndic.profile');
+    Route::post('/syndic/profile/store', [SyndicController::class, 'SyndicProfileStore'])->name('syndic.profile.store');
+    Route::get('/syndic/change/password', [SyndicController::class, 'SyndicChangePassword'])->name('syndic.change.password');
+    Route::post('/syndic/update/password', [SyndicController::class, 'SyndicUpdatePassword'])->name('syndic.update.password');
+    });
+    Route::get('/syndic/login', [SyndicController::class, 'SyndicLogin'])->name('syndic.login');
+    Route::post('/syndic/login', [SyndicController::class, 'SyndicLogin']);

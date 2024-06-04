@@ -29,8 +29,43 @@
 
                             <div class="mb-3">
                                 <label for="methode_paiement" class="form-label">Méthode de Paiement</label>
-                                <input type="text" name="methode_paiement" class="form-control @error('methode_paiement') is-invalid @enderror" id="methode_paiement" value="{{ old('methode_paiement') }}">
+                                <select name="methode_paiement" class="form-control @error('methode_paiement') is-invalid @enderror" id="methode_paiement">
+                                    <option value="">Sélectionner une méthode de paiement</option>
+                                    <option value="Espèces" {{ old('methode_paiement') == 'Espèces' ? 'selected' : '' }}>Espèces</option>
+                                    <option value="Chèque" {{ old('methode_paiement') == 'Chèque' ? 'selected' : '' }}>Chèque</option>
+                                    <option value="Virement Bancaire" {{ old('methode_paiement') == 'Virement Bancaire' ? 'selected' : '' }}>Virement Bancaire</option>
+                                </select>
                                 @error('methode_paiement')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="residence_id" class="form-label">Résidence</label>
+                                <select name="residence_id" class="form-control @error('residence_id') is-invalid @enderror" id="residence_id">
+                                    <option value="">Sélectionner une Résidence</option>
+                                    @foreach($residences as $residence)
+                                        <option value="{{ $residence->id }}" {{ old('residence_id') == $residence->id ? 'selected' : '' }}>
+                                            {{ $residence->nom_residence }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('residence_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="immeuble_id" class="form-label">Immeuble</label>
+                                <select name="immeuble_id" class="form-control @error('immeuble_id') is-invalid @enderror" id="immeuble_id">
+                                    <option value="">Sélectionner un Immeuble</option>
+                                    @foreach($immeubles as $immeuble)
+                                        <option value="{{ $immeuble->id }}" {{ old('immeuble_id') == $immeuble->id ? 'selected' : '' }}>
+                                            {{ $immeuble->nom_immeuble }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('immeuble_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -40,7 +75,9 @@
                                 <select name="appartement_id" class="form-control @error('appartement_id') is-invalid @enderror" id="appartement_id">
                                     <option value="">Sélectionner un Appartement</option>
                                     @foreach($appartements as $appartement)
-                                        <option value="{{ $appartement->id }}" {{ old('appartement_id') == $appartement->id ? 'selected' : '' }}>{{ $appartement->name }}</option>
+                                        <option value="{{ $appartement->id }}" {{ old('appartement_id') == $appartement->id ? 'selected' : '' }}>
+                                            {{ $appartement->nom_appartement }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('appartement_id')
@@ -49,27 +86,31 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="member_coproprietaire_id" class="form-label">Copropriétaire</label>
-                                <select name="member_coproprietaire_id" class="form-control @error('member_coproprietaire_id') is-invalid @enderror" id="member_coproprietaire_id">
-                                    <option value="">Sélectionner un Propriétaire</option>
-                                    @foreach($coproprietaires as $coproprietaire)
-                                        <option value="{{ $coproprietaire->id }}" {{ old('member_coproprietaire_id') == $coproprietaire->id ? 'selected' : '' }}>{{ $coproprietaire->name }}</option>
+                                <label for="coproprietaire_history_id" class="form-label">Copropriétaire</label>
+                                <select name="coproprietaire_history_id" class="form-control @error('coproprietaire_history_id') is-invalid @enderror" id="coproprietaire_history_id">
+                                    <option value="">Sélectionner un Copropriétaire</option>
+                                    @foreach($coproprietaireHistories as $history)
+                                        <option value="{{ $history->id }}" {{ old('coproprietaire_history_id') == $history->id ? 'selected' : '' }}>
+                                            {{ $history->coproprietaire->name }} - {{ $history->appartement->name }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('member_coproprietaire_id')
+                                @error('coproprietaire_history_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label for="member_syndic_id" class="form-label">Syndic</label>
-                                <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
+                                <label for="syndic_history_id" class="form-label">Syndic</label>
+                                <select name="syndic_history_id" class="form-control @error('syndic_history_id') is-invalid @enderror" id="syndic_history_id">
                                     <option value="">Sélectionner un Syndic</option>
-                                    @foreach($syndics as $syndic)
-                                        <option value="{{ $syndic->id }}" {{ old('member_syndic_id') == $syndic->id ? 'selected' : '' }}>{{ $syndic->name }}</option>
+                                    @foreach($syndicHistories as $history)
+                                        <option value="{{ $history->id }}" {{ old('syndic_history_id') == $history->id ? 'selected' : '' }}>
+                                            {{ $history->syndic->name }} - {{ $history->immeuble->name }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('member_syndic_id')
+                                @error('syndic_history_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -79,15 +120,16 @@
                                 <select name="cotisation_id" class="form-control @error('cotisation_id') is-invalid @enderror" id="cotisation_id">
                                     <option value="">Sélectionner une Cotisation</option>
                                     @foreach($cotisations as $cotisation)
-                                        <option value="{{ $cotisation->id }}" {{ old('cotisation_id') == $cotisation->id ? 'selected' : '' }}>{{ $cotisation->description }}</option>
+                                        <option value="{{ $cotisation->id }}" {{ old('cotisation_id') == $cotisation->id ? 'selected' : '' }}>
+                                            {{ $cotisation->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('cotisation_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-
-                            <button type="submit" class="btn btn-primary me-2">Valider</button>
+                            <button type="submit" class="btn btn-primary me-2">Ajouter</button>
                         </form>
                     </div>
                 </div>

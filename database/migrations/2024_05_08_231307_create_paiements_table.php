@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaiementsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -16,12 +16,14 @@ class CreatePaiementsTable extends Migration
             $table->decimal('montant', 10, 2);
             $table->date('date_paiement');
             $table->string('methode_paiement');
-            $table->foreignId('appartement_id')->constrained()->onDelete('cascade');
-            $table->foreignId('member_coproprietaire_id')->constrained('member_coproprietaires')->onDelete('cascade');
-            $table->foreignId('member_syndic_id')->constrained('member_syndics')->onDelete('cascade');
-            $table->foreignId('cotisation_id')->constrained('cotisations')->onDelete('cascade');
-
+            $table->unsignedBigInteger('coproprietaire_history_id')->nullable();
+            $table->unsignedBigInteger('syndic_history_id')->nullable();
+            $table->unsignedBigInteger('cotisation_id');
             $table->timestamps();
+
+            $table->foreign('coproprietaire_history_id')->references('id')->on('coproprietaire_histories')->onDelete('set null');
+            $table->foreign('syndic_history_id')->references('id')->on('syndic_histories')->onDelete('set null');
+            $table->foreign('cotisation_id')->references('id')->on('cotisations')->onDelete('cascade');
         });
     }
 
@@ -32,4 +34,4 @@ class CreatePaiementsTable extends Migration
     {
         Schema::dropIfExists('paiements');
     }
-}
+};

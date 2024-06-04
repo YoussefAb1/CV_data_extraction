@@ -79,7 +79,7 @@ class ImmeubleController extends Controller
     $immeuble = Immeuble::findOrFail($immeubleId);
 
     // Terminer l'association précédente si elle existe
-    $currentHistory = $immeuble->syndicHistory()->whereNull('end_date')->first();
+    $currentHistory = $immeuble->syndicHistories()->whereNull('end_date')->first();
     if ($currentHistory) {
         $currentHistory->end_date = $request->start_date;
         $currentHistory->save();
