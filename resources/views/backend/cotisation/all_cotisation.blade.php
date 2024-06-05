@@ -44,11 +44,11 @@
                                     <td>{{ $cotisation->memberCoproprietaire->name }}</td>
                                     <td>{{ $cotisation->memberSyndic->user->name }}</td>
                                     <td>
-                                        <a href="{{ route('edit.cotisation', $cotisation->id) }}" class="btn btn-primary">Modifier</a>
+                                        <a href="{{ route('edit.cotisation', $cotisation->id) }}" class="btn btn-inverse-warning">Modifier</a>
                                         <form action="{{ route('delete.cotisation', $cotisation->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                            <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
                                         </form>
                                     </td>
                                 </tr>

@@ -1,6 +1,3 @@
-// npm package: jquery-steps
-// github link: https://github.com/rstaib/jquery-steps/
-
 $(function() {
   'use strict';
 
@@ -16,5 +13,4 @@ $(function() {
     transitionEffect: "slideLeft",
     stepsOrientation: 'vertical'
   });
-
 });

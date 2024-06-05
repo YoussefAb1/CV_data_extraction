@@ -1,6 +1,3 @@
-// npm package: sweetalert2
-// github link: https://github.com/sweetalert2/sweetalert2
-
 $(function() {
 
   showSwal = function(type) {
@@ -19,7 +16,7 @@ $(function() {
       )
     } else if (type === 'title-icon-text-footer') {
       Swal.fire({
-        icon: 'error',
+        type: 'error',
         title: 'Oops...',
         text: 'Something went wrong!',
         footer: '<a href>Why do I have this issue?</a>'
@@ -55,7 +52,7 @@ $(function() {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: 'btn btn-success',
-          cancelButton: 'btn btn-danger me-2'
+          cancelButton: 'btn btn-danger mr-2'
         },
         buttonsStyling: false,
       })
@@ -65,7 +62,7 @@ $(function() {
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonClass: 'me-2',
+        confirmButtonClass: 'mr-2',
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
         reverseButtons: true
@@ -91,47 +88,78 @@ $(function() {
       let timerInterval
       Swal.fire({
         title: 'Auto close alert!',
-        html: 'I will close in <b></b> milliseconds.',
+        html: 'I will close in <strong></strong> seconds.',
         timer: 2000,
-        timerProgressBar: true,
-        didOpen: () => {
+        onBeforeOpen: () => {
           Swal.showLoading()
           timerInterval = setInterval(() => {
-            const content = Swal.getHtmlContainer()
-            if (content) {
-              const b = content.querySelector('b')
-              if (b) {
-                b.textContent = Swal.getTimerLeft()
-              }
-            }
+            Swal.getContent().querySelector('strong')
+              .textContent = Swal.getTimerLeft()
           }, 100)
         },
-        willClose: () => {
+        onClose: () => {
           clearInterval(timerInterval)
         }
       }).then((result) => {
-        /* Read more about handling dismissals below */
-        if (result.dismiss === Swal.DismissReason.timer) {
+        if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.timer
+        ) {
           console.log('I was closed by the timer')
         }
       })
-    } else if (type === 'message-with-custom-image') {
-      Swal.fire({
-        title: 'Sweet!',
-        text: 'Modal with a custom image.',
-        // imageUrl: 'https://unsplash.it/400/200',
-        imageUrl: '../../../assets/images/others/placeholder.jpg',
-        imageWidth: 400,
-        imageHeight: 200,
-        imageAlt: 'Custom image',
+    } else if (type === 'chaining-modals') {
+      Swal.mixin({
+        input: 'text',
+        confirmButtonText: 'Next &rarr;',
+        showCancelButton: true,
+        progressSteps: ['1', '2', '3']
+      }).queue([
+        {
+          title: 'Question 1',
+          text: 'Chaining swal2 modals is easy'
+        },
+        'Question 2',
+        'Question 3'
+      ]).then((result) => {
+        if (result.value) {
+          Swal.fire({
+            title: 'All done!',
+            html:
+              'Your answers: <pre><code>' +
+                JSON.stringify(result.value) +
+              '</code></pre>',
+            confirmButtonText: 'Lovely!'
+          })
+        }
       })
+    } else if (type === 'dynamic-queue') {
+      const ipAPI = 'https://api.ipify.org?format=json'
+      Swal.queue([{
+        title: 'Your public IP',
+        confirmButtonText: 'Show my public IP',
+        text:
+          'Your public IP will be received ' +
+          'via AJAX request',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return fetch(ipAPI)
+            .then(response => response.json())
+            .then(data => Swal.insertQueueStep(data.ip))
+            .catch(() => {
+              Swal.insertQueueStep({
+                icon: 'error',
+                title: 'Unable to get your public IP'
+              })
+            })
+        }
+      }])
     } else if (type === 'mixin') {
       const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
+        timer: 1113000
       });
       
       Toast.fire({

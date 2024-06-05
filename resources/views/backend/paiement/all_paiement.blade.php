@@ -44,11 +44,11 @@
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
                                     <td>
-                                        <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-primary">Modifier</a>
+                                        <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-inverse-warning">Modifier</a>
                                         <form action="{{ route('delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                            <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
                                         </form>
                                     </td>
                                 </tr>

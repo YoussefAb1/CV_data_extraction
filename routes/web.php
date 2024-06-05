@@ -15,6 +15,11 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\MemberSyndicController;
 use App\Http\Controllers\Backend\MemberCoproprietaireController;
 use App\Http\Controllers\SyndicController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 Route::get('/', function () {
     return view('welcome');
@@ -78,6 +83,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('immeuble/{id}/store-syndic', [ImmeubleController::class, 'StoreSyndicToImmeuble'])->name('store.syndic_to_immeuble');
 });
 
+
 // Appartement Routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/appartement', [AppartementController::class, 'AllAppartement'])->name('all.appartement');
@@ -128,6 +134,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('edit/facture/{id}', [FactureController::class, 'EditFacture'])->name('edit.facture');
     Route::post('update/facture', [FactureController::class, 'UpdateFacture'])->name('update.facture');
     Route::get('delete/facture/{id}', [FactureController::class, 'DeleteFacture'])->name('delete.facture');
+    Route::get('generate-pdf', [FactureController::class, 'generatePDF']);
 
 });
 
@@ -222,3 +229,17 @@ Route::middleware(['auth','role:syndic'])->group(function(){
     });
     Route::get('/syndic/login', [SyndicController::class, 'SyndicLogin'])->name('syndic.login');
     Route::post('/syndic/login', [SyndicController::class, 'SyndicLogin']);
+
+
+    // Appartement Routes
+Route::middleware(['auth', 'role:syndic'])->group(function () {
+    Route::get('all/appartement', [AppartementController::class, 'AllAppartement'])->name('all.appartement');
+    Route::get('add/appartement', [AppartementController::class, 'AddAppartement'])->name('add.appartement');
+    Route::post('store/appartement', [AppartementController::class, 'StoreAppartement'])->name('store.appartement');
+    Route::get('edit/appartement/{id}', [AppartementController::class, 'EditAppartement'])->name('edit.appartement');
+    Route::post('update/appartement', [AppartementController::class, 'UpdateAppartement'])->name('update.appartement');
+    Route::get('delete/appartement/{id}', [AppartementController::class, 'DeleteAppartement'])->name('delete.appartement');
+    Route::get('/add-coproprietaire-to-appartement/{id}', [AppartementController::class, 'AddCoproprietaireToAppartement'])->name('add.coproprietaire_to_appartement');
+    Route::post('/store-coproprietaire-to-appartement/{id}', [AppartementController::class, 'StoreCoproprietaireToAppartement'])->name('store.coproprietaire_to_appartement');
+    Route::get('/history-coproprietaire-appartement/{id}', [AppartementController::class, 'CoproprietaireHistory'])->name('history.coproprietaire_appartement');
+});

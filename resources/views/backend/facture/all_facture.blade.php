@@ -33,8 +33,8 @@
                                         <td>{{ $facture->description }}</td>
                                         <td>{{ $facture->paiement_id }}</td>
                                         <td>
-                                            <a href="{{ route('edit.facture', $facture->id) }}" class="btn btn-primary btn-sm">Modifier</a>
-                                            <a href="{{ route('delete.facture', $facture->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Supprimer</a>
+                                            <a href="{{ route('edit.facture', $facture->id) }}" class="btn btn-inverse-warning">Modifier</a>
+                                            <a href="{{ route('delete.facture', $facture->id) }}" class="btn btn-inverse-danger" onclick="return confirm('Are you sure?')">Supprimer</a>
                                         </td>
                                     </tr>
                                     @endforeach

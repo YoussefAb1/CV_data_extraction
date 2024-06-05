@@ -1,6 +1,3 @@
-// npm package: ace-builds (Ajax.org Cloud9 Editor)
-// github link: https://github.com/ajaxorg/ace-builds
-
 $(function() {
   'use strict';
 

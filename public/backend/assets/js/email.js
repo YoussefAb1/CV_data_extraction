@@ -5,10 +5,10 @@ $(function() {
     $(".compose-multiple-select").select2();
   }
 
-  /*easymde editor*/
-  if ($("#easyMdeEditor").length) {
-    var easymde = new EasyMDE({
-      element: $("#easyMdeEditor")[0]
+  /*simplemde editor*/
+  if ($("#simpleMdeEditor").length) {
+    var simplemde = new SimpleMDE({
+      element: $("#simpleMdeEditor")[0]
     });
   }
 

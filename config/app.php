@@ -117,6 +117,10 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+ 'maintenance' => [
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+        'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
 
 
     // 'providers' => [
@@ -124,11 +128,16 @@ return [
     //     Barryvdh\DomPDF\ServiceProvider::class
     // ],
 
+    // 'providers' => [
+    //     Barryvdh\DomPDF\ServiceProvider::class,
+    //   ],
 
-    'maintenance' => [
-        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
-        'store' => env('APP_MAINTENANCE_STORE', 'database'),
-    ],
+    //   'aliases' => Facade::defaultAliases()->merge([
+    //     'AppNameGetter' => ConfigHelper::class,
+    //     'PDF' => Barryvdh\DomPDF\Facade::class,
+    //   ])->toArray(),
+
+
 
 
 ];

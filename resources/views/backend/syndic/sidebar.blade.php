@@ -20,8 +20,8 @@
         </li>
         <li class="nav-item nav-category">Copropriété</li>
 
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#appartement" role="button" aria-expanded="false" aria-controls="appartement">
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#appartement" role="button" aria-expanded="false" aria-controls="appartement">
                 <i class="link-icon" data-feather="home"></i>
                 <span class="link-title">Gestion Appartements </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -41,7 +41,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#charge" role="button" aria-expanded="false" aria-controls="charge">
+            <a class="nav-link" data-toggle="collapse" href="#charge" role="button" aria-expanded="false" aria-controls="charge">
                 <i class="link-icon" data-feather="dollar-sign"></i>
                 <span class="link-title">Gestion Charges </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -60,7 +60,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#cotisation" role="button" aria-expanded="false" aria-controls="cotisation">
+            <a class="nav-link" data-toggle="collapse" href="#cotisation" role="button" aria-expanded="false" aria-controls="cotisation">
                 <i class="link-icon" data-feather="dollar-sign"></i>
                 <span class="link-title">Gestion Cotisations </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -80,7 +80,7 @@
 
 
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#paiement" role="button" aria-expanded="false" aria-controls="paiement">
+            <a class="nav-link" data-toggle="collapse" href="#paiement" role="button" aria-expanded="false" aria-controls="paiement">
                 <i class="link-icon" data-feather="credit-card"></i>
                 <span class="link-title">Gestion Paiements </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -100,7 +100,7 @@
 
 
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#facture" role="button" aria-expanded="false" aria-controls="facture">
+            <a class="nav-link" data-toggle="collapse" href="#facture" role="button" aria-expanded="false" aria-controls="facture">
                 <i class="link-icon" data-feather="file-text"></i>
               <span class="link-title">Gestion Factures </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -125,7 +125,7 @@
 
 
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#coproprietaire" role="button" aria-expanded="false" aria-controls="coproprietaire">
+            <a class="nav-link" data-toggle="collapse" href="#coproprietaire" role="button" aria-expanded="false" aria-controls="coproprietaire">
                 <i class="link-icon" data-feather="user"></i>
               <span class="link-title">Gestion Copropriétaires </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
@@ -146,13 +146,6 @@
 
 
 
-
-
-
-
-
-
-
         <li class="nav-item nav-category">Docs</li>
         <li class="nav-item">
           <a href="https://www.nobleui.com/html/documentation/docs.html" target="_blank" class="nav-link">
@@ -170,12 +163,12 @@
       </a>
       <div class="theme-wrapper">
         <h6 class="text-muted mb-2">Light Theme:</h6>
-        <a class="theme-item" href="../demo1/dashboard.html">
-          <img src="../assets/images/screenshots/light.jpg" alt="light theme">
+        <a class="theme-item" href="{{asset('/demo1/dashboard.html')}}">
+          <img src="{{asset('backend/assets/images/screenshots/light.jpg')}}" alt="light theme">
         </a>
         <h6 class="text-muted mb-2">Dark Theme:</h6>
-        <a class="theme-item active" href="../demo2/dashboard.html">
-          <img src="../assets/images/screenshots/dark.jpg" alt="light theme">
+        <a class="theme-item active" href="{{asset('/demo2/dashboard.html')}}">
+          <img src="{{asset('backend/assets/images/screenshots/dark.jpg')}}" alt="light theme">
         </a>
       </div>
     </div>

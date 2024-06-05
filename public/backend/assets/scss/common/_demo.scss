@@ -1,4 +1,4 @@
-// Demo Styles 
+/* Demo Styles */
 
 .main-content {
   color: $body-color;
@@ -39,12 +39,12 @@
     pre {
       padding: 15px;
       font-size: .875rem;
-      font-family: $font-family-sans-serif;
+      font-family: $type1;
       background: transparent;
       line-height: 1.4;
       margin: 0;
       code {
-        font-family: $font-family-sans-serif;
+        font-family: $type1;
         padding: 0;
         tab-size: 8;
         color: $body-color;
@@ -63,14 +63,22 @@
       position: absolute;
       top: 6px;
       right: 6px;
-      font-size: 12px;
-      padding: 1px 6px;
-      background: rgba($primary, .2);
-      &:hover,
-      &:focus {
-        background: rgba($primary, .3);
-        border-color: transparent;
-        transition: background .3s ease-in-out;
+      font-size: 14px;
+      padding: 4px 8px;
+      background: darken($content-bg, 6%);
+      @media(max-width: 991px) {
+        padding: 2px 6px;
+      }
+      &:hover {
+          background: darken($content-bg, 8%);
+      }
+      svg {
+          width: 18px;
+          height: 18px;
+        @media(max-width: 991px) {
+          width: 15px;
+          height: 15px;
+        }
       }
     }
   }
@@ -81,10 +89,6 @@
     + .btn-toolbar {
       margin-top: .5rem;
     }
-  }
-  .btn-group {
-    @extend .mb-1;
-    @extend .mb-md-0;
   }
   .modal {
     &.static {
@@ -99,8 +103,6 @@
     width: 100%;
     height: auto;
     z-index: 9;
-    border-bottom: 0;
-    box-shadow: none;
     .navbar-brand {
       font-size: 1.25rem;
     }
@@ -143,39 +145,35 @@
   margin-bottom: 15px;
   .breadcrumb {
     padding: 0;
-    background: $body-bg;
+    background: $content-bg;
   }
 }
 
 .noble-ui-logo {
-  font-weight: 700;
+  font-weight: 900;
   font-size: 25px;
-  color: darken($primary, 50%);
+  letter-spacing: -1px;
+  color: #031a61;
   span {
-    color: $primary;
+    color: theme-color(primary);
     font-weight: 300;
   }
   &:hover {
-    color: darken($primary, 50%);
+    color: #031a61;
   }
   &.logo-light {
     color: $body-color;
   }
 }
 
-.buy-now-wrapper {
-  position: fixed;
-  bottom: 30px;
-  right: 35px;
-  z-index: 99999;
-  .rtl & {
-    right: auto;
-    left: 35px;
-  }
-  .btn {
-    svg {
-      width: 19px !important;
-      height: 19px !important;
+.rtl {
+  .page-content {
+    .main-content {
+      .example {
+        .navbar {
+          right: 0;
+        }
+      }
     }
   }
 }

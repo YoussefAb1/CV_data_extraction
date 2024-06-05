@@ -1,6 +1,3 @@
-// npm package: typeahead.js
-// github link: https://github.com/twitter/typeahead.js
-
 $(function() {
   'use strict'
 
@@ -61,5 +58,4 @@ $(function() {
     name: 'states',
     source: states
   });
-
 });

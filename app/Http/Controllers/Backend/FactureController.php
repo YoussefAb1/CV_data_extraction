@@ -115,10 +115,19 @@ class FactureController extends Controller
     }
 
 
-    // public function downloadPDF($id)
-    // {
-    //     $facture = Facture::findOrFail($id);
-    //     $pdf = PDF::loadView('factures.pdf', compact('facture'));
-    //     return $pdf->download('facture.pdf');
-    // }
+    public function generatePDF()
+    {
+        $factures = Facture::get();
+
+        $data = [
+            'title' => 'DigiSyndic',
+            'date' => date('m/d/Y'),
+            'factures' => $factures
+        ];
+
+        $pdf = PDF::loadView('factures.facturePDF', $data);
+
+        return $pdf->download('Facture.pdf');
+    }
+
 }

@@ -1,6 +1,3 @@
-// npm package: select2
-// github link: https://github.com/select2/select2
-
 $(function() {
   'use strict'
 
@@ -10,5 +7,4 @@ $(function() {
   if ($(".js-example-basic-multiple").length) {
     $(".js-example-basic-multiple").select2();
   }
-
 });

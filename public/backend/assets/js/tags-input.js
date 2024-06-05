@@ -1,6 +1,3 @@
-// npm package: jquery-tags-input
-// github link: https://github.com/xoxco/jQuery-Tags-Input
-
 $(function() {
   'use strict';
 
@@ -14,5 +11,4 @@ $(function() {
     'maxChars': 20,
     'placeholderColor': '#666666'
   });
-
 });

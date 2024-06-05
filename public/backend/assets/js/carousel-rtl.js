@@ -1,6 +1,3 @@
-// npm package: owl.carousel
-// github link: https://github.com/OwlCarousel2/OwlCarousel2
-
 $(function() {
   'use strict';
 
@@ -60,8 +57,8 @@ $(function() {
 
   if($('.owl-animate-css').length) {
     $('.owl-animate-css').owlCarousel({
-      animateOut: 'animate__animated animate__slideOutDown',
-      animateIn: 'animate__animated animate__flipInX',
+      animateOut: 'slideOutDown',
+      animateIn: 'flipInX',
       items:1,
       rtl: true,
       margin:30,
