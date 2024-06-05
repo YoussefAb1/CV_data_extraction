@@ -3,7 +3,6 @@
 @section('admin')
 
 <div class="page-content">
-
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('add.paiement') }}" class="btn btn-inverse-primary">Ajouter un Paiement</a></li>
@@ -38,11 +37,17 @@
                                     <td>{{ $paiement->montant }}</td>
                                     <td>{{ $paiement->date_paiement }}</td>
                                     <td>{{ $paiement->methode_paiement }}</td>
+<<<<<<< HEAD
                                     <td>{{ $paiement->coproprietaireHistory->appartement->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->immeuble->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->immeuble->residence->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
+=======
+                                    <td>{{ $paiement->appartement->name }}</td>
+                                    <td>{{ $paiement->coproprietaire->name }}</td>
+                                    <td>{{ $paiement->syndic->name }}</td>
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                     <td>
                                         <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-inverse-warning">Modifier</a>
                                         <form action="{{ route('delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
@@ -60,7 +65,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @endsection

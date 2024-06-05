@@ -41,7 +41,24 @@
                                 @enderror
                             </div>
 
+<<<<<<< HEAD
                             <button type="submit" class="btn btn-primary">Ajouter</button>
+=======
+                            <div class="mb-3">
+                                <label for="member_syndic_id" class="form-label">Syndic (optionnel)</label>
+                                <select name="member_syndic_id" class="form-control @error('member_syndic_id') is-invalid @enderror" id="member_syndic_id">
+                                    <option value="">Sélectionner un syndic</option>
+                                    @foreach($syndics as $syndic)
+                                        <option value="{{ $syndic->id }}">{{ $syndic->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('member_syndic_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <button type="submit" name="submit" class="btn btn-primary me-2">Valider</button>
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                         </form>
                     </div>
                 </div>

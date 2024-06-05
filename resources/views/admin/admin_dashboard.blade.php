@@ -34,6 +34,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <style>
 
 .dataTables_length {
@@ -92,6 +93,8 @@
 
 
 
+=======
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
 <body>
 	<div class="main-wrapper">
 

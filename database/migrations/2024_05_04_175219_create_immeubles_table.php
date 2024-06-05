@@ -18,6 +18,10 @@ class CreateImmeublesTable extends Migration
             $table->string('nom_immeuble');
             $table->integer('nombre_etages');
             $table->foreignId('residence_id')->constrained()->onDelete('cascade');
+<<<<<<< HEAD:database/migrations/2024_05_04_175219_create_immeubles_table.php
+=======
+            $table->foreignId('member_syndic_id')->constrained('users')->nullable()->onDelete('cascade');
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364:database/migrations/2024_05_05_175219_create_immeubles_table.php
             $table->timestamps();
         });
     }

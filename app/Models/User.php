@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->hasOne(Admin::class);
     }
 
+    public function immeubles()
+    {
+        return $this->hasMany(Immeuble::class, 'member_syndic_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

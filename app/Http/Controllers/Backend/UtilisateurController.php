@@ -14,12 +14,27 @@ use Illuminate\Support\Facades\Hash;
 
 class UtilisateurController extends Controller
 {
-    public function AllUtilisateur(){
+    public function AllUtilisateur(Request $request)
+    {
+        $query = User::query();
 
-        $utilisateurs = User::latest()->get();
-        return view('backend.utilisateur.all_utilisateur', compact('utilisateurs'));
+        // Appliquer les filtres si présents
+        if ($request->has('role') && $request->role != '') {
+            $query->role($request->role);
+        }
 
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $utilisateurs = $query->with('roles')->latest()->get();  // Charger les rôles avec les utilisateurs
+        $roles = Role::all();
+        $statuses = ['actif', 'inactif', 'En attente', 'Supprimé']; // Liste de tous les statuts possibles
+
+        return view('backend.utilisateur.all_utilisateur', compact('utilisateurs', 'roles', 'statuses'));
     }
+
+
 
     public function AddUtilisateur(){
         $roles = Role::all(); // Récupérer tous les rôles depuis la base de données
@@ -37,6 +52,7 @@ class UtilisateurController extends Controller
             'status' => 'required|string',
         ]);
 
+        // Créez l'utilisateur
         $user = User::create([
             'name' => $validatedData['name'],
             'username' => $validatedData['username'],
@@ -44,11 +60,25 @@ class UtilisateurController extends Controller
             'password' => bcrypt($validatedData['password']),
             'role' => $validatedData['role'], // Assurez-vous d'ajouter ce champ
             'status' => $validatedData['status'],
+            'role' => $validatedData['role'], // Ajoutez cette ligne pour enregistrer le rôle
         ]);
 
+        // Assignez le rôle à l'utilisateur
         $user->assignRole($validatedData['role']);
 
+<<<<<<< HEAD
         return redirect()->route('all.utilisateur')->with('success', 'Utilisateur ajouté avec succès');
+=======
+        // Enregistrez l'utilisateur dans la base de données
+        $user->save();
+
+        $notification = [
+            'message' => 'Utilisateur ajouté avec succès',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('all.utilisateur')->with($notification);
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
     }
 
 public function EditUtilisateur($id)

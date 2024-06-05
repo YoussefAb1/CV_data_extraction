@@ -21,9 +21,14 @@ class Appartement extends Model
         return $this->belongsTo(Residence::class, 'residence_id');
     }
 
+    // public function memberCoproprietaire()
+    // {
+    //     return $this->belongsTo(MemberCoproprietaire::class, 'member_coproprietaire_id');
+    // }
+
     public function memberCoproprietaire()
     {
-        return $this->belongsTo(MemberCoproprietaire::class, 'member_coproprietaire_id');
+        return $this->belongsTo(User::class, 'member_coproprietaire_id');
     }
 
     public function factures()

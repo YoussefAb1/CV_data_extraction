@@ -19,9 +19,15 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nom de l'Immeuble</th>
+<<<<<<< HEAD
                                     <th>Nombre d'étages</th>
                                     <th>Résidence</th>
                                     <th>Syndic Actuel</th>
+=======
+                                    <th>Nombre d'Étages</th>
+                                    <th>Résidence</th>
+                                    <th>Syndic</th>
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -33,10 +39,17 @@
                                         <td>{{ $immeuble->nombre_etages }}</td>
                                         <td>{{ $immeuble->residence->nom_residence }}</td>
                                         <td>
+<<<<<<< HEAD
                                             @if($immeuble->syndicHistories()->whereNull('end_date')->exists())
                                                 {{ optional($immeuble->syndicHistories()->whereNull('end_date')->first()->syndic->user)->name ?? 'N/A' }}
                                             @else
                                                 N/A
+=======
+                                            @if ($immeuble->memberSyndic)
+                                                {{ $immeuble->memberSyndic->name }}
+                                            @else
+                                                Aucun syndic
+>>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                             @endif
                                         </td>
                                         <td>
