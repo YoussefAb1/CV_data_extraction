@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class SyndicController extends Controller
 {
     public function SyndicDashboard(){
 
-        return view('backend.syndic.syndic_dashboard');
+        return view('backend.syndic.index');
     }
 
     public function SyndicLogout(Request $request){

@@ -253,7 +253,7 @@
     </nav>
 
 
-
+{{--
   <nav class="settings-sidebar">
     <div class="sidebar-body">
       <a href="#" class="settings-sidebar-toggler">
@@ -270,4 +270,4 @@
         </a>
       </div>
     </div>
-  </nav>
+  </nav> --}}

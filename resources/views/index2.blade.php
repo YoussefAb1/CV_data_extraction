@@ -14,7 +14,7 @@
         <h1>Bienvenue!</h1>
         <div class="options">
             <div class="option">
-                <a href=>Je suis Copropriétaire</a>
+                <a href="{{ route('coproprietaire.login') }}">Je suis Copropriétaire</a>
             </div>
             <div class="option">
                 <a href="{{ route('syndic.login') }}">Je suis Syndic</a>

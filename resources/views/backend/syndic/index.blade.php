@@ -1,4 +1,4 @@
-@extends('syndic.syndic_dashboard')
+@extends('backend.syndic.syndic_dashboard')
 
 @section('syndic')
 
@@ -13,18 +13,8 @@
           <span class="input-group-addon bg-transparent"><i data-feather="calendar" class=" text-primary"></i></span>
           <input type="text" class="form-control">
         </div>
-        <button type="button" class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
-          <i class="btn-icon-prepend" data-feather="download"></i>
-          Import
-        </button>
-        <button type="button" class="btn btn-outline-primary btn-icon-text mr-2 mb-2 mb-md-0">
-          <i class="btn-icon-prepend" data-feather="printer"></i>
-          Print
-        </button>
-        <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
-          <i class="btn-icon-prepend" data-feather="download-cloud"></i>
-          Download Report
-        </button>
+
+        
       </div>
     </div>
 
@@ -426,4 +416,7 @@
     </div> <!-- row -->
 
         </div>
+
+
 @endsection
+

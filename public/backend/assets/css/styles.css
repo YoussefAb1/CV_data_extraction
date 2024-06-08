@@ -98,7 +98,7 @@ body {
 .nav__logo a {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var( --text-dark);
 }
 
 .nav__links {

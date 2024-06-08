@@ -27,6 +27,7 @@
                                     <th>Résidence</th>
                                     <th>Propriétaire</th>
                                     <th>Syndic</th>
+                                    <th>Cotisation ID</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -37,23 +38,21 @@
                                     <td>{{ $paiement->montant }}</td>
                                     <td>{{ $paiement->date_paiement }}</td>
                                     <td>{{ $paiement->methode_paiement }}</td>
-<<<<<<< HEAD
-                                    <td>{{ $paiement->coproprietaireHistory->appartement->name ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->immeuble->name ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->immeuble->residence->name ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->coproprietaireHistory->appartement->nom_appartement ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->syndicHistory->immeuble->nom_immeuble ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->syndicHistory->immeuble->residence->nom_residence ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
-=======
-                                    <td>{{ $paiement->appartement->name }}</td>
-                                    <td>{{ $paiement->coproprietaire->name }}</td>
-                                    <td>{{ $paiement->syndic->name }}</td>
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
+                                    <td>{{ $paiement->cotisation->id ?? 'N/A' }}</td>
+
                                     <td>
                                         <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-inverse-warning">Modifier</a>
                                         <form action="{{ route('delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
+
                                             <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
+                                            <a href="{{ route('download.pdf', $paiement->id) }}" class="btn btn-danger">Télécharger PDF</a>
                                         </form>
                                     </td>
                                 </tr>

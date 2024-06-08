@@ -7,7 +7,6 @@
 @section('admin')
 
 <style>
-<<<<<<< HEAD
     .badge {
         --bs-badge-font-weight: 300 !important;
         --bs-badge-border-radius: 0.25rem !important;
@@ -43,45 +42,6 @@
         padding: 0.5em 0.6em !important;
         border-radius: 0.30rem !important;
     }
-=======
-.badge {
-    --bs-badge-font-weight: 300;
-    --bs-badge-border-radius: 0.25rem;
-    line-height: .75;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.bg-label-success {
-    background-color: #36483f!important;
-    color: #71dd37!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-.bg-label-secondary {
-    background-color: #393c50!important;
-    color: #8592a3!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-.bg-label-warning {
-    background-color: #4d4036!important;
-    color: #ffab00!important;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-.bg-label-danger {
-    background-color: #343a40;
-    color: #000;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
-.bg-label-dark {
-    background-color: #343a40;
-    color: #fff;
-    padding: 0.5em 0.6em;
-    border-radius: 0.30rem;
-}
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
 
 .filter-form {
     display: flex;
@@ -90,14 +50,6 @@
     margin-bottom: 1.5rem;
 }
 
-<<<<<<< HEAD
-=======
-.filter-form .form-control {
-    margin-right: 0.5rem;
-}
-</style>
-
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
@@ -151,7 +103,6 @@
                                         <td>{{ $utilisateur->roles->pluck('name')->join(', ') }}</td>
                                         <td>
                                             @if ($utilisateur->status == 'actif')
-<<<<<<< HEAD
                                                 <span class="badge bg-success">Actif</span>
                                             @elseif ($utilisateur->status == 'inactif')
                                                 <span class="badge bg-secondary">Inactif</span>
@@ -159,15 +110,6 @@
                                                 <span class="badge bg-warning">En attente</span>
                                             @elseif ($utilisateur->status == 'Supprimé')
                                                 <span class="badge bg-danger">Supprimé</span>
-=======
-                                                <span class="badge bg-label-success">Actif</span>
-                                            @elseif ($utilisateur->status == 'inactif')
-                                                <span class="badge bg-label-secondary">Inactif</span>
-                                            @elseif ($utilisateur->status == 'En attente')
-                                                <span class="badge bg-label-warning">En attente</span>
-                                            @elseif ($utilisateur->status == 'Supprimé')
-                                                <span class="badge bg-label-danger">Supprimé</span>
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                             @else
                                                 <span class="badge bg-label-dark">Inconnu</span>
                                             @endif

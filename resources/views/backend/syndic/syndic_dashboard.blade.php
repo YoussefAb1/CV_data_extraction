@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>NobleUI Responsive Bootstrap 4 Dashboard Template</title>
+	<title>Espace Syndic | DigiSyndic</title>
 	<!-- core:css -->
 	<link rel="stylesheet" href="{{asset('backend/assets/vendors/core/core.css')}}">
 	<!-- endinject -->
@@ -93,10 +93,6 @@
 <body>
 	<div class="main-wrapper">
 
-
-		<!-- partial:partials/_sidebar.html -->
-        <div class="main-wrapper">
-
             <!-- partial:partials/_sidebar.html -->
                 @include('backend.syndic.sidebar');
             <!-- partial -->
@@ -116,12 +112,12 @@
             </div>
         </div>
 
+
 	<!-- core:js -->
 	<script src="{{asset('backend/assets/vendors/core/core.js')}}"></script>
 	<!-- endinject -->
   <!-- plugin js for this page -->
   <script src="{{asset('backend/assets/vendors/flatpickr/flatpickr.min.js')}}"></script>
-
   <script src="{{asset('backend/assets/vendors/chartjs/Chart.min.js')}}"></script>
   <script src="{{asset('backend/assets/vendors/jquery.flot/jquery.flot.js')}}"></script>
   <script src="{{asset('backend/assets/vendors/jquery.flot/jquery.flot.resize.js')}}"></script>
@@ -136,10 +132,11 @@
   <!-- custom js for this page -->
   <script src="{{asset('backend/assets/js/dashboard.js')}}"></script>
   <script src="{{asset('backend/assets/js/datepicker.js')}}"></script>
-
 	<!-- end custom js for this page -->
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="{{asset('backend/assets/js/code/code.js')}}"></script>
@@ -179,5 +176,7 @@
   @endif
 
  </script>
+
+
 </body>
 </html>

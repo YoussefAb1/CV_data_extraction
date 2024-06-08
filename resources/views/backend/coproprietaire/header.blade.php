@@ -8,7 +8,6 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                         <i data-feather="search"></i>
-
                     </div>
                 </div>
                 <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
@@ -16,7 +15,7 @@
         </form>
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
-               
+
 
 </li>
             <li class="nav-item dropdown nav-apps">
@@ -205,20 +204,20 @@
 
                         <ul class="list-unstyled p-1">
                             <li class="dropdown-item py-2">
-                              <a href="{{route('admin.profile')}}" class="text-body ms-0">
+                              <a href="{{route('coproprietaire.profile')}}" class="text-body ms-0">
                                 <i class="me-2 icon-md" data-feather="user"></i>
                                 <span>Profil</span>
                               </a>
                             </li>
                             <li class="dropdown-item py-2">
-                              <a href="{{route('admin.change.password')}}" class="text-body ms-0">
+                              <a href="{{route('coproprietaire.change.password')}}" class="text-body ms-0">
                                 <i class="me-2 icon-md" data-feather="edit"></i>
                                 <span>Modifier Mot de Passe</span>
                               </a>
                             </li>
 
                             <li class="dropdown-item py-2">
-                              <a href="{{route('admin.logout')}}" class="text-body ms-0">
+                              <a href="{{route('coproprietaire.logout')}}" class="text-body ms-0">
                                 <i class="me-2 icon-md" data-feather="log-out"></i>
                                 <span>Se Déconnecter</span>
             </a>

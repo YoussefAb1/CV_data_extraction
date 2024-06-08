@@ -23,9 +23,9 @@ class PDFController extends Controller
             'factures' => $factures
         ];
 
-        $pdf = PDF::loadView('myPDF', $data);
+        // $pdf = PDF::loadView('myPDF', $data);
 
-        return $pdf->download('itsolutionstuff.pdf');
+        // return $pdf->download('itsolutionstuff.pdf');
     }
 
 

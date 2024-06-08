@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             $url='syndic/dashboard';
         }
         elseif($request->user()->role === 'coproprietaire'){
-            $url='/dashboard';
+            $url='coproprietaire/dashboard';
         }
 
         return redirect()->intended($url);

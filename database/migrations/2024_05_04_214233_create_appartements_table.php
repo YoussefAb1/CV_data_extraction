@@ -19,11 +19,6 @@ class CreateAppartementsTable extends Migration
             $table->string('surface');
             $table->foreignId('immeuble_id')->constrained()->onDelete('cascade');
             $table->foreignId('residence_id')->constrained()->onDelete('cascade');
-<<<<<<< HEAD:database/migrations/2024_05_04_214233_create_appartements_table.php
-=======
-            $table->foreignId('member_coproprietaire_id')->nullable()->constrained('users')->onDelete('cascade'); // Utiliser la table 'users' ici
-
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364:database/migrations/2024_05_06_214233_create_appartements_table.php
             $table->timestamps();
         });
     }

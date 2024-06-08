@@ -66,19 +66,7 @@ class UtilisateurController extends Controller
         // Assignez le rôle à l'utilisateur
         $user->assignRole($validatedData['role']);
 
-<<<<<<< HEAD
         return redirect()->route('all.utilisateur')->with('success', 'Utilisateur ajouté avec succès');
-=======
-        // Enregistrez l'utilisateur dans la base de données
-        $user->save();
-
-        $notification = [
-            'message' => 'Utilisateur ajouté avec succès',
-            'alert-type' => 'success'
-        ];
-
-        return redirect()->route('all.utilisateur')->with($notification);
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
     }
 
 public function EditUtilisateur($id)

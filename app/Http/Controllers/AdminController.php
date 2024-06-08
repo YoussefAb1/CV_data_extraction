@@ -6,13 +6,29 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Appartement;
+use App\Models\Immeuble;
+use App\Models\MemberCoproprietaire;
+use App\Models\MemberSyndic;
+use App\Models\Residence;
+
+
 
 class AdminController extends Controller
 {
     public function AdminDashboard(){
 
-        return view('admin.index');
-    }
+        $residencesCount = Residence::count();
+        $immeublesCount = Immeuble::count();
+        $appartementsCount = Appartement::count();
+        $coproprietairesCount = MemberCoproprietaire::count();
+        $syndicsCount = MemberSyndic::count();
+
+        return view('admin.index', compact('residencesCount', 'immeublesCount', 'appartementsCount', 'coproprietairesCount', 'syndicsCount'));    }
+
+
+
+
 
     public function AdminLogout(Request $request){
         Auth::guard('web')->logout();

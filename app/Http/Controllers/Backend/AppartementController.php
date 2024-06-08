@@ -9,59 +9,28 @@ use App\Models\CoproprietaireHistory;
 use App\Models\MemberCoproprietaire;
 use App\Models\Immeuble;
 use App\Models\Residence;
-<<<<<<< HEAD
-
-=======
-use App\Models\MemberCoproprietaire;
-use App\Models\User;
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
+use Illuminate\Support\Facades\Auth;
 
 class AppartementController extends Controller
 {
     public function AllAppartement(Request $request)
     {
-<<<<<<< HEAD
-        $appartements = Appartement::with('coproprietaireHistories.coproprietaire.user')->get();
-        return view('backend.appartement.all_appartement', compact('appartements'));
-=======
+        $coproprietaires = MemberCoproprietaire::with('user')->get();
         $residences = Residence::all();
-        // Récupérer les utilisateurs ayant le rôle de copropriétaire
-        $coproprietaires = User::role('coproprietaire')->get();
 
-        $appartements = Appartement::query()
-            ->with(['immeuble.residence', 'memberCoproprietaire'])
-            ->when($request->residence_id, function ($query) use ($request) {
-                return $query->whereHas('immeuble.residence', function ($q) use ($request) {
-                    $q->where('id', $request->residence_id);
-                });
-            })
-            ->when($request->coproprietaire_id, function ($query) use ($request) {
-                return $query->where('member_coproprietaire_id', $request->coproprietaire_id);
-            })
-            ->latest()
-            ->get();
-
-        return view('backend.appartement.all_appartement', compact('appartements', 'residences', 'coproprietaires'));
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
+        $appartements = Appartement::with('coproprietaireHistories.coproprietaire.user')->get();
+        return view('backend.appartement.all_appartement', compact('appartements','coproprietaires','residences'));
     }
 
     public function AddAppartement()
     {
         $immeubles = Immeuble::all();
         $residences = Residence::all();
-<<<<<<< HEAD
         return view('backend.appartement.add_appartement', compact('immeubles', 'residences'));
-=======
-        // Récupérer les utilisateurs ayant le rôle de copropriétaire
-        $coproprietaires = User::role('coproprietaire')->get();
-
-        return view('backend.appartement.add_appartement', compact('immeubles', 'residences', 'coproprietaires'));
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
     }
 
 
     public function StoreAppartement(Request $request)
-<<<<<<< HEAD
     {
         $request->validate([
             'nom_appartement' => 'required|unique:appartements|max:255',
@@ -76,50 +45,15 @@ class AppartementController extends Controller
         return redirect()->route('all.appartement')->with('success', 'Appartement ajouté avec succès');
     }
 
-=======
+    public function EditAppartement($id)
 {
-    // Validation
-    $request->validate([
-        'nom_appartement' => 'required|unique:appartements|max:255',
-        'etage' => 'required|numeric',
-        'surface' => 'required|numeric',
-        'immeuble_id' => 'required|exists:immeubles,id',
-        'residence_id' => 'required|exists:residences,id',
-        'member_coproprietaire_id' => 'nullable|exists:users,id' // Vérifier l'existence dans la table 'users'
-    ]);
+    $appartement = Appartement::findOrFail($id);
+    $immeubles = Immeuble::all(); // Assurez-vous que cette ligne récupère tous les immeubles
+    $residences = Residence::all(); // Assurez-vous que cette ligne récupère toutes les résidences
 
-    // Créez un tableau des données à enregistrer
-    $data = [
-        'nom_appartement' => $request->nom_appartement,
-        'etage' => $request->etage,
-        'surface' => $request->surface,
-        'immeuble_id' => $request->immeuble_id,
-        'residence_id' => $request->residence_id,
-    ];
-
-    // Ajoutez `member_coproprietaire_id` seulement s'il est présent
-    if ($request->filled('member_coproprietaire_id')) {
-        $data['member_coproprietaire_id'] = $request->member_coproprietaire_id;
-    }
-
-    // Créez l'appartement
-    Appartement::create($data);
-
-    $notification = [
-        'message' => 'Appartement ajouté avec succès',
-        'alert-type' => 'success'
-    ];
-
-    return redirect()->route('all.appartement')->with($notification);
+    return view('backend.appartement.edit_appartement', compact('appartement', 'immeubles', 'residences'));
 }
 
-
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
-    public function EditAppartement($id)
-    {
-        $appartement = Appartement::findOrFail($id);
-        return view('backend.appartement.edit_appartement', compact('appartement'));
-    }
 
     public function UpdateAppartement(Request $request, $id)
     {
@@ -178,6 +112,20 @@ class AppartementController extends Controller
     $coproprietaireHistories = $appartement->coproprietaireHistories()->with('coproprietaire.user')->get();
 
     return view('backend.appartement.history_coproprietaire_appartement', compact('appartement', 'coproprietaireHistories'));
+}
+
+
+public function manageAppartementsForSyndic($immeubleId)
+{
+    $user = Auth::user();
+    $syndicImmeubleId = $user->syndic->immeuble_id;
+
+    // Vérifiez si le syndic est associé à l'immeuble passé en paramètre
+    if ($syndicImmeubleId != $immeubleId) {
+        // Redirigez ou affichez un message d'erreur indiquant que le syndic n'a pas accès à cet immeuble
+    }
+
+    // Sinon, continuez le traitement normal
 }
 
 }

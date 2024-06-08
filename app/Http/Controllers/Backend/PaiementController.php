@@ -12,16 +12,25 @@ use App\Models\Immeuble;
 use App\Models\Residence;
 use App\Models\SyndicHistory;
 use App\Models\CoproprietaireHistory;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Support\Facades\View;
+use App\Models\MemberCoproprietaire;
+use App\Models\MemberSyndic;
+
 
 class PaiementController extends Controller
 {
     public function AllPaiement()
     {
-<<<<<<< HEAD
-        $paiements = Paiement::with(['coproprietaireHistory', 'syndicHistory', 'cotisation'])->latest()->get();
-=======
-        $paiements = Paiement::with(['appartement', 'coproprietaire', 'syndic', 'cotisation'])->latest()->get();
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
+        $paiements = Paiement::with([
+            'coproprietaireHistory.appartement',
+            'coproprietaireHistory.coproprietaire',
+            'syndicHistory.immeuble.residence',
+            'syndicHistory.syndic',
+            'cotisation'
+        ])->latest()->get();
+
         return view('backend.paiement.all_paiement', compact('paiements'));
     }
 
@@ -30,14 +39,10 @@ class PaiementController extends Controller
         $residences = Residence::all();
         $immeubles = Immeuble::all();
         $appartements = Appartement::all();
-<<<<<<< HEAD
         $coproprietaireHistories = CoproprietaireHistory::all();
         $syndicHistories = SyndicHistory::all();
-=======
-        $coproprietaires = User::role('coproprietaire')->get(); // Filtrer par rôle de copropriétaire
-        $syndics = User::role('syndic')->get(); // Filtrer par rôle de syndic
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
         $cotisations = Cotisation::all();
+
         return view('backend.paiement.add_paiement', compact('residences', 'immeubles', 'appartements', 'coproprietaireHistories', 'syndicHistories', 'cotisations'));
     }
 
@@ -47,79 +52,79 @@ class PaiementController extends Controller
             'montant' => 'required|numeric',
             'date_paiement' => 'required|date',
             'methode_paiement' => 'required|string',
-<<<<<<< HEAD
             'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
             'syndic_history_id' => 'required|exists:syndic_histories,id',
             'cotisation_id' => 'required|exists:cotisations,id',
-=======
-            'appartement_id' => 'required|exists:appartements,id',
-            'coproprietaire_id' => 'required|exists:users,id', // Utiliser l'ID utilisateur
-            'syndic_id' => 'required|exists:users,id', // Utiliser l'ID utilisateur
-            'cotisation_id' => 'required|exists:cotisations,id'
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
         ]);
 
         Paiement::create([
             'montant' => $request->montant,
             'date_paiement' => $request->date_paiement,
             'methode_paiement' => $request->methode_paiement,
-<<<<<<< HEAD
             'coproprietaire_history_id' => $request->coproprietaire_history_id,
             'syndic_history_id' => $request->syndic_history_id,
-=======
-            'appartement_id' => $request->appartement_id,
-            'coproprietaire_id' => $request->coproprietaire_id,
-            'syndic_id' => $request->syndic_id,
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
             'cotisation_id' => $request->cotisation_id,
         ]);
 
         return redirect()->route('all.paiement')->with('success', 'Paiement ajouté avec succès');
     }
-<<<<<<< HEAD
-=======
+
 
     public function EditPaiement($id)
     {
         $paiement = Paiement::findOrFail($id);
+        $residences = Residence::all();
+        $immeubles = Immeuble::all();
         $appartements = Appartement::all();
-        $coproprietaires = User::role('coproprietaire')->get();
-        $syndics = User::role('syndic')->get();
+        $coproprietaires = MemberCoproprietaire::all(); // Ajoutez cette ligne pour récupérer les copropriétaires
+        $syndics = MemberSyndic::all(); // Assurez-vous de récupérer également les syndics si vous en avez besoin
         $cotisations = Cotisation::all();
-        return view('backend.paiement.edit_paiement', compact('paiement', 'appartements', 'coproprietaires', 'syndics', 'cotisations'));
+
+        return view('backend.paiement.edit_paiement', compact('paiement', 'residences', 'immeubles', 'appartements', 'coproprietaires', 'syndics', 'cotisations'));
     }
 
-    public function UpdatePaiement(Request $request, $id)
-    {
-        $request->validate([
-            'montant' => 'required|numeric',
-            'date_paiement' => 'required|date',
-            'methode_paiement' => 'required|string',
-            'appartement_id' => 'required|exists:appartements,id',
-            'coproprietaire_id' => 'required|exists:users,id',
-            'syndic_id' => 'required|exists:users,id',
-            'cotisation_id' => 'required|exists:cotisations,id'
-        ]);
 
-        $paiement = Paiement::findOrFail($id);
-        $paiement->update([
-            'montant' => $request->montant,
-            'date_paiement' => $request->date_paiement,
-            'methode_paiement' => $request->methode_paiement,
-            'appartement_id' => $request->appartement_id,
-            'coproprietaire_id' => $request->coproprietaire_id,
-            'syndic_id' => $request->syndic_id,
-            'cotisation_id' => $request->cotisation_id,
-        ]);
 
-        return redirect()->route('all.paiement')->with('success', 'Paiement modifié avec succès');
-    }
+    public function downloadPDF($id)
+{
+    $paiement = Paiement::findOrFail($id);
 
-    public function DeletePaiement($id)
-    {
-        Paiement::findOrFail($id)->delete();
+    $pdf = new Dompdf();
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isRemoteEnabled', true);
+    $pdf->setOptions($options);
 
-        return redirect()->back()->with('success', 'Paiement supprimé avec succès');
-    }
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
+    $pdf->loadHtml(View::make('backend.paiement.paiement_pdf', compact('paiement')));
+    $pdf->render();
+
+    $pdf->stream('paiement.pdf', ['Attachment' => 0]);
+}
+
+
+
+public function getImmeublesByResidence($residenceId)
+{
+    $immeubles = Immeuble::where('residence_id', $residenceId)->get();
+    return response()->json($immeubles);
+}
+
+public function getAppartementsByImmeuble($immeubleId)
+{
+    $appartements = Appartement::where('immeuble_id', $immeubleId)->get();
+    return response()->json($appartements);
+}
+
+public function getCoproprietairesByAppartement($appartementId)
+{
+    $coproprietaireHistories = CoproprietaireHistory::where('appartement_id', $appartementId)->with('coproprietaire')->get();
+    return response()->json($coproprietaireHistories);
+}
+
+public function getSyndicsByImmeuble($immeubleId)
+{
+    $syndicHistories = SyndicHistory::where('immeuble_id', $immeubleId)->with('syndic')->get();
+    return response()->json($syndicHistories);
+}
+
 }

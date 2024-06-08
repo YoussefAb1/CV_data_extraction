@@ -21,12 +21,12 @@
     </head>
 <style>
 
-    .auth-left-wrapper{
-        width: 100%;
-        height: 100%;
-        background-image: url({{asset('upload/login.png')}});
-    }
-
+.auth-page .auth-left-wrapper {
+    width: 100%;
+    height: 100%;
+    background-image: url({{asset('upload/login.png')}});
+    background-size: cover;
+}
     </style>
 
 

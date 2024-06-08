@@ -16,11 +16,19 @@
     <title>Page HOME | DigiSyndic</title>
   </head>
 
+<style>
 
+.noble-ui-logo span {
+    color: #727cf5;
+    font-weight: 400;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+        }
+
+</style>
   <body>
     <nav>
       <div class="nav__bar">
-        <div class="nav__logo"><a href="#">DigiSyndic</a></div>
+        <div class="nav__logo"><a href="#" class="noble-ui-logo logo-light d-block mb-2" >Digi<span>Syndic</span></a></div>
         <ul class="nav__links">
           <li class="link"><a href="#home">Principal</a></li>
           <li class="link"><a href="#about">À Propos de Nous </a></li>
@@ -41,7 +49,11 @@
 
             </h1>
           <p>
-            Avec DigiSyndic, gérez facilement tous les aspects de votre copropriété. De la gestion des finances à l'organisation des assemblées générales, notre plateforme vous offre tous les outils nécessaires pour une administration transparente et efficace.
+            Avec DigiSyndic, gérez facilement tous les aspects de votre copropriété.
+            <br>
+            De la gestion des finances à l'organisation des assemblées générales,
+            <br>
+            notre plateforme vous offre tous les outils nécessaires pour une administration transparente et efficace.
           </p>
           <div class="header__btns">
             <a href="{{ route('index2') }}" class="btn btn__secondary">Login</a>
@@ -55,7 +67,7 @@
 
     <section class="section__container about__container" id="about">
       <div class="about__image">
-        <img src="{{ asset('backend/assets/images/about.jpg') }}" alt="about" />
+        <img src="{{ asset('backend/assets/images/synd.jpg') }}" alt="about" />
       </div>
       <div class="about__content">
         <h3>À Propos de Nous
@@ -102,7 +114,7 @@
 
     <section class="section__container contact__container" id="contact">
       <div class="contact__image">
-        <img src="{{ asset('backend/assets/images/contact.jpg') }}" alt="contact" />
+        <img src="{{ asset('backend/assets/images/contaact.jpg') }}" alt="contact" />
       </div>
       <div class="contact__content">
         <h2 class="section__header">Contacter Nous</h2>

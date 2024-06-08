@@ -5,11 +5,7 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-<<<<<<< HEAD
             <li class="breadcrumb-item"><a href="{{ route('add.appartement') }}" class="btn btn-inverse-primary">Ajouter un Appartement</a></li>
-=======
-            <a href="{{ route('add.appartement') }}" class="btn btn-inverse-primary">Ajouter un Appartement</a>
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
         </ol>
     </nav>
 
@@ -56,19 +52,13 @@
                                     <th>Appartement</th>
                                     {{-- <th>Surface</th> --}}
                                     <th>Immeuble</th>
-<<<<<<< HEAD
                                     <th>Residence</th>
                                     <th>Copropriétaire Actuel</th>
-=======
-                                    <th>Résidence</th>
-                                    <th>Copropriétaire</th>
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($appartements as $appartement)
-<<<<<<< HEAD
                                 <tr>
                                     <td>{{ $appartement->id }}</td>
                                     <td>{{ $appartement->nom_appartement }}</td>
@@ -90,21 +80,6 @@
                                         <a href="{{ route('history.coproprietaire_appartement', $appartement->id) }}" class="btn btn-inverse-info">Historique Copropriétaire</a>
                                     </td>
                                 </tr>
-=======
-                                    <tr>
-                                        <td>{{ $appartement->id }}</td>
-                                        <td>{{ $appartement->nom_appartement }}</td>
-                                        <td>{{ $appartement->etage }}</td>
-                                        <td>{{ $appartement->surface }}</td>
-                                        <td>{{ $appartement->immeuble->nom_immeuble }}</td>
-                                        <td>{{ $appartement->immeuble->residence->nom_residence }}</td>
-                                        <td>{{ optional($appartement->memberCoproprietaire)->name ?? 'N/A' }}</td>
-                                        <td>
-                                            <a href="{{ route('edit.appartement', $appartement->id) }}" class="btn btn-inverse-warning">Editer</a>
-                                            <a href="{{ route('delete.appartement', $appartement->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
-                                        </td>
-                                    </tr>
->>>>>>> bd045bba608f20d7eaa00d6941bf23dad4069364
                                 @endforeach
                             </tbody>
                         </table>
