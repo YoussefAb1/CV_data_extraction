@@ -9,7 +9,7 @@ use App\Models\Appartement;
 use App\Models\Charge;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
-
+use App\Models\SyndicHistory;
 use App\Models\Paiement;
 use PDF;
 
@@ -20,8 +20,23 @@ class FactureController extends Controller
 
     public function AllFacture()
     {
-        $factures = Facture::latest()->get();
-        return view('backend.facture.all_facture', compact('factures'));
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            // Récupérer toutes les factures
+            $factures = Facture::latest()->get();
+            // Retourner la vue avec les données des factures pour l'admin
+            return view('backend.facture.all_facture', compact('factures'));
+        } elseif ($user->role === 'syndic') {
+            // Récupérer les immeubles associés au syndic
+            $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
+            // Récupérer les factures associées à ces immeubles
+            $factures = Facture::whereIn('immeuble_id', $immeubles_ids)->latest()->get();
+            // Retourner la vue avec les données des factures pour le syndic
+            return view('backend.facture.all_facture', compact('factures'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function AddFacture()

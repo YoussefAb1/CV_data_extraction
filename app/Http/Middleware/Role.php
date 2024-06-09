@@ -19,7 +19,7 @@ class Role
         $userRole = $request->user()->role;
         Log::info('User role check', ['user_id' => $request->user()->id, 'role' => $userRole, 'allowed_roles' => $roles]);
 
-        $authorizedRoles = ['admin', 'syndic']; // Ajoutez 'syndic' à la liste des rôles autorisés
+        $authorizedRoles = ['admin', 'syndic','coproprietaire']; // Ajoutez 'syndic' à la liste des rôles autorisés
 
         if (!in_array($userRole, $authorizedRoles)) {
             Log::info('User role is not authorized', ['role' => $userRole]);

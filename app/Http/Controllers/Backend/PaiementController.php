@@ -22,7 +22,11 @@ use App\Models\MemberSyndic;
 class PaiementController extends Controller
 {
     public function AllPaiement()
-    {
+{
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        // Récupérer tous les paiements avec les données associées
         $paiements = Paiement::with([
             'coproprietaireHistory.appartement',
             'coproprietaireHistory.coproprietaire',
@@ -30,10 +34,27 @@ class PaiementController extends Controller
             'syndicHistory.syndic',
             'cotisation'
         ])->latest()->get();
-
+        // Retourner la vue avec les données des paiements pour l'admin
         return view('backend.paiement.all_paiement', compact('paiements'));
+    } elseif ($user->role === 'syndic') {
+        // Récupérer les immeubles associés au syndic
+        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
+        // Récupérer les paiements associés à ces immeubles
+        $paiements = Paiement::with([
+            'coproprietaireHistory.appartement',
+            'coproprietaireHistory.coproprietaire',
+            'syndicHistory.immeuble.residence',
+            'syndicHistory.syndic',
+            'cotisation'
+        ])->whereHas('coproprietaireHistory.appartement', function ($query) use ($immeubles_ids) {
+            $query->whereIn('immeuble_id', $immeubles_ids);
+        })->latest()->get();
+        // Retourner la vue avec les données des paiements pour le syndic
+        return view('backend.paiement.all_paiement', compact('paiements'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
-
+}
     public function AddPaiement()
     {
         $residences = Residence::all();

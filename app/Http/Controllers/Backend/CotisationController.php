@@ -8,15 +8,36 @@ use App\Models\Cotisation;
 use App\Models\Appartement;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
+use App\Models\SyndicHistory;
 
 class CotisationController extends Controller
 {
 
     public function AllCotisation()
-    {
+{
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        // Récupérer toutes les cotisations avec les données associées d'appartement, d'immeuble et de résidence
         $cotisations = Cotisation::with(['appartement.immeuble', 'appartement.residence'])->latest()->get();
+        // Retourner la vue avec les données des cotisations pour l'admin
         return view('backend.cotisation.all_cotisation', compact('cotisations'));
+    } elseif ($user->role === 'syndic') {
+        // Récupérer les immeubles associés au syndic
+        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
+        // Récupérer les cotisations associées à ces immeubles
+        $cotisations = Cotisation::with(['appartement.immeuble', 'appartement.residence'])
+            ->whereHas('appartement', function ($query) use ($immeubles_ids) {
+                $query->whereIn('immeuble_id', $immeubles_ids);
+            })
+            ->latest()
+            ->get();
+        // Retourner la vue avec les données des cotisations pour le syndic
+        return view('backend.cotisation.all_cotisation', compact('cotisations'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
 
     public function AddCotisation()
     {

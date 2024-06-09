@@ -1,11 +1,21 @@
-@extends('admin.admin_dashboard')
+@if (auth()->user()->role === 'admin')
+    @extends('admin.admin_dashboard')
+@elseif (auth()->user()->role === 'syndic')
+    @extends('backend.syndic.syndic_dashboard')
+@endif
 
-@section('admin')
+@if (auth()->user()->role === 'admin')
+    @section('admin')
+@else
+    @section('syndic')
+@endif
 
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('add.appartement') }}" class="btn btn-inverse-primary">Ajouter un Appartement</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ route('add.appartement') }}" class="btn btn-inverse-primary">Ajouter un Appartement</a>
+            </li>
         </ol>
     </nav>
 
@@ -65,7 +75,6 @@
                                     {{-- <td>{{ $appartement->surface }}</td> --}}
                                     <td>{{ $appartement->immeuble->nom_immeuble }}</td>
                                     <td>{{ $appartement->residence->nom_residence }}</td>
-
                                     <td>
                                         @if($appartement->coproprietaireHistories()->whereNull('end_date')->exists())
                                             {{ optional($appartement->coproprietaireHistories()->whereNull('end_date')->first()->coproprietaire->user)->name ?? 'N/A' }}
@@ -85,6 +94,20 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- JavaScript pour initialiser DataTable -->
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var tableId = '#dataTableExample';
+                        if ($.fn.dataTable.isDataTable(tableId)) {
+                            $(tableId).DataTable().destroy();
+                        }
+
+                        $(tableId).DataTable({
+                            // Ajoutez ici d'autres options de configuration si nécessaire
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

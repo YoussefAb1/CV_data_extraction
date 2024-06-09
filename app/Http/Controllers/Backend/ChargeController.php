@@ -8,23 +8,36 @@ use App\Models\Charge;
 use App\Models\Appartement;
 use App\Models\Immeuble;
 use App\Models\Residence;
-
+use App\Models\SyndicHistory;
 
 class ChargeController extends Controller
 {
     public function AllCharge()
-    {
+{
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
         // Récupérer toutes les charges avec les données associées d'appartement, d'immeuble et de résidence
         $charges = Charge::with(['appartement.immeuble.residence'])->latest()->get();
-
-        // Récupérer tous les appartements, immeubles et résidences pour les formulaires
-        $appartements = Appartement::all();
-        $immeubles = Immeuble::all();
-        $residences = Residence::all();
-
-        // Retourner la vue avec les données des charges, appartements, immeubles et résidences
-        return view('backend.charge.all_charge', compact('charges', 'appartements', 'immeubles', 'residences'));
+        // Retourner la vue avec les données des charges pour l'admin
+        return view('backend.charge.all_charge', compact('charges'));
+    } elseif ($user->role === 'syndic') {
+        // Récupérer les immeubles associés au syndic
+        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
+        // Récupérer les charges associées à ces immeubles
+        $charges = Charge::with(['appartement.immeuble.residence'])
+            ->whereIn('immeuble_id', $immeubles_ids)
+            ->latest()
+            ->get();
+        // Retourner la vue avec les données des charges pour le syndic
+        return view('backend.charge.all_charge', compact('charges'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
+// Les autres fonctions suivent le même modèle en ajustant les vues et les données récupérées en fonction du rôle de l'utilisateur.
+
 
     public function AddCharge()
     {
