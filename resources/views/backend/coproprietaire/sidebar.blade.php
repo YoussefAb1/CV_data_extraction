@@ -21,12 +21,44 @@
         <li class="nav-item nav-category">Copropriété</li>
 
 
-        <li class="nav-item">
-          <a href="pages/apps/calendar.html" class="nav-link">
-            <i class="link-icon" data-feather="calendar"></i>
-            <span class="link-title">Calendrier</span>
-          </a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#charge" role="button" aria-expanded="false" aria-controls="charge">
+                <i class="link-icon" data-feather="dollar-sign"></i>
+                <span class="link-title">Gestion Charges </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="charge">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('coproprietaire.all.charge') }}" class="nav-link">Lister Charges</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.charge') }}" class="nav-link">Ajouter Charge</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#cotisation" role="button" aria-expanded="false" aria-controls="cotisation">
+                <i class="link-icon" data-feather="dollar-sign"></i>
+                <span class="link-title">Gestion Cotisations </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="cotisation">
+              <ul class="nav sub-menu">
+                <li class="nav-item">
+                  <a href="{{ route('coproprietaire.all.cotisation') }}" class="nav-link">Lister Cotisations</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.cotisation') }}" class="nav-link">Ajouter Cotisation</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
 
 
         <li class="nav-item">
@@ -38,10 +70,30 @@
             <div class="collapse" id="paiement">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('all.paiement') }}" class="nav-link">Lister Paiements</a>
+                  <a href="{{ route('coproprietaire.all.paiement') }}" class="nav-link">Lister Paiements</a>
                 </li>
                 <li class="nav-item">
                   <a href="{{ route('add.paiement') }}" class="nav-link">Ajouter Paiement</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#facture" role="button" aria-expanded="false" aria-controls="facture">
+                <i class="link-icon" data-feather="file-text"></i>
+              <span class="link-title">Gestion Factures </span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="facture">
+              <ul class="nav sub-menu">
+
+                <li class="nav-item">
+                  <a href="{{ route('coproprietaire.all.facture') }}" class="nav-link">Lister Factures</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('add.facture') }}" class="nav-link">Ajouter Facture</a>
                 </li>
 
               </ul>

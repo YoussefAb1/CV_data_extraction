@@ -29,10 +29,10 @@
             <div class="collapse" id="appartement">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('all.appartement') }}" class="nav-link">Lister Appartements</a>
+                  <a href="{{ route('syndic.all.appartement') }}" class="nav-link">Lister Appartements</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.appartement') }}" class="nav-link">Ajouter Appartement</a>
+                  <a href="{{ route('syndic.add.appartement') }}" class="nav-link">Ajouter Appartement</a>
                 </li>
 
 
@@ -49,10 +49,10 @@
             <div class="collapse" id="charge">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('all.charge') }}" class="nav-link">Lister Charges</a>
+                  <a href="{{ route('syndic.all.charge') }}" class="nav-link">Lister Charges</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.charge') }}" class="nav-link">Ajouter Charge</a>
+                  <a href="{{ route('syndic.add.charge') }}" class="nav-link">Ajouter Charge</a>
                 </li>
 
               </ul>
@@ -68,10 +68,10 @@
             <div class="collapse" id="cotisation">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('all.cotisation') }}" class="nav-link">Lister Cotisations</a>
+                  <a href="{{ route('syndic.all.cotisation') }}" class="nav-link">Lister Cotisations</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.cotisation') }}" class="nav-link">Ajouter Cotisation</a>
+                  <a href="{{ route('syndic.add.cotisation') }}" class="nav-link">Ajouter Cotisation</a>
                 </li>
 
               </ul>
@@ -88,10 +88,10 @@
             <div class="collapse" id="paiement">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('all.paiement') }}" class="nav-link">Lister Paiements</a>
+                  <a href="{{ route('syndic.all.paiement') }}" class="nav-link">Lister Paiements</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.paiement') }}" class="nav-link">Ajouter Paiement</a>
+                  <a href="{{ route('syndic.add.paiement') }}" class="nav-link">Ajouter Paiement</a>
                 </li>
 
               </ul>
@@ -109,18 +109,15 @@
               <ul class="nav sub-menu">
 
                 <li class="nav-item">
-                  <a href="{{ route('all.facture') }}" class="nav-link">Lister Factures</a>
+                  <a href="{{ route('syndic.all.facture') }}" class="nav-link">Lister Factures</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.facture') }}" class="nav-link">Ajouter Facture</a>
+                  <a href="{{ route('syndic.add.facture') }}" class="nav-link">Ajouter Facture</a>
                 </li>
 
               </ul>
             </div>
           </li>
-
-
-
 
 
 
@@ -134,10 +131,10 @@
               <ul class="nav sub-menu">
 
                 <li class="nav-item">
-                  <a href="{{ route('all.memberCoproprietaire') }}" class="nav-link">Lister Copropriétaires</a>
+                  <a href="{{ route('syndic.all.memberCoproprietaire') }}" class="nav-link">Lister Copropriétaires</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('add.memberCoproprietaire') }}" class="nav-link">Ajouter Copropriétaire</a>
+                  <a href="{{ route('syndic.add.memberCoproprietaire') }}" class="nav-link">Ajouter Copropriétaire</a>
                 </li>
 
               </ul>
@@ -146,7 +143,7 @@
 
 
 
-       
+
       </ul>
     </div>
   </nav>

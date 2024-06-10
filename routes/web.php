@@ -52,7 +52,9 @@
     Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'])->name('admin.profile.store');
     Route::get('/admin/change/password', [AdminController::class, 'AdminChangePassword'])->name('admin.change.password');
     Route::post('/admin/update/password', [AdminController::class, 'AdminUpdatePassword'])->name('admin.update.password');
-    });
+
+
+});
     Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
     Route::post('/admin/login', [AdminController::class, 'AdminLogin']);
 
@@ -85,8 +87,8 @@
     });
 
 
-// Appartement Routes
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+// Appartement Routes Admin
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/appartement', [AppartementController::class, 'AllAppartement'])->name('all.appartement');
     Route::get('add/appartement', [AppartementController::class, 'AddAppartement'])->name('add.appartement');
     Route::post('store/appartement', [AppartementController::class, 'StoreAppartement'])->name('store.appartement');
@@ -115,7 +117,7 @@
 
 
  // Member Coproprietaire Routes
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/memberCoproprietaire', [MemberCoproprietaireController::class, 'AllMemberCoproprietaire'])->name('all.memberCoproprietaire');
     Route::get('add/memberCoproprietaire', [MemberCoproprietaireController::class, 'AddMemberCoproprietaire'])->name('add.memberCoproprietaire');
     Route::post('store/memberCoproprietaire', [MemberCoproprietaireController::class, 'StoreMemberCoproprietaire'])->name('store.memberCoproprietaire');
@@ -126,7 +128,7 @@
 
 // Facture Routes
 
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/facture', [FactureController::class, 'AllFacture'])->name('all.facture');
     Route::get('add/facture', [FactureController::class, 'AddFacture'])->name('add.facture');
     Route::post('store/facture', [FactureController::class, 'StoreFacture'])->name('store.facture');
@@ -139,7 +141,7 @@
 
 // Charge Routes
 
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/charge', [ChargeController::class, 'AllCharge'])->name('all.charge');
     Route::get('add/charge', [ChargeController::class, 'AddCharge'])->name('add.charge');
     Route::post('store/charge', [ChargeController::class, 'StoreCharge'])->name('store.charge');
@@ -151,7 +153,7 @@
 
 // Cotisation Routes
 
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/cotisation', [CotisationController::class, 'AllCotisation'])->name('all.cotisation');
     Route::get('add/cotisation', [CotisationController::class, 'AddCotisation'])->name('add.cotisation');
     Route::post('store/cotisation', [CotisationController::class, 'StoreCotisation'])->name('store.cotisation');
@@ -163,7 +165,7 @@
 
 // Paiement Routes
 
-    Route::middleware(['auth', 'role:syndic|admin'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/paiement', [PaiementController::class, 'AllPaiement'])->name('all.paiement');
     Route::get('add/paiement', [PaiementController::class, 'AddPaiement'])->name('add.paiement');
     Route::post('store/paiement', [PaiementController::class, 'StorePaiement'])->name('store.paiement');
@@ -219,7 +221,45 @@
     Route::post('/syndic/profile/store', [SyndicController::class, 'SyndicProfileStore'])->name('syndic.profile.store');
     Route::get('/syndic/change/password', [SyndicController::class, 'SyndicChangePassword'])->name('syndic.change.password');
     Route::post('/syndic/update/password', [SyndicController::class, 'SyndicUpdatePassword'])->name('syndic.update.password');
-    });
+    Route::get('/syndic/appartements', [SyndicController::class, 'AllAppartement'])->name('syndic.all.appartement');
+    Route::get('/syndic/add/appartement', [SyndicController::class, 'AddAppartement'])->name('syndic.add.appartement');
+    Route::post('/syndic/store/appartement', [SyndicController::class, 'StoreAppartement'])->name('syndic.store.appartement');
+    Route::get('/syndic/edit/appartement/{id}', [SyndicController::class, 'EditAppartement'])->name('syndic.edit.appartement');
+    Route::post('/syndic/update/appartement', [SyndicController::class, 'UpdateAppartement'])->name('syndic.update.appartement');
+    Route::get('/syndic/delete/appartement/{id}', [SyndicController::class, 'DeleteAppartement'])->name('syndic.delete.appartement');
+    Route::get('/syndic/all/memberCoproprietaire', [SyndicController::class, 'AllMemberCoproprietaire'])->name('syndic.all.memberCoproprietaire');
+    Route::get('/syndic/add/memberCoproprietaire', [SyndicController::class, 'AddMemberCoproprietaire'])->name('syndic.add.memberCoproprietaire');
+    Route::post('/syndic/store/memberCoproprietaire', [SyndicController::class, 'StoreMemberCoproprietaire'])->name('syndic.store.memberCoproprietaire');
+    Route::get('/syndic/edit/memberCoproprietaire/{id}', [SyndicController::class, 'EditMemberCoproprietaire'])->name('syndic.edit.memberCoproprietaire');
+    Route::post('/syndic/update/memberCoproprietaire', [SyndicController::class, 'UpdateMemberCoproprietaire'])->name('syndic.update.memberCoproprietaire');
+    Route::get('/syndic/delete/memberCoproprietaire/{id}', [SyndicController::class, 'DeleteMemberCoproprietaire'])->name('syndic.delete.memberCoproprietaire');
+    Route::get('/syndic/all/facture', [SyndicController::class, 'AllFacture'])->name('syndic.all.facture');
+    Route::get('/syndic/add/facture', [SyndicController::class, 'AddFacture'])->name('syndic.add.facture');
+    Route::post('/syndic/store/facture', [SyndicController::class, 'StoreFacture'])->name('syndic.store.facture');
+    Route::get('/syndic/edit/facture/{id}', [SyndicController::class, 'EditFacture'])->name('syndic.edit.facture');
+    Route::post('/syndic/update/facture', [SyndicController::class, 'UpdateFacture'])->name('syndic.update.facture');
+    Route::get('/syndic/delete/facture/{id}', [SyndicController::class, 'DeleteFacture'])->name('syndic.delete.facture');
+    Route::get('/syndic/generate-pdf', [SyndicController::class, 'generatePDF']);
+    Route::get('/syndic/all/charge', [SyndicController::class, 'AllCharge'])->name('syndic.all.charge');
+    Route::get('/syndic/add/charge', [SyndicController::class, 'AddCharge'])->name('syndic.add.charge');
+    Route::post('/syndic/store/charge', [SyndicController::class, 'StoreCharge'])->name('syndic.store.charge');
+    Route::get('/syndic/edit/charge/{id}', [SyndicController::class, 'EditCharge'])->name('syndic.edit.charge');
+    Route::post('/syndic/update/charge', [SyndicController::class, 'UpdateCharge'])->name('syndic.update.charge');
+    Route::get('/syndic/delete/charge/{id}', [SyndicController::class, 'DeleteCharge'])->name('syndic.delete.charge');
+    Route::get('/syndic/all/cotisation', [SyndicController::class, 'AllCotisation'])->name('syndic.all.cotisation');
+    Route::get('/syndic/add/cotisation', [SyndicController::class, 'AddCotisation'])->name('syndic.add.cotisation');
+    Route::post('/syndic/store/cotisation', [SyndicController::class, 'StoreCotisation'])->name('syndic.store.cotisation');
+    Route::get('/syndic/edit/cotisation/{id}', [SyndicController::class, 'EditCotisation'])->name('syndic.edit.cotisation');
+    Route::post('/syndic/update/cotisation', [SyndicController::class, 'UpdateCotisation'])->name('syndic.update.cotisation');
+    Route::get('/syndic/delete/cotisation/{id}', [SyndicController::class, 'DeleteCotisation'])->name('syndic.delete.cotisation');
+    Route::get('/syndic/all/paiement', [SyndicController::class, 'AllPaiement'])->name('syndic.all.paiement');
+    Route::get('/syndic/add/paiement', [SyndicController::class, 'AddPaiement'])->name('syndic.add.paiement');
+    Route::post('/syndic/store/paiement', [SyndicController::class, 'StorePaiement'])->name('syndic.store.paiement');
+    Route::get('/syndic/edit/paiement/{id}', [SyndicController::class, 'EditPaiement'])->name('syndic.edit.paiement');
+    Route::post('/syndic/update/paiement', [SyndicController::class, 'UpdatePaiement'])->name('syndic.update.paiement');
+    Route::get('/syndic/delete/paiement/{id}', [SyndicController::class, 'DeletePaiement'])->name('syndic.delete.paiement');
+
+});
     Route::get('/syndic/login', [SyndicController::class, 'SyndicLogin'])->name('syndic.login');
     Route::post('/syndic/login', [SyndicController::class, 'SyndicLogin']);
 
@@ -232,6 +272,12 @@
     Route::post('/coproprietaire/profile/store', [CoproprietaireController::class, 'CoproprietaireProfileStore'])->name('coproprietaire.profile.store');
     Route::get('/coproprietaire/change/password', [CoproprietaireController::class, 'CoproprietaireChangePassword'])->name('coproprietaire.change.password');
     Route::post('/coproprietaire/update/password', [CoproprietaireController::class, 'CoproprietaireUpdatePassword'])->name('coproprietaire.update.password');
+    Route::get('/coproprietaire/all/facture', [CoproprietaireController::class, 'AllFacture'])->name('coproprietaire.all.facture');
+    Route::get('/coproprietaire/all/charge', [CoproprietaireController::class, 'AllCharge'])->name('coproprietaire.all.charge');
+    Route::get('/coproprietaire/all/paiement', [CoproprietaireController::class, 'AllPaiement'])->name('coproprietaire.all.paiement');
+    Route::get('/coproprietaire/all/cotisation', [CoproprietaireController::class, 'AllCotisation'])->name('coproprietaire.all.cotisation');
+
+
     });
     Route::get('/coproprietaire/login', [CoproprietaireController::class, 'CoproprietaireLogin'])->name('coproprietaire.login');
     Route::post('/coproprietaire/login', [CoproprietaireController::class, 'CoproprietaireLogin']);

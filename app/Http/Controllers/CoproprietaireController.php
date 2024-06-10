@@ -6,6 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\CoproprietaireHistory;
+use App\Models\Charge;
+use App\Models\Facture;
+use App\Models\Paiement;
+use App\Models\Cotisation;
 
 
 class CoproprietaireController extends Controller
@@ -103,6 +108,72 @@ class CoproprietaireController extends Controller
 
     }
 
+    public function AllCharge()
+{
+    $user = auth()->user();
+
+    // Récupérer l'appartement associé au copropriétaire
+    $appartement_id = CoproprietaireHistory::where('coproprietaire_id', $user->id)
+                                           ->whereNull('end_date') // S'assurer que c'est le propriétaire actuel
+                                           ->pluck('appartement_id');
+
+    // Récupérer les charges associées à cet appartement
+    $charges = Charge::whereIn('appartement_id', $appartement_id)->latest()->get();
+
+    // Retourner la vue avec les données des charges pour le copropriétaire
+    return view('backend.coproprietaire.charge.all_charge', compact('charges'));
+}
+
+
+public function AllCotisation()
+{
+    $user = auth()->user();
+
+    // Récupérer l'appartement associé au copropriétaire
+    $appartement_id = CoproprietaireHistory::where('coproprietaire_id', $user->id)
+                                           ->whereNull('end_date') // S'assurer que c'est le propriétaire actuel
+                                           ->pluck('appartement_id');
+
+    // Récupérer les cotisations associées à cet appartement
+    $cotisations = Cotisation::whereIn('appartement_id', $appartement_id)->latest()->get();
+
+    // Retourner la vue avec les données des cotisations pour le copropriétaire
+    return view('backend.coproprietaire.cotisation.all_cotisation', compact('cotisations'));
+}
+
+public function AllPaiement()
+{
+    $user = auth()->user();
+
+    // Récupérer l'appartement associé au copropriétaire
+    $appartement_id = CoproprietaireHistory::where('coproprietaire_id', $user->id)
+                                           ->whereNull('end_date') // S'assurer que c'est le propriétaire actuel
+                                           ->pluck('appartement_id');
+
+    // Récupérer les paiements associés à cet appartement
+    $paiements = Paiement::whereIn('appartement_id', $appartement_id)->latest()->get();
+
+    // Retourner la vue avec les données des paiements pour le copropriétaire
+    return view('backend.coproprietaire.paiement.all_paiement', compact('paiements'));
+}
+
+public function AllFacture()
+{
+    $user = auth()->user();
+
+    // Récupérer l'appartement associé au copropriétaire
+    $appartement_id = CoproprietaireHistory::where('coproprietaire_id', $user->id)
+                                           ->whereNull('end_date') // S'assurer que c'est le propriétaire actuel
+                                           ->pluck('appartement_id');
+
+    // Récupérer les factures associées à cet appartement
+    $factures = Facture::whereIn('appartement_id', $appartement_id)->latest()->get();
+
+    // Retourner la vue avec les données des factures pour le copropriétaire
+    return view('backend.coproprietaire.facture.all_facture', compact('factures'));
+}
+
+
+
  }
 
-?>
