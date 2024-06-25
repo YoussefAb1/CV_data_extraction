@@ -17,14 +17,52 @@ use App\Models\CoproprietaireHistory;
 use App\Models\Paiement;
 use App\Models\Immeuble;
 use App\Models\Facture;
+use Illuminate\Support\Facades\Validator;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Support\Facades\View;
 
 
 class SyndicController extends Controller
 {
-    public function SyndicDashboard(){
+    public function SyndicDashboard()
+{
+    // Récupérer l'utilisateur authentifié
+    $user = auth()->user();
 
-        return view('backend.syndic.index');
+    // Initialiser les variables par défaut
+    $nombreAppartements = 0;
+    $nombreCoproprietaires = 0;
+    $appartements = collect();
+
+    // Vérifier si l'utilisateur a un syndic associé
+    if ($user->syndic) {
+        // Récupérer l'historique le plus récent du syndic
+        $syndicHistory = $user->syndic->histories->last();
+
+        if ($syndicHistory && $syndicHistory->immeuble) {
+            // Récupérer l'ID de l'immeuble
+            $immeubleId = $syndicHistory->immeuble->id;
+
+            // Compter le nombre d'appartements dans l'immeuble
+            $nombreAppartements = Appartement::where('immeuble_id', $immeubleId)->count();
+
+            // Récupérer les appartements dans l'immeuble
+            $appartements = Appartement::where('immeuble_id', $immeubleId)->get();
+
+            // Compter le nombre de copropriétaires possédant ces appartements
+            $appartementIds = $appartements->pluck('id');
+            $nombreCoproprietaires = CoproprietaireHistory::whereIn('appartement_id', $appartementIds)
+                                        ->distinct('coproprietaire_id')
+                                        ->count('coproprietaire_id');
+        }
     }
+
+    return view('backend.syndic.index', compact('nombreAppartements', 'nombreCoproprietaires', 'appartements'));
+}
+
+
+
 
     public function SyndicLogout(Request $request){
         Auth::guard('web')->logout();
@@ -115,711 +153,681 @@ class SyndicController extends Controller
     }
 
     public function AllAppartement()
-{
-    $user = auth()->user();
-    $residences = Residence::all();
-    $coproprietaires = MemberCoproprietaire::all();
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
 
-    if ($user->role === 'syndic') {
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        $appartements = Appartement::whereIn('immeuble_id', $immeubles_ids)->get();
-    } else {
-        abort(403, 'Unauthorized action.');
+        // Vérifier si l'utilisateur a un syndic associé
+        if ($user->syndic) {
+            // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+            $syndicHistory = $user->syndic->histories->last();
+
+            if ($syndicHistory && $syndicHistory->immeuble) {
+                // Récupérer les appartements de l'immeuble du syndic
+                $appartements = $syndicHistory->immeuble->appartements;
+
+                // Retourner la vue avec les appartements
+                return view('backend.syndic.appartement.all_appartement', compact('appartements'));
+            } else {
+                // Si le syndic n'est pas associé à un immeuble, retourner une vue vide ou un message d'erreur
+                return view('backend.syndic.appartement.all_appartement', ['appartements' => collect()])
+                    ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
+            }
+        } else {
+            // Si l'utilisateur n'a pas de syndic associé, retourner une vue vide ou un message d'erreur
+            return view('backend.syndic.appartement.all_appartement', ['appartements' => collect()])
+                ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
+        }
     }
 
-    return view('backend.syndic.appartement.all_appartement', compact('appartements', 'residences', 'coproprietaires'));
+    public function AddAppartement()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $user->syndic->histories->last()->immeuble;
+        $residence = $immeuble->residence;
+
+        return view('backend.syndic.appartement.add_appartement', compact('immeuble', 'residence'));
+    }
+
+    public function StoreAppartement(Request $request)
+    {
+        $request->validate([
+            'nom_appartement' => 'required|string|max:255',
+            'etage' => 'required|string|max:255',
+            'surface' => 'required|string|max:255',
+        ]);
+
+        $appartement = new Appartement($request->all());
+
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+        // Ajouter l'immeuble et la résidence associés au syndic authentifié à l'appartement
+        $appartement->immeuble_id = $user->syndic->histories->last()->immeuble->id;
+        $appartement->residence_id = $user->syndic->histories->last()->immeuble->residence->id;
+
+        $appartement->save();
+
+        return redirect()->route('syndic.all.appartement')->with('success', 'Appartement ajouté avec succès');
+    }
+
+
+
+    public function EditAppartement($id)
+    {
+        $appartement = Appartement::findOrFail($id);
+        // Récupérer l'immeuble associé à l'appartement
+        $immeuble = $appartement->immeuble;
+        // Récupérer la résidence associée à l'immeuble
+        $residence = $immeuble->residence;
+
+        return view('backend.syndic.appartement.edit_appartement', compact('appartement', 'immeuble', 'residence'));
+    }
+
+
+
+    public function UpdateAppartement(Request $request, $id)
+    {
+        $request->validate([
+            'nom_appartement' => 'required|string|max:255',
+            'etage' => 'required|string|max:255',
+            'surface' => 'required|string|max:255',
+        ]);
+
+        $appartement = Appartement::findOrFail($id);
+        $appartement->update($request->all());
+
+        return redirect()->route('syndic.all.appartement')->with('success', 'Appartement mis à jour avec succès');
+    }
+
+
+    public function DeleteAppartement($id)
+    {
+        Appartement::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Appartement supprimé avec succès');
+    }
+
+
+    public function AllCharge()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Vérifier si l'utilisateur a un syndic associé
+        if ($user->syndic) {
+            // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+            $syndicHistory = $user->syndic->histories->last();
+
+            if ($syndicHistory && $syndicHistory->immeuble) {
+                // Récupérer les charges des appartements de l'immeuble du syndic
+                $charges = Charge::whereHas('appartement', function($query) use ($syndicHistory) {
+                    $query->where('immeuble_id', $syndicHistory->immeuble->id);
+                })->get();
+
+                // Retourner la vue avec les charges
+                return view('backend.syndic.charge.all_charge', compact('charges'));
+            } else {
+                // Si le syndic n'est pas associé à un immeuble, retourner une vue vide ou un message d'erreur
+                return view('backend.syndic.charge.all_charge', ['charges' => collect()])
+                    ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
+            }
+        } else {
+            // Si l'utilisateur n'a pas de syndic associé, retourner une vue vide ou un message d'erreur
+            return view('backend.syndic.charge.all_charge', ['charges' => collect()])
+                ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
+        }
+    }
+
+
+
+    public function AddCharge()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $user->syndic->histories->last()->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.charge.add_charge', compact('immeuble', 'residence', 'appartements'));
+    }
+
+
+
+    public function StoreCharge(Request $request)
+    {
+        $request->validate([
+            'designation' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'date' => 'required|date',
+            'montant' => 'required|numeric',
+            'appartement_id' => 'required|exists:appartements,id',
+            'statut' => 'required|string|max:255',
+        ]);
+
+        $charge = new Charge($request->all());
+        $charge->save();
+
+        return redirect()->route('syndic.all.charge')->with('success', 'Charge ajoutée avec succès');
+    }
+
+
+
+    public function EditCharge($id)
+    {
+        $charge = Charge::findOrFail($id);
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $charge->appartement->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.charge.edit_charge', compact('charge', 'immeuble', 'residence', 'appartements'));
+    }
+
+
+
+
+    public function UpdateCharge(Request $request, $id)
+    {
+        $request->validate([
+            'designation' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'date' => 'required|date',
+            'montant' => 'required|numeric',
+            'appartement_id' => 'required|exists:appartements,id',
+            'statut' => 'required|string|max:255',
+        ]);
+
+        $charge = Charge::findOrFail($id);
+        $charge->update($request->all());
+
+        return redirect()->route('syndic.all.charge')->with('success', 'Charge mise à jour avec succès');
+    }
+
+
+
+    public function DeleteCharge($id)
+    {
+        Charge::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Charge supprimée avec succès');
+    }
+
+
+
+    public function AllCotisation()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Vérifier si l'utilisateur a un syndic associé
+        if ($user->syndic) {
+            // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+            $syndicHistory = $user->syndic->histories->last();
+
+            if ($syndicHistory && $syndicHistory->immeuble) {
+                // Récupérer les cotisations des appartements de l'immeuble du syndic
+                $cotisations = Cotisation::whereHas('appartement', function($query) use ($syndicHistory) {
+                    $query->where('immeuble_id', $syndicHistory->immeuble->id);
+                })->get();
+
+                // Retourner la vue avec les cotisations
+                return view('backend.syndic.cotisation.all_cotisation', compact('cotisations'));
+            } else {
+                // Si le syndic n'est pas associé à un immeuble, retourner une vue vide ou un message d'erreur
+                return view('backend.syndic.cotisation.all_cotisation', ['cotisations' => collect()])
+                    ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
+            }
+        } else {
+            // Si l'utilisateur n'a pas de syndic associé, retourner une vue vide ou un message d'erreur
+            return view('backend.syndic.cotisation.all_cotisation', ['cotisations' => collect()])
+                ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
+        }
+    }
+
+
+
+
+    public function AddCotisation()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $user->syndic->histories->last()->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.cotisation.add_cotisation', compact('immeuble', 'residence', 'appartements'));
+    }
+
+
+    public function StoreCotisation(Request $request)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_cotisation' => 'required|date',
+            'description' => 'required|string|max:255',
+            'appartement_id' => 'required|exists:appartements,id',
+        ]);
+
+        // Récupérer l'enregistrement correspondant dans la table 'coproprietaire_histories'
+        $coproprietaire_history = CoproprietaireHistory::where('appartement_id', $request->appartement_id)->latest()->first();
+
+        if ($coproprietaire_history) {
+            // Si un enregistrement est trouvé, récupérer l'ID du copropriétaire
+            $member_coproprietaire_id = $coproprietaire_history->coproprietaire_id;
+
+            // Récupérer l'ID du syndic authentifié
+            $user = auth()->user();
+            $member_syndic_id = $user->syndic->id;
+
+            // Créer une nouvelle cotisation avec le membre copropriétaire et le syndic associés
+            $cotisation = new Cotisation($request->all());
+            $cotisation->member_coproprietaire_id = $member_coproprietaire_id;
+            $cotisation->member_syndic_id = $member_syndic_id;
+            $cotisation->save();
+
+            return redirect()->route('syndic.all.cotisation')->with('success', 'Cotisation ajoutée avec succès');
+        } else {
+            // Si aucun enregistrement n'est trouvé dans 'coproprietaire_histories', renvoyer une erreur
+            return redirect()->back()->withErrors(['message' => 'Aucun copropriétaire associé à cet appartement']);
+        }
+    }
+
+
+
+    public function EditCotisation($id)
+    {
+        $cotisation = Cotisation::findOrFail($id);
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $cotisation->appartement->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.cotisation.edit_cotisation', compact('cotisation', 'immeuble', 'residence', 'appartements'));
+    }
+
+
+
+    public function UpdateCotisation(Request $request, $id)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_cotisation' => 'required|date',
+            'description' => 'required|string|max:255',
+            'appartement_id' => 'required|exists:appartements,id',
+        ]);
+
+        $cotisation = Cotisation::findOrFail($id);
+        $cotisation->update($request->all());
+
+        return redirect()->route('syndic.all.cotisation')->with('success', 'Cotisation mise à jour avec succès');
+    }
+
+
+
+    public function DeleteCotisation($id)
+    {
+        Cotisation::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Cotisation supprimée avec succès');
+    }
+
+
+    public function AllPaiement()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Vérifier si l'utilisateur a un syndic associé
+        if ($user->syndic) {
+            // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+            $syndicHistory = $user->syndic->histories->last();
+
+            if ($syndicHistory && $syndicHistory->immeuble) {
+                // Récupérer les paiements associés aux appartements de l'immeuble du syndic
+                $paiements = Paiement::whereHas('syndicHistory', function ($query) use ($syndicHistory) {
+                    $query->where('immeuble_id', $syndicHistory->immeuble->id);
+                })->get();
+
+                // Retourner la vue avec les paiements
+                return view('backend.syndic.paiement.all_paiement', compact('paiements'));
+            } else {
+                // Si le syndic n'est pas associé à un immeuble, retourner une vue vide ou un message d'erreur
+                return view('backend.syndic.paiement.all_paiement', ['paiements' => collect()])
+                    ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
+            }
+        } else {
+            // Si l'utilisateur n'a pas de syndic associé, retourner une vue vide ou un message d'erreur
+            return view('backend.syndic.paiement.all_paiement', ['paiements' => collect()])
+                ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
+        }
+    }
+
+
+    public function AddPaiement()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $user->syndic->histories->last()->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        // Récupérer les cotisations associées aux appartements de l'immeuble
+        $cotisations = Cotisation::whereHas('appartement', function ($query) use ($immeuble) {
+            $query->where('immeuble_id', $immeuble->id);
+        })->get();
+
+        return view('backend.syndic.paiement.add_paiement', compact('immeuble', 'residence', 'appartements', 'cotisations'));
+    }
+
+
+    public function StorePaiement(Request $request)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_paiement' => 'required|date',
+            'methode_paiement' => 'required|string|max:255',
+            'cotisation_id' => 'required|exists:cotisations,id',
+            'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
+        ]);
+
+        $paiement = new Paiement($request->all());
+        $paiement->save();
+
+        return redirect()->route('syndic.all.paiement')->with('success', 'Paiement ajouté avec succès');
+    }
+
+
+
+    public function EditPaiement($id)
+    {
+        $paiement = Paiement::findOrFail($id);
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $paiement->syndicHistory->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        // Récupérer les cotisations associées aux appartements de l'immeuble
+        $cotisations = Cotisation::whereHas('appartement', function ($query) use ($immeuble) {
+            $query->where('immeuble_id', $immeuble->id);
+        })->get();
+
+        return view('backend.syndic.paiement.edit_paiement', compact('paiement', 'immeuble', 'residence', 'appartements', 'cotisations'));
+    }
+
+
+    public function UpdatePaiement(Request $request, $id)
+    {
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_paiement' => 'required|date',
+            'methode_paiement' => 'required|string|max:255',
+            'cotisation_id' => 'required|exists:cotisations,id',
+            'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
+        ]);
+
+        $paiement = Paiement::findOrFail($id);
+        $paiement->update($request->all());
+
+        return redirect()->route('syndic.all.paiement')->with('success', 'Paiement mis à jour avec succès');
+    }
+
+
+
+    public function DeletePaiement($id)
+    {
+        Paiement::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Paiement supprimé avec succès');
+    }
+
+
+    public function downloadPDF($id)
+{
+    $paiement = Paiement::findOrFail($id);
+
+    $pdf = new Dompdf();
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isRemoteEnabled', true);
+    $pdf->setOptions($options);
+
+    $pdf->loadHtml(View::make('backend.paiement.paiement_pdf', compact('paiement')));
+    $pdf->render();
+
+    $pdf->stream('paiement.pdf', ['Attachment' => 0]);
 }
 
-public function AddAppartement()
+
+    public function AllMemberCoproprietaire()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Vérifier si l'utilisateur a un syndic associé
+        if ($user->syndic) {
+            // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+            $syndicHistory = $user->syndic->histories->last();
+
+            if ($syndicHistory && $syndicHistory->immeuble) {
+                // Récupérer les copropriétaires associés aux appartements de l'immeuble du syndic
+                $coproprietaires = MemberCoproprietaire::whereHas('coproprietaireHistories', function ($query) use ($syndicHistory) {
+                    $query->whereHas('appartement', function ($query) use ($syndicHistory) {
+                        $query->where('immeuble_id', $syndicHistory->immeuble->id);
+                    });
+                })->get();
+
+                // Retourner la vue avec les copropriétaires
+                return view('backend.syndic.coproprietaire.all_coproprietaire', compact('coproprietaires'));
+            } else {
+                // Si le syndic n'est pas associé à un immeuble, retourner une vue vide ou un message d'erreur
+                return view('backend.syndic.coproprietaire.all_coproprietaire', ['coproprietaires' => collect()])
+                    ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
+            }
+        } else {
+            // Si l'utilisateur n'a pas de syndic associé, retourner une vue vide ou un message d'erreur
+            return view('backend.syndic.coproprietaire.all_coproprietaire', ['coproprietaires' => collect()])
+                ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
+        }
+    }
+
+
+    public function AddMemberCoproprietaire()
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $user->syndic->histories->last()->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.coproprietaire.add_coproprietaire', compact('immeuble', 'residence', 'appartements'));
+    }
+
+
+    public function StoreMemberCoproprietaire(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'cin' => 'required|string|max:255|unique:coproprietaires',
+            'type' => 'required|string|max:255',
+            'appartement_id' => 'required|exists:appartements,id',
+        ]);
+
+        $coproprietaire = new MemberCoproprietaire($request->all());
+        $coproprietaire->save();
+
+        return redirect()->route('syndic.all.memberCoproprietaire')->with('success', 'Copropriétaire ajouté avec succès');
+    }
+
+
+    public function EditMemberCoproprietaire($id)
+    {
+        $coproprietaire = MemberCoproprietaire::findOrFail($id);
+
+        // Récupérer l'immeuble et la résidence associés au syndic authentifié
+        $immeuble = $coproprietaire->histories->last()->appartement->immeuble;
+        $residence = $immeuble->residence;
+
+        // Récupérer les appartements associés à l'immeuble
+        $appartements = $immeuble->appartements;
+
+        return view('backend.syndic.coproprietaire.edit_coproprietaire', compact('coproprietaire', 'immeuble', 'residence', 'appartements'));
+    }
+
+
+    public function UpdateMemberCoproprietaire(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'cin' => 'required|string|max:255|unique:coproprietaires,cin,' . $id,
+            'type' => 'required|string|max:255',
+            'appartement_id' => 'required|exists:appartements,id',
+        ]);
+
+        $coproprietaire = MemberCoproprietaire::findOrFail($id);
+        $coproprietaire->update($request->all());
+
+        return redirect()->route('syndic.all.memberCoproprietaire')->with('success', 'Copropriétaire mis à jour avec succès');
+    }
+
+
+    public function DeleteMemberCoproprietaire($id)
+    {
+        MemberCoproprietaire::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Copropriétaire supprimé avec succès');
+    }
+
+
+
+    public function AllFacture(Request $request)
 {
     // Récupérer l'utilisateur authentifié
     $user = auth()->user();
 
-    // Récupérer les informations de la résidence et de l'immeuble associés au syndic à partir de SyndicHistory
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->first();
-    $residence = $syndicHistory->immeuble->residence;
-    $immeuble = $syndicHistory->immeuble;
+    // Vérifier si l'utilisateur a un syndic associé
+    if ($user->syndic) {
+        // Récupérer l'immeuble associé au syndic à partir de la table syndic_histories
+        $syndicHistory = $user->syndic->histories->last();
+
+        if ($syndicHistory && $syndicHistory->immeuble) {
+            // Récupérer les factures associées à l'immeuble du syndic avec des fonctionnalités de recherche et de filtrage
+            $query = Facture::query();
+
+            if ($request->filled('numero_facture')) {
+                $query->where('numero_facture', 'like', '%' . $request->numero_facture . '%');
+            }
+
+            if ($request->filled('date_emission')) {
+                $query->where('date_emission', $request->date_emission);
+            }
+
+            if ($request->filled('date_echeance')) {
+                $query->where('date_echeance', $request->date_echeance);
+            }
+
+            if ($request->filled('paiement_id')) {
+                $query->where('paiement_id', $request->paiement_id);
+            }
+
+            $factures = $query->whereHas('paiement', function ($query) use ($syndicHistory) {
+                $query->whereHas('syndicHistory', function ($query) use ($syndicHistory) {
+                    $query->where('immeuble_id', $syndicHistory->immeuble->id);
+                });
+            })->get();
 
-    return view('backend.syndic.appartement.add_appartement', compact('residence', 'immeuble'));
-}
-
-public function StoreAppartement(Request $request)
-{
-    $request->validate([
-        'nom_appartement' => 'required|unique:appartements|max:255',
-        'etage' => 'required',
-        'surface' => 'required',
-        'immeuble_id' => 'required|exists:immeubles,id',
-    ]);
-
-    Appartement::create([
-        'nom_appartement' => $request->nom_appartement,
-        'etage' => $request->etage,
-        'surface' => $request->surface,
-        'immeuble_id' => $request->immeuble_id,
-    ]);
-
-    return redirect()->route('syndic.all.appartement')->with('success', 'Appartement ajouté avec succès');
-}
-
-
-public function EditAppartement($id)
-{
-    $appartement = Appartement::findOrFail($id);
-
-    // Récupérer les informations de la résidence et de l'immeuble associés à l'appartement
-    $immeuble = $appartement->immeuble;
-    $residence = $immeuble->residence;
-
-    return view('backend.syndic.appartement.edit_appartement', compact('appartement', 'immeuble', 'residence'));
-}
-
-
-public function UpdateAppartement(Request $request, $id)
-{
-    $request->validate([
-        'nom_appartement' => 'required|unique:appartements,nom_appartement,' . $id . '|max:255',
-        'etage' => 'required',
-        'surface' => 'required',
-        'immeuble_id' => 'required|exists:immeubles,id',
-    ]);
-
-    $appartement = Appartement::findOrFail($id);
-    $appartement->update([
-        'nom_appartement' => $request->nom_appartement,
-        'etage' => $request->etage,
-        'surface' => $request->surface,
-        'immeuble_id' => $request->immeuble_id,
-    ]);
-
-    return redirect()->route('syndic.all.appartement')->with('success', 'Appartement mis à jour avec succès');
-}
-
-
-public function DeleteAppartement($id)
-{
-    $appartement = Appartement::findOrFail($id);
-    $appartement->delete();
-
-    return redirect()->route('syndic.all.appartement')->with('success', 'Appartement supprimé avec succès');
-}
-
-public function AllCharge()
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        // Récupérer les immeubles associés au syndic
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        // Récupérer les charges associées à ces immeubles
-        $charges = Charge::whereIn('immeuble_id', $immeubles_ids)
-                         ->with(['appartement.immeuble.residence'])
-                         ->latest()
-                         ->get();
-        return view('backend.syndic.charge.all_charge', compact('charges'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-
-public function AddCharge()
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-
-    return view('backend.syndic.charge.add_charge', compact('appartements', 'immeuble', 'residence'));
-}
-
-
-public function StoreCharge(Request $request)
-{
-    $request->validate([
-        'designation' => 'required',
-        'type' => 'required',
-        'date' => 'required|date',
-        'montant' => 'required|numeric',
-        'description' => 'nullable',
-        'statut' => 'required',
-        'appartement_id' => 'required|exists:appartements,id',
-    ]);
-
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    Charge::create([
-        'designation' => $request->designation,
-        'type' => $request->type,
-        'date' => $request->date,
-        'montant' => $request->montant,
-        'description' => $request->description,
-        'statut' => $request->statut,
-        'appartement_id' => $request->appartement_id,
-        'immeuble_id' => $immeuble->id,
-        'residence_id' => $residence->id,
-    ]);
-
-    return redirect()->route('syndic.all.charge')->with('success', 'Charge ajoutée avec succès');
-}
-
-
-public function EditCharge($id)
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    $charge = Charge::where('immeuble_id', $immeuble->id)->findOrFail($id);
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-
-    return view('backend.syndic.charge.edit_charge', compact('charge', 'appartements', 'immeuble', 'residence'));
-}
-
-
-
-public function UpdateCharge(Request $request, $id)
-{
-    $request->validate([
-        'designation' => 'required',
-        'type' => 'required',
-        'date' => 'required|date',
-        'montant' => 'required|numeric',
-        'description' => 'nullable',
-        'statut' => 'required',
-        'appartement_id' => 'required|exists:appartements,id',
-    ]);
-
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    $charge = Charge::where('immeuble_id', $immeuble->id)->findOrFail($id);
-    $charge->update([
-        'designation' => $request->designation,
-        'type' => $request->type,
-        'date' => $request->date,
-        'montant' => $request->montant,
-        'description' => $request->description,
-        'statut' => $request->statut,
-        'appartement_id' => $request->appartement_id,
-        'immeuble_id' => $immeuble->id,
-        'residence_id' => $residence->id,
-    ]);
-
-    return redirect()->route('syndic.all.charge')->with('success', 'Charge modifiée avec succès');
-}
-
-
-public function DeleteCharge($id)
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-
-    $charge = Charge::where('immeuble_id', $immeuble->id)->findOrFail($id);
-    $charge->delete();
-
-    return redirect()->back()->with('success', 'Charge supprimée avec succès');
-}
-
-
-public function AllCotisation()
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        // Récupérer les immeubles associés au syndic
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        // Récupérer les cotisations associées à ces immeubles
-        $cotisations = Cotisation::with(['appartement.immeuble', 'appartement.residence'])
-            ->whereHas('appartement', function ($query) use ($immeubles_ids) {
-                $query->whereIn('immeuble_id', $immeubles_ids);
-            })
-            ->latest()
-            ->get();
-        return view('backend.syndic.cotisation.all_cotisation', compact('cotisations'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-
-
-public function AddCotisation()
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-    $coproprietaires = MemberCoproprietaire::all();
-    $syndics = MemberSyndic::with('user')->get();
-
-    return view('backend.syndic.cotisation.add_cotisation', compact('appartements', 'coproprietaires', 'syndics', 'immeuble', 'residence'));
-}
-
-public function StoreCotisation(Request $request)
-{
-    $request->validate([
-        'montant' => 'required|numeric',
-        'date_cotisation' => 'required|date',
-        'description' => 'nullable|string',
-        'appartement_id' => 'required|exists:appartements,id',
-        'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
-        'member_syndic_id' => 'required|exists:member_syndics,id'
-    ]);
-
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    Cotisation::create([
-        'montant' => $request->montant,
-        'date_cotisation' => $request->date_cotisation,
-        'description' => $request->description,
-        'appartement_id' => $request->appartement_id,
-        'member_coproprietaire_id' => $request->member_coproprietaire_id,
-        'member_syndic_id' => $request->member_syndic_id,
-        'immeuble_id' => $immeuble->id,
-        'residence_id' => $residence->id,
-    ]);
-
-    return redirect()->route('syndic.all.cotisation')->with('success', 'Cotisation ajoutée avec succès');
-}
-
-
-public function EditCotisation($id)
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    $cotisation = Cotisation::whereHas('appartement', function ($query) use ($immeuble) {
-        $query->where('immeuble_id', $immeuble->id);
-    })->findOrFail($id);
-
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-    $coproprietaires = MemberCoproprietaire::all();
-    $syndics = MemberSyndic::with('user')->get();
-
-    return view('backend.syndic.cotisation.edit_cotisation', compact('cotisation', 'appartements', 'coproprietaires', 'syndics', 'immeuble', 'residence'));
-}
-
-
-public function UpdateCotisation(Request $request, $id)
-{
-    $request->validate([
-        'montant' => 'required|numeric',
-        'date_cotisation' => 'required|date',
-        'description' => 'nullable|string',
-        'appartement_id' => 'required|exists:appartements,id',
-        'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
-        'member_syndic_id' => 'required|exists:member_syndics,id'
-    ]);
-
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    $cotisation = Cotisation::whereHas('appartement', function ($query) use ($immeuble) {
-        $query->where('immeuble_id', $immeuble->id);
-    })->findOrFail($id);
-
-    $cotisation->update([
-        'montant' => $request->montant,
-        'date_cotisation' => $request->date_cotisation,
-        'description' => $request->description,
-        'appartement_id' => $request->appartement_id,
-        'member_coproprietaire_id' => $request->member_coproprietaire_id,
-        'member_syndic_id' => $request->member_syndic_id,
-        'immeuble_id' => $immeuble->id,
-        'residence_id' => $residence->id,
-    ]);
-
-    return redirect()->route('syndic.all.cotisation')->with('success', 'Cotisation modifiée avec succès');
-}
-
-
-public function DeleteCotisation($id)
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-
-    $cotisation = Cotisation::whereHas('appartement', function ($query) use ($immeuble) {
-        $query->where('immeuble_id', $immeuble->id);
-    })->findOrFail($id);
-
-    $cotisation->delete();
-
-    return redirect()->back()->with('success', 'Cotisation supprimée avec succès');
-}
-
-public function AllPaiement()
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        // Récupérer les immeubles associés au syndic
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        // Récupérer les paiements associés à ces immeubles
-        $paiements = Paiement::with([
-            'coproprietaireHistory.appartement.immeuble.residence',
-            'coproprietaireHistory.coproprietaire',
-            'syndicHistory.syndic',
-            'cotisation'
-        ])->whereHas('coproprietaireHistory.appartement', function ($query) use ($immeubles_ids) {
-            $query->whereIn('immeuble_id', $immeubles_ids);
-        })->latest()->get();
-        // Retourner la vue avec les données des paiements pour le syndic
-        return view('backend.syndic.paiement.all_paiement', compact('paiements'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function AddPaiement()
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-    $coproprietaireHistories = CoproprietaireHistory::all();
-    $syndicHistories = SyndicHistory::all();
-    $cotisations = Cotisation::all();
-
-    return view('backend.syndic.paiement.add_paiement', compact('residence', 'immeuble', 'appartements', 'coproprietaireHistories', 'syndicHistories', 'cotisations'));
-}
-
-public function StorePaiement(Request $request)
-{
-    $request->validate([
-        'montant' => 'required|numeric',
-        'date_paiement' => 'required|date',
-        'methode_paiement' => 'required|string',
-        'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
-        'syndic_history_id' => 'required|exists:syndic_histories,id',
-        'cotisation_id' => 'required|exists:cotisations,id',
-    ]);
-
-    Paiement::create([
-        'montant' => $request->montant,
-        'date_paiement' => $request->date_paiement,
-        'methode_paiement' => $request->methode_paiement,
-        'coproprietaire_history_id' => $request->coproprietaire_history_id,
-        'syndic_history_id' => $request->syndic_history_id,
-        'cotisation_id' => $request->cotisation_id,
-    ]);
-
-    return redirect()->route('syndic.all.paiement')->with('success', 'Paiement ajouté avec succès');
-}
-
-
-public function EditPaiement($id)
-{
-    $user = auth()->user();
-    $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->firstOrFail();
-    $immeuble = $syndicHistory->immeuble;
-    $residence = $immeuble->residence;
-
-    $paiement = Paiement::whereHas('coproprietaireHistory.appartement', function ($query) use ($immeuble) {
-        $query->where('immeuble_id', $immeuble->id);
-    })->findOrFail($id);
-
-    $residences = Residence::all();
-    $immeubles = Immeuble::all();
-    $appartements = Appartement::where('immeuble_id', $immeuble->id)->get();
-    $coproprietaires = MemberCoproprietaire::all(); // Assurez-vous de récupérer les copropriétaires si nécessaire
-    $syndics = MemberSyndic::all(); // Assurez-vous de récupérer les syndics si nécessaire
-    $cotisations = Cotisation::all();
-
-    return view('backend.syndic.paiement.edit_paiement', compact('paiement', 'residences', 'immeubles', 'appartements', 'coproprietaires', 'syndics', 'cotisations', 'residence', 'immeuble'));
-}
-
-public function UpdatePaiement(Request $request, $id)
-{
-    $request->validate([
-        'montant' => 'required|numeric',
-        'date_paiement' => 'required|date',
-        'methode_paiement' => 'required|string',
-        'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
-        'syndic_history_id' => 'required|exists:syndic_histories,id',
-        'cotisation_id' => 'required|exists:cotisations,id',
-    ]);
-
-    $paiement = Paiement::findOrFail($id);
-    $paiement->update([
-        'montant' => $request->montant,
-        'date_paiement' => $request->date_paiement,
-        'methode_paiement' => $request->methode_paiement,
-        'coproprietaire_history_id' => $request->coproprietaire_history_id,
-        'syndic_history_id' => $request->syndic_history_id,
-        'cotisation_id' => $request->cotisation_id,
-    ]);
-
-    return redirect()->route('syndic.all.paiement')->with('success', 'Paiement modifié avec succès');
-}
-
-
-public function DeletePaiement($id)
-{
-    Paiement::findOrFail($id)->delete();
-    return redirect()->back()->with('success', 'Paiement supprimé avec succès');
-}
-
-
-public function AllMemberCoproprietaire()
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        // Récupérer les immeubles associés au syndic
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        // Récupérer les appartements dans ces immeubles
-        $appartement_ids = Appartement::whereIn('immeuble_id', $immeubles_ids)->pluck('id');
-        // Récupérer les copropriétaires associés à ces appartements via CoproprietaireHistory
-        $coproprietaire_ids = CoproprietaireHistory::whereIn('appartement_id', $appartement_ids)->pluck('coproprietaire_id');
-        $coproprietaires = MemberCoproprietaire::whereIn('id', $coproprietaire_ids)->with('user')->latest()->get();
-
-        // Retourner la vue avec les données des copropriétaires pour le syndic
-        return view('backend.syndic.coproprietaire.all_coproprietaire', compact('coproprietaires'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function AddMemberCoproprietaire()
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        // Désactiver les champs d'immeuble et de résidence
-        $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->first();
-        $immeuble_id = $syndicHistory->immeuble_id;
-        $residence_id = $syndicHistory->immeuble->residence_id;
-
-        $users = User::all();
-        return view('backend.syndic.coproprietaire.add_coproprietaire', compact('users', 'residence_id', 'immeuble_id'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function StoreMemberCoproprietaire(Request $request)
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'cin' => 'required|unique:member_coproprietaires|max:255',
-            'name' => 'required',
-            'type' => 'required|in:promoteur,proprietaire,locataire'
-        ]);
-
-        MemberCoproprietaire::create($request->all());
-
-        return redirect()->route('syndic.all.memberCoproprietaire')->with('success', 'Copropriétaire ajouté avec succès');
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function EditMemberCoproprietaire($id)
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        $coproprietaire = MemberCoproprietaire::with('coproprietaireHistories')->findOrFail($id);
-        $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->first();
-        $immeuble_id = $syndicHistory->immeuble_id;
-        $residence_id = $syndicHistory->immeuble->residence_id;
-
-        $users = User::all();
-        return view('backend.syndic.coproprietaire.edit_coproprietaire', compact('coproprietaire', 'users', 'residence_id', 'immeuble_id'));
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function UpdateMemberCoproprietaire(Request $request, $id)
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'cin' => 'required|max:255|unique:member_coproprietaires,cin,' . $id,
-            'name' => 'required',
-            'type' => 'required|in:promoteur,proprietaire,locataire'
-        ]);
-
-        MemberCoproprietaire::findOrFail($id)->update($request->all());
-
-        return redirect()->route('syndic.all.memberCoproprietaire')->with('success', 'Copropriétaire modifié avec succès');
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-public function DeleteMemberCoproprietaire($id)
-{
-    $user = auth()->user();
-
-    if ($user->role === 'syndic') {
-        MemberCoproprietaire::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Copropriétaire supprimé avec succès');
-    } else {
-        abort(403, 'Unauthorized action.');
-    }
-}
-
-
-    public function AllFacture()
-    {
-        $user = auth()->user();
-
-        if ($user->role === 'syndic') {
-            // Récupérer les immeubles associés au syndic
-            $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-
-            // Récupérer les appartements associés à ces immeubles
-            $appartements_ids = Appartement::whereIn('immeuble_id', $immeubles_ids)->pluck('id');
-
-            // Récupérer les factures associées à ces appartements
-            $factures = Facture::whereIn('appartement_id', $appartements_ids)->latest()->get();
-
-            // Retourner la vue avec les données des factures pour le syndic
             return view('backend.syndic.facture.all_facture', compact('factures'));
         } else {
-            abort(403, 'Unauthorized action.');
+            return view('backend.syndic.facture.all_facture', ['factures' => collect()])
+                ->withErrors(['message' => 'Le syndic n\'est associé à aucun immeuble.']);
         }
+    } else {
+        return view('backend.syndic.facture.all_facture', ['factures' => collect()])
+            ->withErrors(['message' => 'L\'utilisateur n\'est pas associé à un syndic.']);
     }
-
-    public function AddFacture()
-    {
-        // Récupérer l'utilisateur authentifié (le syndic)
-        $user = auth()->user();
-
-        // Vérifier l'historique du syndic
-        $syndicHistory = SyndicHistory::where('syndic_id', $user->id)->first();
-
-        if ($syndicHistory) {
-            $immeuble = $syndicHistory->immeuble;
-
-            if ($immeuble) {
-                $residence_id = $immeuble->residence_id;
-                $immeuble_id = $immeuble->id;
-            } else {
-                $residence_id = null;
-                $immeuble_id = null;
-            }
-        } else {
-            $residence_id = null;
-            $immeuble_id = null;
-        }
-
-        // Récupérer les copropriétaires, syndics, charges et paiements
-        $coproprietaires = MemberCoproprietaire::all();
-        $syndics = MemberSyndic::all();
-        $charges = Charge::all();
-        $paiements = Paiement::all();
-
-        // Retourner la vue pour ajouter une facture
-        return view('backend.syndic.facture.add_facture', compact('coproprietaires', 'syndics', 'charges', 'paiements', 'residence_id', 'immeuble_id'));
-    }
-
-    public function StoreFacture(Request $request)
-    {
-        $request->validate([
-            'numero_facture' => 'required|unique:factures',
-            'date_emission' => 'required|date',
-            'date_echeance' => 'required|date',
-            'montant_total' => 'required|numeric',
-            'description' => 'nullable|string',
-            'paiement_id' => 'nullable|exists:paiements,id',
-        ]);
-
-        Facture::create([
-            'numero_facture' => $request->numero_facture,
-            'date_emission' => $request->date_emission,
-            'date_echeance' => $request->date_echeance,
-            'montant_total' => $request->montant_total,
-            'description' => $request->description,
-            'paiement_id' => $request->paiement_id,
-        ]);
-
-        return redirect()->route('syndic.all.facture')->with('success', 'Facture ajoutée avec succès');
-    }
+}
 
 
-    public function EditFacture($id)
-    {
-        // Récupérer la facture à éditer
-        $facture = Facture::findOrFail($id);
+public function AddFacture()
+{
+    $paiements = Paiement::all(); // ou filtrer par les paiements pertinents
+    return view('backend.syndic.facture.add_facture', compact('paiements'));
+}
 
-        // Récupérer tous les appartements, charges et paiements
-        $appartements = Appartement::all();
-        $charges = Charge::all();
-        $paiements = Paiement::all();
 
-        // Retourner la vue pour éditer une facture
-        return view('backend.syndic.facture.edit_facture', compact('facture', 'appartements', 'charges', 'paiements'));
-    }
+public function StoreFacture(Request $request)
+{
+    $request->validate([
+        'numero_facture' => 'required|string|max:255|unique:factures',
+        'date_emission' => 'required|date',
+        'date_echeance' => 'required|date|after_or_equal:date_emission',
+        'montant_total' => 'required|numeric',
+        'description' => 'nullable|string',
+        'paiement_id' => 'required|exists:paiements,id',
+    ]);
 
-    public function UpdateFacture(Request $request, $id)
-    {
-        // validation
-        $validatedData = $request->validate([
-            'numero_facture' => 'required|max:20',
-            'date_emission' => 'required|date',
-            'date_echeance' => 'required|date',
-            'montant_total' => 'required|numeric',
-            'description' => 'required|string',
-            'appartement_id' => 'required|exists:appartements,id',
-            'charge_id' => 'required|exists:charges,id',
-            'paiement_id' => 'required|exists:paiements,id',
-            'etat' => 'required|string'
-        ]);
+    $facture = new Facture($request->all());
+    $facture->save();
 
-        // Mise à jour de la facture
-        Facture::findOrFail($id)->update($validatedData);
+    return redirect()->route('syndic.all.facture')->with('success', 'Facture ajoutée avec succès');
+}
 
-        // Notification de succès
-        $notification = array(
-            'message' => 'Facture modifiée avec succès',
-            'alert-type' => 'success'
-        );
 
-        // Redirection après modification
-        return redirect()->route('syndic.all.facture')->with($notification);
-    }
+public function EditFacture($id)
+{
+    $facture = Facture::findOrFail($id);
+    $paiements = Paiement::all(); // ou filtrer par les paiements pertinents
 
-    public function DeleteFacture($id)
-    {
-        // Suppression de la facture
-        Facture::findOrFail($id)->delete();
+    return view('backend.syndic.facture.edit_facture', compact('facture', 'paiements'));
+}
 
-        // Notification de succès
-        $notification = array(
-            'message' => 'Facture supprimée avec succès',
-            'alert-type' => 'success'
-        );
 
-        // Redirection après suppression
-        return redirect()->back()->with($notification);
-    }
+public function UpdateFacture(Request $request, $id)
+{
+    $request->validate([
+        'numero_facture' => 'required|string|max:255|unique:factures,numero_facture,' . $id,
+        'date_emission' => 'required|date',
+        'date_echeance' => 'required|date|after_or_equal:date_emission',
+        'montant_total' => 'required|numeric',
+        'description' => 'nullable|string',
+        'paiement_id' => 'required|exists:paiements,id',
+    ]);
+
+    $facture = Facture::findOrFail($id);
+    $facture->update($request->all());
+
+    return redirect()->route('syndic.all.facture')->with('success', 'Facture mise à jour avec succès');
+}
+
+
+public function DeleteFacture($id)
+{
+    Facture::findOrFail($id)->delete();
+    return redirect()->back()->with('success', 'Facture supprimée avec succès');
+}
+
 
 
     // public function generatePDF()

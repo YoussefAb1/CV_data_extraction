@@ -10,7 +10,7 @@ class Charge extends Model
     use HasFactory;
 
     protected $fillable = [
-        'designation', 'type', 'date', 'montant', 'description', 'statut', 'appartement_id'
+        'designation', 'type', 'date', 'montant', 'description', 'appartement_id','statut'
     ];
 
     public function factures()
@@ -30,7 +30,7 @@ class Charge extends Model
 
     public function residence()
     {
-        return $this->appartement->immeuble->residence; 
+        return $this->appartement->immeuble->residence;
     }
 
     public function compte()

@@ -11,20 +11,27 @@ use App\Models\Immeuble;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
 use App\Models\Residence;
+use App\Models\Cotisation;
 
 
 
 class AdminController extends Controller
 {
-    public function AdminDashboard(){
 
-        $residencesCount = Residence::count();
-        $immeublesCount = Immeuble::count();
-        $appartementsCount = Appartement::count();
-        $coproprietairesCount = MemberCoproprietaire::count();
-        $syndicsCount = MemberSyndic::count();
+    public function AdminDashboard()
+{
+    $residencesCount = Residence::count();
+    $immeublesCount = Immeuble::count();
+    $appartementsCount = Appartement::count();
+    $coproprietairesCount = MemberCoproprietaire::count();
+    $syndicsCount = MemberSyndic::count();
 
-        return view('admin.index', compact('residencesCount', 'immeublesCount', 'appartementsCount', 'coproprietairesCount', 'syndicsCount'));    }
+    // Récupérer les 10 derniers utilisateurs ajoutés
+    $latestUsers = User::orderBy('created_at', 'desc')->take(10)->get();
+    $latestCotisations = Cotisation::orderBy('created_at', 'desc')->take(10)->get();
+
+    return view('admin.index', compact('residencesCount', 'immeublesCount', 'appartementsCount', 'coproprietairesCount', 'syndicsCount', 'latestUsers','latestCotisations'));
+}
 
 
 

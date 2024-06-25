@@ -31,7 +31,7 @@
                                 <select class="form-control @error('immeuble_id') is-invalid @enderror" id="immeuble_id" name="immeuble_id" required>
                                     <option value="">Sélectionner un immeuble</option>
                                     @foreach($immeubles as $immeuble)
-                                        <option value="{{ $immeuble->id }}" {{ $syndic->histories->last()->immeuble_id == $immeuble->id ? 'selected' : '' }}>{{ $immeuble->name }}</option>
+                                        <option value="{{ $immeuble->id }}" {{ $syndic->histories->last() && $syndic->histories->last()->immeuble_id == $immeuble->id ? 'selected' : '' }}>{{ $immeuble->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('immeuble_id')
@@ -40,14 +40,14 @@
                             </div>
                             <div class="mb-3">
                                 <label for="start_date" class="form-label">Date de début</label>
-                                <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ $syndic->histories->last()->start_date }}" required>
+                                <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ $syndic->histories->last() ? $syndic->histories->last()->start_date : '' }}" required>
                                 @error('start_date')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="end_date" class="form-label">Date de fin</label>
-                                <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ $syndic->histories->last()->end_date }}">
+                                <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ $syndic->histories->last() ? $syndic->histories->last()->end_date : '' }}">
                                 @error('end_date')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

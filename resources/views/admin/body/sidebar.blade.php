@@ -177,25 +177,24 @@
 
 
 
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#coproprietaire" role="button" aria-expanded="false" aria-controls="coproprietaire">
-                  <i class="link-icon" data-feather="user"></i>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#coproprietaire" role="button" aria-expanded="false" aria-controls="coproprietaire">
+                <i class="link-icon" data-feather="user"></i>
                 <span class="link-title">Gestion Copropriétaires </span>
                 <i class="link-arrow" data-feather="chevron-down"></i>
-              </a>
-              <div class="collapse" id="coproprietaire">
+            </a>
+            <div class="collapse" id="coproprietaire">
                 <ul class="nav sub-menu">
-
-                  <li class="nav-item">
-                    <a href="{{ route('all.memberCoproprietaire') }}" class="nav-link">Lister Copropriétaires</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('add.memberCoproprietaire') }}" class="nav-link">Ajouter Copropriétaire</a>
-                  </li>
-
+                    <li class="nav-item">
+                        <a href="{{ route('all.memberCoproprietaire') }}" class="nav-link">Lister Copropriétaires</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('add.memberCoproprietaire') }}" class="nav-link">Ajouter Copropriétaire</a>
+                    </li>
                 </ul>
-              </div>
-            </li>
+            </div>
+        </li>
+
 
 
 
@@ -203,21 +202,22 @@
 
             <li class="nav-item nav-category">Utilisateurs</li>
 
-          <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#user" role="button" aria-expanded="false" aria-controls="user">
-                  <i class="link-icon" data-feather="user"></i>
-                  <span class="link-title">Gestion Utilisateurs</span>
-                <i class="link-arrow" data-feather="chevron-down"></i>
-              </a>
-              <div class="collapse" id="user">
-                <ul class="nav sub-menu">
-                  <li class="nav-item">
-                    <a href="{{route('all.utilisateur')}}" class="nav-link">Lister Utilisateurs</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{route('add.utilisateur')}}" class="nav-link">Ajouter Utilisateur</a>
-                  </li>
-                </ul>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#user" role="button" aria-expanded="false" aria-controls="user">
+                    <i class="link-icon" data-feather="user"></i>
+                    <span class="link-title">Gestion Utilisateurs</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" id="user">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="{{route('all.utilisateur')}}" class="nav-link">Lister Utilisateurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('add.utilisateur')}}" class="nav-link">Ajouter Utilisateur</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
           <li class="nav-item nav-category">Roles & Permissions</li>
@@ -241,13 +241,7 @@
 
 
 
-          <li class="nav-item nav-category">Docs</li>
-          <li class="nav-item">
-            <a href="https://www.nobleui.com/html/documentation/docs.html" target="_blank" class="nav-link">
-              <i class="link-icon" data-feather="hash"></i>
-              <span class="link-title">Documentation</span>
-            </a>
-          </li>
+
         </ul>
       </div>
     </nav>

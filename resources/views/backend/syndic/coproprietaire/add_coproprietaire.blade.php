@@ -2,53 +2,57 @@
 
 @section('syndic')
 <div class="page-content">
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('syndic.all.memberCoproprietaire') }}" class="btn btn-inverse-primary">Retour</a></li>
-        </ol>
-    </nav>
-
-    <div class="row">
-        <div class="col-md-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title">Ajouter un Copropriétaire</h6>
-                    <form action="{{ route('syndic.store.memberCoproprietaire') }}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label for="user_id">Utilisateur</label>
-                            <select name="user_id" id="user_id" class="form-control">
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="cin">CIN</label>
-                            <input type="text" name="cin" id="cin" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Nom</label>
-                            <input type="text" name="name" id="name" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="type">Type</label>
-                            <select name="type" id="type" class="form-control">
-                                <option value="promoteur">Promoteur</option>
-                                <option value="proprietaire">Propriétaire</option>
-                                <option value="locataire">Locataire</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="immeuble_id">Immeuble</label>
-                            <input type="text" id="immeuble_id" class="form-control" value="{{ $immeuble_id }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="residence_id">Résidence</label>
-                            <input type="text" id="residence_id" class="form-control" value="{{ $residence_id }}" disabled>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Ajouter</button>
-                    </form>
+    <div class="row profile-body">
+        <div class="col-md-8 col-xl-8 middle-wrapper">
+            <div class="row">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <h6 class="card-title">Ajouter un Copropriétaire</h6>
+                        <form action="{{ route('syndic.store.memberCoproprietaire') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nom</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" required>
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="cin" class="form-label">CIN</label>
+                                <input type="text" class="form-control @error('cin') is-invalid @enderror" id="cin" name="cin" required>
+                                @error('cin')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Type</label>
+                                <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
+                                @error('type')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="appartement_id" class="form-label">Appartement</label>
+                                <select class="form-control @error('appartement_id') is-invalid @enderror" id="appartement_id" name="appartement_id" required>
+                                    @foreach($appartements as $appartement)
+                                        <option value="{{ $appartement->id }}">{{ $appartement->nom_appartement }}</option>
+                                    @endforeach
+                                </select>
+                                @error('appartement_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="immeuble" class="form-label">Immeuble</label>
+                                <input type="text" class="form-control" id="immeuble" name="immeuble" value="{{ $immeuble->nom_immeuble }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="residence" class="form-label">Résidence</label>
+                                <input type="text" class="form-control" id="residence" name="residence" value="{{ $residence->nom_residence }}" disabled>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

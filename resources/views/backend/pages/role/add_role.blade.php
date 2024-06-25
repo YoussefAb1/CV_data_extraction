@@ -1,9 +1,25 @@
 @extends('admin.admin_dashboard')
 
 @section('admin')
+
+<style>
+
+.forms-sample{
+    padding-left: 21px;
+}
+
+.col-8{
+    padding-left: 6.15em;
+
+}
+
+</style>
+
+
+
 <div class="page-content">
     <div class="row profile-body">
-        <div class="col-md-8 col-xl-8 middle-wrapper">
+        <div class="col-md-12 col-xl-12 middle-wrapper">
             <div class="row">
                 <div class="card rounded">
                     <div class="card-body">
@@ -26,20 +42,22 @@
                             <hr>
 
                             @foreach ($permission_groups as $group)
-                            <div class="row">
-                                <div class="col-3">
+                            <div class="row mb-3">
+                                <div class="col-4">
                                     <div class="form-check mb-2">
                                         <input type="checkbox" class="form-check-input group-checkbox" id="group{{ $loop->index }}" onClick="toggleGroup({{ $loop->index }})">
                                         <label class="form-check-label" for="group{{ $loop->index }}">{{ $group->group_name }}</label>
                                     </div>
                                 </div>
-                                <div class="col-9">
-                                    @foreach ($permissions->where('group_name', $group->group_name) as $permission)
-                                    <div class="form-check mb-2">
-                                        <input type="checkbox" class="form-check-input permission-checkbox group{{ $loop->parent->index }}" name="permissions[]" value="{{ $permission->id }}" id="permission{{ $permission->id }}">
-                                        <label class="form-check-label" for="permission{{ $permission->id }}">{{ $permission->name }}</label>
+                                <div class="col-8">
+                                    <div class="permissions-container">
+                                        @foreach ($permissions->where('group_name', $group->group_name) as $permission)
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input permission-checkbox group{{ $loop->parent->index }}" name="permissions[]" value="{{ $permission->id }}" id="permission{{ $permission->id }}">
+                                            <label class="form-check-label" for="permission{{ $permission->id }}">{{ $permission->name }}</label>
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                 </div>
                             </div>
                             @endforeach
@@ -69,4 +87,6 @@
         }
     }
 </script>
+
+
 @endsection

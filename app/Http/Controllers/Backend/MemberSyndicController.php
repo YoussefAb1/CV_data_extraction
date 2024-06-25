@@ -44,6 +44,7 @@ class MemberSyndicController extends Controller
         return view('backend.syndic.edit_syndic', compact('syndic', 'users', 'immeubles'));
     }
 
+
     public function UpdateMemberSyndic(Request $request, $id)
     {
         $request->validate([

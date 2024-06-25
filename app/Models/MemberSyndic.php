@@ -25,6 +25,10 @@ class MemberSyndic extends Model
                     ->withTimestamps();
     }
 
+    public function histories()
+    {
+        return $this->hasMany(SyndicHistory::class, 'syndic_id');
+    }
 
     public function syndicHistories()
     {
@@ -54,6 +58,11 @@ class MemberSyndic extends Model
         public function appartements()
         {
             return $this->hasMany(Appartement::class);
+        }
+
+        public function immeuble()
+        {
+            return $this->belongsTo(Immeuble::class, 'immeuble_id');
         }
 
 }

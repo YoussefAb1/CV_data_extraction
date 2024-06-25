@@ -43,6 +43,7 @@ class Paiement extends Model
         return $this->belongsTo(MemberSyndic::class, 'member_syndic_id');
     }
 
+    
     public function cotisation()
     {
         return $this->belongsTo(Cotisation::class, 'cotisation_id');

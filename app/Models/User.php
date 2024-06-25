@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasOne(MemberCoproprietaire::class);
     }
 
+    public function syndic()
+{
+    return $this->hasOne(MemberSyndic::class, 'user_id');
+}
+
     public function memberSyndic()
     {
         return $this->hasOne(MemberSyndic::class);
@@ -85,4 +90,6 @@ class User extends Authenticatable
                          ->groupBy('group_name')
                          ->get();
     }
+
+
 }

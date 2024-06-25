@@ -32,6 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @foreach($paiements as $paiement)
                                 <tr>
                                     <td>{{ $paiement->id }}</td>
@@ -39,8 +40,8 @@
                                     <td>{{ $paiement->date_paiement }}</td>
                                     <td>{{ $paiement->methode_paiement }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->appartement->nom_appartement ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->immeuble->nom_immeuble ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->immeuble->residence->nom_residence ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->coproprietaireHistory->appartement->immeuble->nom_immeuble ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->coproprietaireHistory->appartement->immeuble->residence->nom_residence ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->cotisation->id ?? 'N/A' }}</td>

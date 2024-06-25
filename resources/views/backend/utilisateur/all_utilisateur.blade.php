@@ -1,8 +1,4 @@
-
-
 @extends('admin.admin_dashboard')
-
-
 
 @section('admin')
 
@@ -43,12 +39,13 @@
         border-radius: 0.30rem !important;
     }
 
-.filter-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
+    .filter-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+</style>
 
 <div class="page-content">
     <nav class="page-breadcrumb">
@@ -103,13 +100,13 @@
                                         <td>{{ $utilisateur->roles->pluck('name')->join(', ') }}</td>
                                         <td>
                                             @if ($utilisateur->status == 'actif')
-                                                <span class="badge bg-success">Actif</span>
+                                                <span class="badge bg-label-success">Actif</span>
                                             @elseif ($utilisateur->status == 'inactif')
-                                                <span class="badge bg-secondary">Inactif</span>
+                                                <span class="badge bg-label-secondary">Inactif</span>
                                             @elseif ($utilisateur->status == 'En attente')
-                                                <span class="badge bg-warning">En attente</span>
+                                                <span class="badge bg-label-warning">En attente</span>
                                             @elseif ($utilisateur->status == 'Supprimé')
-                                                <span class="badge bg-danger">Supprimé</span>
+                                                <span class="badge bg-label-danger">Supprimé</span>
                                             @else
                                                 <span class="badge bg-label-dark">Inconnu</span>
                                             @endif

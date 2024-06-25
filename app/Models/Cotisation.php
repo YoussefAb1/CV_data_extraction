@@ -17,7 +17,7 @@ class Cotisation extends Model
         'member_syndic_id',
         'description'
     ];
-    
+
     public function appartement()
     {
         return $this->belongsTo(Appartement::class);
@@ -47,4 +47,9 @@ class Cotisation extends Model
     {
         return $this->morphOne(Compte::class, 'compteable');
     }
+
+    public function coproprietaire()
+{
+    return $this->belongsTo(User::class, 'coproprietaire_id');
+}
 }

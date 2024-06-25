@@ -30,11 +30,9 @@
             <div class="collapse" id="charge">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('coproprietaire.all.charge') }}" class="nav-link">Lister Charges</a>
+                  <a href="{{ route('coproprietaire.all.charge') }}" class="nav-link">Lister Mes Charges</a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{ route('add.charge') }}" class="nav-link">Ajouter Charge</a>
-                </li>
+
 
               </ul>
             </div>
@@ -49,11 +47,9 @@
             <div class="collapse" id="cotisation">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('coproprietaire.all.cotisation') }}" class="nav-link">Lister Cotisations</a>
+                  <a href="{{ route('coproprietaire.all.cotisation') }}" class="nav-link">Lister Mes Cotisations</a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{ route('add.cotisation') }}" class="nav-link">Ajouter Cotisation</a>
-                </li>
+
 
               </ul>
             </div>
@@ -70,11 +66,9 @@
             <div class="collapse" id="paiement">
               <ul class="nav sub-menu">
                 <li class="nav-item">
-                  <a href="{{ route('coproprietaire.all.paiement') }}" class="nav-link">Lister Paiements</a>
+                  <a href="{{ route('coproprietaire.all.paiement') }}" class="nav-link">Lister Mes Paiements</a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{ route('add.paiement') }}" class="nav-link">Ajouter Paiement</a>
-                </li>
+
 
               </ul>
             </div>
@@ -90,11 +84,9 @@
               <ul class="nav sub-menu">
 
                 <li class="nav-item">
-                  <a href="{{ route('coproprietaire.all.facture') }}" class="nav-link">Lister Factures</a>
+                  <a href="{{ route('coproprietaire.all.facture') }}" class="nav-link">Lister Mes Factures</a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{ route('add.facture') }}" class="nav-link">Ajouter Facture</a>
-                </li>
+
 
               </ul>
             </div>
@@ -104,7 +96,7 @@
       </ul>
     </div>
   </nav>
-  <nav class="settings-sidebar">
+  {{-- <nav class="settings-sidebar">
     <div class="sidebar-body">
       <a href="#" class="settings-sidebar-toggler">
         <i data-feather="settings"></i>
@@ -135,4 +127,4 @@
         </a>
       </div>
     </div>
-  </nav>
+  </nav> --}}

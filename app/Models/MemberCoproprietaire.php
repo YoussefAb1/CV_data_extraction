@@ -18,7 +18,7 @@ class MemberCoproprietaire extends Model
 
     public function coproprietaireHistories()
     {
-        return $this->hasMany(CoproprietaireHistory::class);
+        return $this->hasMany(CoproprietaireHistory::class, 'coproprietaire_id');
     }
 
     public function charges()

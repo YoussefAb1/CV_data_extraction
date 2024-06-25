@@ -38,7 +38,7 @@ class Appartement extends Model
 
     public function charges()
     {
-        return $this->hasMany(Charge::class, 'appartement_id');
+        return $this->hasMany(Charge::class);
     }
 
     public function compte()

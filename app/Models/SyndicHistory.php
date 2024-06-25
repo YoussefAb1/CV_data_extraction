@@ -10,6 +10,7 @@ class SyndicHistory extends Model
 {
     use HasFactory;
 
+    
     protected $fillable = ['syndic_id', 'immeuble_id', 'start_date', 'end_date'];
 
 

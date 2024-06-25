@@ -12,28 +12,34 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="user_id">Utilisateur</label>
-                        <select name="user_id" id="user_id" class="form-control">
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
+                                <select name="user_id" id="user_id" class="form-control">
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cin">CIN</label>
+                                <input type="text" name="cin" id="cin" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="name">Nom</label>
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="type">Type</label>
+                                <select name="type" id="type" class="form-control">
+                                    <option value="promoteur">Promoteur</option>
+                                    <option value="proprietaire">Propriétaire</option>
+                                    <option value="locataire">Locataire</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="cin">CIN</label>
-                        <input type="text" name="cin" id="cin" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="type">Type</label>
-                        <select name="type" id="type" class="form-control">
-                            <option value="promoteur">Promoteur</option>
-                            <option value="proprietaire">Propriétaire</option>
-                            <option value="locataire">Locataire</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

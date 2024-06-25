@@ -3,13 +3,6 @@
 @section('coproprietaire')
 
 <div class="page-content">
-
-    {{-- <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <a href="{{ route('coproprietaire.add.charge') }}" class="btn btn-inverse-primary">Ajouter une Charge</a>
-        </ol>
-    </nav> --}}
-
     <div class="row">
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
@@ -32,7 +25,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($charges as $key => $charge)
+                                <tr>
+                                    <td>5</td>
+                                    <td>Maintenance Ascenseur</td>
+                                    <td>Entretien des parties communes</td>
+                                    <td>2024-06-02</td>
+                                    <td>90.00</td>
+                                    <td>Appartement 1</td>
+                                    <td>Immeuble 1</td>
+                                    <td>Résidence 1</td>
+                                    <td>En attente </td>
+                                    <td>
+                                        <a href="" class="btn btn-inverse-warning">Editer</a>
+                                        <a href="" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                    </td>
+                                </tr>
+
+
+                                {{-- @foreach ($charges as $charge)
                                 <tr>
                                     <td>{{ $charge->id }}</td>
                                     <td>{{ $charge->designation }}</td>
@@ -48,7 +58,7 @@
                                         <a href="{{ route('coproprietaire.delete.charge', $charge->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -56,7 +66,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @endsection

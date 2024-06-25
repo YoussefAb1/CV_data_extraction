@@ -20,21 +20,21 @@ class UtilisateurController extends Controller
 
         // Appliquer les filtres si présents
         if ($request->has('role') && $request->role != '') {
-            $query->role($request->role);
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
         }
 
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
 
-        $utilisateurs = $query->with('roles')->latest()->get();  // Charger les rôles avec les utilisateurs
+        $utilisateurs = $query->with('roles')->latest()->get(); // Charger les rôles avec les utilisateurs
         $roles = Role::all();
         $statuses = ['actif', 'inactif', 'En attente', 'Supprimé']; // Liste de tous les statuts possibles
 
         return view('backend.utilisateur.all_utilisateur', compact('utilisateurs', 'roles', 'statuses'));
     }
-
-
 
     public function AddUtilisateur(){
         $roles = Role::all(); // Récupérer tous les rôles depuis la base de données
