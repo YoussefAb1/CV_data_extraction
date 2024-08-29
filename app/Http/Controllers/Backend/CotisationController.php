@@ -9,6 +9,9 @@ use App\Models\Appartement;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
 use App\Models\SyndicHistory;
+use App\Models\Immeuble;
+use App\Models\Residence;
+
 
 class CotisationController extends Controller
 {
@@ -44,8 +47,10 @@ class CotisationController extends Controller
         $appartements = Appartement::all();
         $coproprietaires = MemberCoproprietaire::all();
         $syndics = MemberSyndic::with('user')->get();
+        $immeubles = Immeuble::all();
+        $residences = Residence::all();
 
-        return view('backend.cotisation.add_cotisation', compact('appartements', 'coproprietaires', 'syndics'));
+        return view('backend.cotisation.add_cotisation', compact('appartements', 'coproprietaires', 'syndics','immeubles','residences'));
     }
 
     public function StoreCotisation(Request $request)

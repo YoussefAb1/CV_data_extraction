@@ -20,4 +20,10 @@ class CoproprietaireHistory extends Model
     {
         return $this->belongsTo(Appartement::class, 'appartement_id');
     }
+
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class, 'coproprietaire_history_id');
+    }
+
 }

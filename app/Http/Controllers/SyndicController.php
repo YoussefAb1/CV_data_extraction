@@ -71,7 +71,7 @@ class SyndicController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/syndic/login');
+        return redirect('/');
     }
 
 
@@ -243,12 +243,6 @@ class SyndicController extends Controller
     }
 
 
-    public function DeleteAppartement($id)
-    {
-        Appartement::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Appartement supprimé avec succès');
-    }
-
 
     public function AllCharge()
     {
@@ -301,20 +295,26 @@ class SyndicController extends Controller
 
     public function StoreCharge(Request $request)
     {
+
+
         $request->validate([
-            'designation' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
+            'designation' => 'required',
+            'type' => 'required',
             'date' => 'required|date',
             'montant' => 'required|numeric',
+            'description' => 'nullable',
+            'statut' => 'required',
             'appartement_id' => 'required|exists:appartements,id',
-            'statut' => 'required|string|max:255',
+            'immeuble_id' => 'required|exists:immeubles,id',
+            'residence_id' => 'required|exists:residences,id'
         ]);
 
-        $charge = new Charge($request->all());
-        $charge->save();
+        Charge::create($request->all());
 
         return redirect()->route('syndic.all.charge')->with('success', 'Charge ajoutée avec succès');
     }
+
+
 
 
 
@@ -354,11 +354,6 @@ class SyndicController extends Controller
 
 
 
-    public function DeleteCharge($id)
-    {
-        Charge::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Charge supprimée avec succès');
-    }
 
 
 
@@ -479,12 +474,6 @@ class SyndicController extends Controller
 
 
 
-    public function DeleteCotisation($id)
-    {
-        Cotisation::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Cotisation supprimée avec succès');
-    }
-
 
     public function AllPaiement()
     {
@@ -522,8 +511,12 @@ class SyndicController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = auth()->user();
 
+
+        $coproprietaireHistories = CoproprietaireHistory::all();
+        $syndicHistory = $user->syndic->histories->last();
+
         // Récupérer l'immeuble et la résidence associés au syndic authentifié
-        $immeuble = $user->syndic->histories->last()->immeuble;
+        $immeuble = $syndicHistory->immeuble;
         $residence = $immeuble->residence;
 
         // Récupérer les appartements associés à l'immeuble
@@ -534,7 +527,8 @@ class SyndicController extends Controller
             $query->where('immeuble_id', $immeuble->id);
         })->get();
 
-        return view('backend.syndic.paiement.add_paiement', compact('immeuble', 'residence', 'appartements', 'cotisations'));
+        // Passer la variable $syndicHistory à la vue
+        return view('backend.syndic.paiement.add_paiement', compact('syndicHistory', 'immeuble', 'residence', 'appartements', 'cotisations'));
     }
 
 
@@ -543,14 +537,20 @@ class SyndicController extends Controller
         $request->validate([
             'montant' => 'required|numeric',
             'date_paiement' => 'required|date',
-            'methode_paiement' => 'required|string|max:255',
-            'cotisation_id' => 'required|exists:cotisations,id',
+            'methode_paiement' => 'required|string',
             'coproprietaire_history_id' => 'required|exists:coproprietaire_histories,id',
+            'syndic_history_id' => 'required|exists:syndic_histories,id',
+            'cotisation_id' => 'required|exists:cotisations,id',
         ]);
 
-        $paiement = new Paiement($request->all());
-        $paiement->save();
-
+        Paiement::create([
+            'montant' => $request->montant,
+            'date_paiement' => $request->date_paiement,
+            'methode_paiement' => $request->methode_paiement,
+            'coproprietaire_history_id' => $request->coproprietaire_history_id,
+            'syndic_history_id' => $request->syndic_history_id,
+            'cotisation_id' => $request->cotisation_id,
+        ]);
         return redirect()->route('syndic.all.paiement')->with('success', 'Paiement ajouté avec succès');
     }
 
@@ -594,11 +594,6 @@ class SyndicController extends Controller
 
 
 
-    public function DeletePaiement($id)
-    {
-        Paiement::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Paiement supprimé avec succès');
-    }
 
 
     public function downloadPDF($id)
@@ -670,10 +665,10 @@ class SyndicController extends Controller
     public function StoreMemberCoproprietaire(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'cin' => 'required|string|max:255|unique:coproprietaires',
-            'type' => 'required|string|max:255',
-            'appartement_id' => 'required|exists:appartements,id',
+           'user_id' => 'required|exists:users,id',
+        'cin' => 'required|unique:member_coproprietaires|max:255',
+        'name' => 'required',
+        'type' => 'required|in:promoteur,proprietaire,locataire',
         ]);
 
         $coproprietaire = new MemberCoproprietaire($request->all());
@@ -714,11 +709,7 @@ class SyndicController extends Controller
     }
 
 
-    public function DeleteMemberCoproprietaire($id)
-    {
-        MemberCoproprietaire::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Copropriétaire supprimé avec succès');
-    }
+
 
 
 
@@ -822,11 +813,6 @@ public function UpdateFacture(Request $request, $id)
 }
 
 
-public function DeleteFacture($id)
-{
-    Facture::findOrFail($id)->delete();
-    return redirect()->back()->with('success', 'Facture supprimée avec succès');
-}
 
 
 

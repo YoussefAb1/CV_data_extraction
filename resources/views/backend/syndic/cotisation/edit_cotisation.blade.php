@@ -32,7 +32,8 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
+
+                            {{-- <div class="mb-3">
                                 <label for="appartement_id" class="form-label">Appartement</label>
                                 <select class="form-control @error('appartement_id') is-invalid @enderror" id="appartement_id" name="appartement_id" required>
                                     @foreach($appartements as $appartement)
@@ -50,7 +51,8 @@
                             <div class="mb-3">
                                 <label for="residence" class="form-label">Résidence</label>
                                 <input type="text" class="form-control" id="residence" name="residence" value="{{ $residence->nom_residence }}" disabled>
-                            </div>
+                            </div> --}}
+
                             <button type="submit" class="btn btn-primary">Mettre à jour</button>
                         </form>
                     </div>

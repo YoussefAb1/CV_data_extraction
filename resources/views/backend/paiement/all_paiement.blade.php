@@ -20,8 +20,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Montant</th>
-                                    <th>Date de Paiement</th>
-                                    <th>Méthode de Paiement</th>
+                                    <th>Date de paiement</th>
+                                    <th>Méthode de paiement</th>
                                     <th>Appartement</th>
                                     <th>Immeuble</th>
                                     <th>Résidence</th>
@@ -29,7 +29,6 @@
                                     <th>Syndic</th>
                                     <th>Cotisation ID</th>
                                     <th>Actions</th>
-                                </tr>
                             </thead>
                             <tbody>
 
@@ -43,18 +42,12 @@
                                     <td>{{ $paiement->coproprietaireHistory->appartement->immeuble->nom_immeuble ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->appartement->immeuble->residence->nom_residence ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
+                                    <td>{{ $paiement->cotisation->memberSyndic->user->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->cotisation->id ?? 'N/A' }}</td>
-
                                     <td>
                                         <a href="{{ route('edit.paiement', $paiement->id) }}" class="btn btn-inverse-warning">Modifier</a>
-                                        <form action="{{ route('delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
-                                            <a href="{{ route('download.pdf', $paiement->id) }}" class="btn btn-danger">Télécharger PDF</a>
-                                        </form>
+                                        <a href="{{ route('delete.paiement', $paiement->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                        <a href="{{ route('download.pdf', $paiement->id) }}" class="btn btn-danger">Télécharger Facture PDF</a>
                                     </td>
                                 </tr>
                                 @endforeach

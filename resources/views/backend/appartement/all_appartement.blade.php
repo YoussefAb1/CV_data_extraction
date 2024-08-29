@@ -5,9 +5,7 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
                 <a href="{{ route('add.appartement') }}" class="btn btn-inverse-primary">Ajouter un Appartement</a>
-            </li>
         </ol>
     </nav>
 
@@ -17,7 +15,6 @@
                 <div class="card-body">
                     <h6 class="card-title">Liste des Appartements</h6>
 
-                    <form method="GET" action="{{ route('all.appartement') }}" class="mb-3">
                         <div class="row">
                             <div class="col-md-4">
                                 <select name="residence_id" class="form-control">
@@ -43,7 +40,9 @@
                                 <button type="submit" class="btn btn-primary">Filtrer</button>
                             </div>
                         </div>
-                    </form>
+
+
+
 
                     <div class="table-responsive">
                         <table id="dataTableExample" class="table">
@@ -99,5 +98,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection

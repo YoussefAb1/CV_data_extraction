@@ -8,6 +8,7 @@
             </ol>
         </nav>
 
+
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
@@ -47,7 +48,7 @@
                                                 <td>{{ $appartement->residence->nom_residence }}</td>
                                                 <td>
                                                     <a href="{{ route('syndic.edit.appartement', $appartement->id) }}" class="btn btn-inverse-warning">Editer</a>
-                                                    <a href="{{ route('syndic.delete.appartement', $appartement->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                                    <a href="{{ route('delete.appartement', $appartement->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
                                                 </td>
                                             </tr>
                                         @endforeach

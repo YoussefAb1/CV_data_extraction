@@ -239,6 +239,56 @@ class PermissionTableSeeder extends Seeder
                 'group_name' => 'Role',
                 'guard_name' => 'web',
             ],
+            [
+                'name' => 'Menu Copropriétaire',
+                'group_name' => 'Copropriétaire',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Lister Copropriétaires',
+                'group_name' => 'Copropriétaire',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Créer Copropriétaire',
+                'group_name' => 'Copropriétaire',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Editer Copropriétaire',
+                'group_name' => 'Copropriétaire',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Supprimer Copropriétaire',
+                'group_name' => 'Role',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Menu Syndic',
+                'group_name' => 'Syndic',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Lister Syndics',
+                'group_name' => 'Syndic',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Créer Syndic',
+                'group_name' => 'Syndic',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Editer Syndic',
+                'group_name' => 'Syndic',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Supprimer Syndic',
+                'group_name' => 'Syndic',
+                'guard_name' => 'web',
+            ],
 
         ]);
     }

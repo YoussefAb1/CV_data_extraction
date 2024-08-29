@@ -121,7 +121,7 @@
                                     <option value="">Sélectionner une Cotisation</option>
                                     @foreach($cotisations as $cotisation)
                                         <option value="{{ $cotisation->id }}" {{ old('cotisation_id') == $cotisation->id ? 'selected' : '' }}>
-                                            {{ $cotisation->name }}
+                                            {{ $cotisation->description }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -23,11 +23,11 @@
                                     <th>Montant</th>
                                     <th>Date de Cotisation</th>
                                     <th>Description</th>
-                                    <th>Appartement</th>
+                                    {{-- <th>Appartement</th>
                                     <th>Immeuble</th>
                                     <th>Résidence</th>
                                     <th>Propriétaire</th>
-                                    <th>Syndic</th>
+                                    <th>Syndic</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -38,18 +38,15 @@
                                     <td>{{ $cotisation->montant }}</td>
                                     <td>{{ $cotisation->date_cotisation }}</td>
                                     <td>{{ $cotisation->description }}</td>
-                                    <td>{{ $cotisation->appartement->nom_appartement }}</td>
+                                    {{-- <td>{{ $cotisation->appartement->nom_appartement }}</td>
                                     <td>{{ $cotisation->appartement->immeuble->nom_immeuble }}</td>
                                     <td>{{ $cotisation->appartement->immeuble->residence->nom_residence }}</td>
                                     <td>{{ $cotisation->memberCoproprietaire->name }}</td>
-                                    <td>{{ $cotisation->memberSyndic->user->name }}</td>
+                                    <td>{{ $cotisation->memberSyndic->user->name }}</td> --}}
                                     <td>
                                         <a href="{{ route('edit.cotisation', $cotisation->id) }}" class="btn btn-inverse-warning">Modifier</a>
-                                        <form action="{{ route('delete.cotisation', $cotisation->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
-                                        </form>
+                                        <a href="{{ route('delete.cotisation', $cotisation->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+
                                     </td>
                                 </tr>
                                 @endforeach

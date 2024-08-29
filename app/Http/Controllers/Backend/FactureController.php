@@ -9,140 +9,100 @@ use App\Models\Appartement;
 use App\Models\Charge;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
-use App\Models\SyndicHistory;
 use App\Models\Paiement;
-use PDF;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class FactureController extends Controller
 {
-
-
     public function AllFacture()
     {
-        $user = auth()->user();
-
-        if ($user->role === 'admin') {
-            // Récupérer toutes les factures
-            $factures = Facture::latest()->get();
-            // Retourner la vue avec les données des factures pour l'admin
-            return view('backend.facture.all_facture', compact('factures'));
-        } elseif ($user->role === 'syndic') {
-            // Récupérer les immeubles associés au syndic
-            $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-            // Récupérer les factures associées à ces immeubles
-            $factures = Facture::whereIn('immeuble_id', $immeubles_ids)->latest()->get();
-            // Retourner la vue avec les données des factures pour le syndic
-            return view('backend.facture.all_facture', compact('factures'));
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
+        $factures = Facture::latest()->get();
+        return view('backend.facture.all_facture', compact('factures'));
     }
 
     public function AddFacture()
     {
+        $paiements = Paiement::all();
+        $appartements = Appartement::all();
         $coproprietaires = MemberCoproprietaire::all();
         $syndics = MemberSyndic::all();
         $charges = Charge::all();
-        $paiements = Paiement::all();
-        return view('backend.facture.add_facture', compact('coproprietaires', 'syndics', 'charges', 'paiements'));
+        return view('backend.facture.add_facture', compact('paiements', 'appartements', 'coproprietaires', 'syndics', 'charges'));
     }
 
     public function StoreFacture(Request $request)
     {
-        $request->validate([
-            'numero_facture' => 'required|unique:factures',
+        $validated = $request->validate([
+            'numero_facture' => 'required|string|max:255|unique:factures,numero_facture',
             'date_emission' => 'required|date',
             'date_echeance' => 'required|date',
             'montant_total' => 'required|numeric',
             'description' => 'nullable|string',
-            'paiement_id' => 'nullable|exists:paiements,id',
+            'paiement_id' => 'required|exists:paiements,id',
+            'appartement_id' => 'required|exists:appartements,id',
+            'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
+            'member_syndic_id' => 'required|exists:member_syndics,id',
+            'charge_id' => 'required|exists:charges,id',
         ]);
 
-        Facture::create([
-            'numero_facture' => $request->numero_facture,
-            'date_emission' => $request->date_emission,
-            'date_echeance' => $request->date_echeance,
-            'montant_total' => $request->montant_total,
-            'description' => $request->description,
-            'paiement_id' => $request->paiement_id,
-        ]);
+        Facture::create($validated);
 
-        return redirect()->route('all.facture')->with('success', 'Facture ajoutée avec succès');
+        return redirect()->route('all.facture')->with('success', 'Facture créée avec succès');
     }
-
 
     public function EditFacture($id)
     {
-        // Récupérer la facture à éditer
         $facture = Facture::findOrFail($id);
-
-        // Récupérer tous les appartements, charges et paiements
-        $appartements = Appartement::all();
-        $charges = Charge::all();
         $paiements = Paiement::all();
-
-        // Retourner la vue pour éditer une facture
-        return view('backend.facture.edit_facture', compact('facture', 'appartements', 'charges', 'paiements'));
+        $appartements = Appartement::all();
+        $coproprietaires = MemberCoproprietaire::all();
+        $syndics = MemberSyndic::all();
+        $charges = Charge::all();
+        return view('backend.facture.edit_facture', compact('facture', 'paiements', 'appartements', 'coproprietaires', 'syndics', 'charges'));
     }
 
     public function UpdateFacture(Request $request, $id)
     {
-        // validation
-        $validatedData = $request->validate([
-            'numero_facture' => 'required|max:20',
+        $validated = $request->validate([
+            'numero_facture' => 'required|string|max:255|unique:factures,numero_facture,'.$id,
             'date_emission' => 'required|date',
             'date_echeance' => 'required|date',
             'montant_total' => 'required|numeric',
-            'description' => 'required|string',
-            'appartement_id' => 'required|exists:appartements,id',
-            'charge_id' => 'required|exists:charges,id',
+            'description' => 'nullable|string',
             'paiement_id' => 'required|exists:paiements,id',
-            'etat' => 'required|string'
+            'appartement_id' => 'required|exists:appartements,id',
+            'member_coproprietaire_id' => 'required|exists:member_coproprietaires,id',
+            'member_syndic_id' => 'required|exists:member_syndics,id',
+            'charge_id' => 'required|exists:charges,id',
         ]);
 
-        // Mise à jour de la facture
-        Facture::findOrFail($id)->update($validatedData);
+        $facture = Facture::findOrFail($id);
+        $facture->update($validated);
 
-        // Notification de succès
-        $notification = array(
-            'message' => 'Facture modifiée avec succès',
-            'alert-type' => 'success'
-        );
-
-        // Redirection après modification
-        return redirect()->route('all.facture')->with($notification);
+        return redirect()->route('all.facture')->with('success', 'Facture mise à jour avec succès');
     }
 
     public function DeleteFacture($id)
     {
-        // Suppression de la facture
-        Facture::findOrFail($id)->delete();
+        $facture = Facture::findOrFail($id);
+        $facture->delete();
 
-        // Notification de succès
-        $notification = array(
-            'message' => 'Facture supprimée avec succès',
-            'alert-type' => 'success'
-        );
-
-        // Redirection après suppression
-        return redirect()->back()->with($notification);
+        return redirect()->route('all.facture')->with('success', 'Facture supprimée avec succès');
     }
 
+    public function generatePDF($id)
+    {
+        $facture = Facture::findOrFail($id);
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
 
-    // public function generatePDF()
-    // {
-    //     $factures = Facture::get();
+        $html = view('backend.facture.facture_pdf', compact('facture'))->render();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
 
-    //     $data = [
-    //         'title' => 'DigiSyndic',
-    //         'date' => date('m/d/Y'),
-    //         'factures' => $factures
-    //     ];
-
-    //     $pdf = PDF::loadView('factures.facturePDF', $data);
-
-    //     return $pdf->download('Facture.pdf');
-    // }
-
+        return $dompdf->stream("facture_{$facture->id}.pdf");
+    }
 }

@@ -60,7 +60,7 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#paiement" role="button" aria-expanded="false" aria-controls="paiement">
                 <i class="link-icon" data-feather="credit-card"></i>
-                <span class="link-title">Gestion Paiements </span>
+                <span class="link-title">Paiements et Factures </span>
               <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
             <div class="collapse" id="paiement">
@@ -74,7 +74,7 @@
             </div>
           </li>
 
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#facture" role="button" aria-expanded="false" aria-controls="facture">
                 <i class="link-icon" data-feather="file-text"></i>
               <span class="link-title">Gestion Factures </span>
@@ -90,7 +90,7 @@
 
               </ul>
             </div>
-          </li>
+          </li> --}}
 
 
       </ul>

@@ -128,16 +128,16 @@
 
 // Facture Routes
 
-    Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('all/facture', [FactureController::class, 'AllFacture'])->name('all.facture');
     Route::get('add/facture', [FactureController::class, 'AddFacture'])->name('add.facture');
     Route::post('store/facture', [FactureController::class, 'StoreFacture'])->name('store.facture');
     Route::get('edit/facture/{id}', [FactureController::class, 'EditFacture'])->name('edit.facture');
-    Route::post('update/facture', [FactureController::class, 'UpdateFacture'])->name('update.facture');
+    Route::put('update/facture/{id}', [FactureController::class, 'UpdateFacture'])->name('update.facture');
     Route::get('delete/facture/{id}', [FactureController::class, 'DeleteFacture'])->name('delete.facture');
-    Route::get('generate-pdf', [FactureController::class, 'generatePDF']);
+    Route::get('generate-pdf/{id}', [FactureController::class, 'generatePDF'])->name('generate.pdf');
+});
 
-    });
 
 // Charge Routes
 

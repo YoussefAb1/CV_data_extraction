@@ -8,7 +8,19 @@
                 <div class="card rounded">
                     <div class="card-body">
                         <h6 class="card-title">Ajouter un Paiement</h6>
-                        <form action="{{ route('syndic.store.paiement') }}" method="POST">
+
+                        {{-- Afficher les erreurs de validation --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('syndic.store.paiement') }}" class="forms-sample">
                             @csrf
                             <div class="mb-3">
                                 <label for="montant" class="form-label">Montant</label>
@@ -57,13 +69,16 @@
                             </div>
                             <div class="mb-3">
                                 <label for="immeuble" class="form-label">Immeuble</label>
-                                <input type="text" class="form-control" id="immeuble" name="immeuble" value="{{ $immeuble->nom_immeuble }}" disabled>
+                                <input type="text" class="form-control" id="immeuble" name="immeuble" value="{{ $immeuble->nom_immeuble }}" readonly>
+                                <input type="hidden" name="immeuble_id" value="{{ $immeuble->id }}">
                             </div>
                             <div class="mb-3">
                                 <label for="residence" class="form-label">Résidence</label>
-                                <input type="text" class="form-control" id="residence" name="residence" value="{{ $residence->nom_residence }}" disabled>
+                                <input type="text" class="form-control" id="residence" name="residence" value="{{ $residence->nom_residence }}" readonly>
+                                <input type="hidden" name="residence_id" value="{{ $residence->id }}">
                             </div>
-                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                            <input type="hidden" name="syndic_history_id" value="{{ $syndicHistory->id }}">
+                            <button type="submit" class="btn btn-primary me-2">Ajouter</button>
                         </form>
                     </div>
                 </div>

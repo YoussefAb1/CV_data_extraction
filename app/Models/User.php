@@ -33,9 +33,10 @@ class User extends Authenticatable
     ];
 
     public function appartements()
-    {
-        return $this->hasMany(Appartement::class);
-    }
+{
+    return $this->hasMany(Appartement::class, 'member_coproprietaire_id');
+}
+
 
     public function memberCoproprietaire()
     {

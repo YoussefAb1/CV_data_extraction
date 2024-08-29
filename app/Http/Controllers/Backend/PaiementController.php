@@ -17,44 +17,41 @@ use Dompdf\Options;
 use Illuminate\Support\Facades\View;
 use App\Models\MemberCoproprietaire;
 use App\Models\MemberSyndic;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class PaiementController extends Controller
 {
     public function AllPaiement()
-{
-    $user = auth()->user();
+    {
+        $user = Auth::user();
 
-    if ($user->role === 'admin') {
-        // Récupérer tous les paiements avec les données associées
-        $paiements = Paiement::with([
-            'coproprietaireHistory.appartement',
-            'coproprietaireHistory.coproprietaire',
-            'syndicHistory.immeuble.residence',
-            'syndicHistory.syndic',
-            'cotisation'
-        ])->latest()->get();
-        // Retourner la vue avec les données des paiements pour l'admin
+        if ($user->role === 'admin') {
+            // Récupérer tous les paiements avec les données associées pour l'admin
+            $paiements = Paiement::with([
+                'coproprietaireHistory.appartement.immeuble.residence',
+                'coproprietaireHistory.coproprietaire',
+                'cotisation.memberSyndic.user'
+            ])->latest()->get();
+        } elseif ($user->role === 'syndic') {
+            // Récupérer les immeubles associés au syndic
+            $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
+
+            // Récupérer les paiements associés à ces immeubles
+            $paiements = Paiement::with([
+                'coproprietaireHistory.appartement.immeuble.residence',
+                'coproprietaireHistory.coproprietaire',
+                'cotisation.memberSyndic.user'
+            ])->whereHas('coproprietaireHistory.appartement', function ($query) use ($immeubles_ids) {
+                $query->whereIn('immeuble_id', $immeubles_ids);
+            })->latest()->get();
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('backend.paiement.all_paiement', compact('paiements'));
-    } elseif ($user->role === 'syndic') {
-        // Récupérer les immeubles associés au syndic
-        $immeubles_ids = SyndicHistory::where('syndic_id', $user->id)->pluck('immeuble_id');
-        // Récupérer les paiements associés à ces immeubles
-        $paiements = Paiement::with([
-            'coproprietaireHistory.appartement',
-            'coproprietaireHistory.coproprietaire',
-            'syndicHistory.immeuble.residence',
-            'syndicHistory.syndic',
-            'cotisation'
-        ])->whereHas('coproprietaireHistory.appartement', function ($query) use ($immeubles_ids) {
-            $query->whereIn('immeuble_id', $immeubles_ids);
-        })->latest()->get();
-        // Retourner la vue avec les données des paiements pour le syndic
-        return view('backend.paiement.all_paiement', compact('paiements'));
-    } else {
-        abort(403, 'Unauthorized action.');
     }
-}
     public function AddPaiement()
     {
         $residences = Residence::all();
@@ -104,6 +101,11 @@ class PaiementController extends Controller
         return view('backend.paiement.edit_paiement', compact('paiement', 'residences', 'immeubles', 'appartements', 'coproprietaires', 'syndics', 'cotisations'));
     }
 
+    public function DeletePaiement($id)
+    {
+        Paiement::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Paiement supprimée avec succès');
+    }
 
 
     public function downloadPDF($id)

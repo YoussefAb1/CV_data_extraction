@@ -26,7 +26,6 @@
                                     <th>Immeuble</th>
                                     <th>Résidence</th>
                                     <th>Propriétaire</th>
-                                    <th>Syndic</th>
                                     <th>Cotisation ID</th>
                                     <th>Actions</th>
                                 </tr>
@@ -42,18 +41,13 @@
                                     <td>{{ $paiement->syndicHistory->immeuble->nom_immeuble ?? 'N/A' }}</td>
                                     <td>{{ $paiement->syndicHistory->immeuble->residence->nom_residence ?? 'N/A' }}</td>
                                     <td>{{ $paiement->coproprietaireHistory->coproprietaire->name ?? 'N/A' }}</td>
-                                    <td>{{ $paiement->syndicHistory->syndic->name ?? 'N/A' }}</td>
                                     <td>{{ $paiement->cotisation->id ?? 'N/A' }}</td>
 
                                     <td>
                                         <a href="{{ route('syndic.edit.paiement', $paiement->id) }}" class="btn btn-inverse-warning">Modifier</a>
-                                        <form action="{{ route('syndic.delete.paiement', $paiement->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
+                                        <a href="{{ route('delete.paiement', $paiement->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                        <a href="{{ route('download.pdf', $paiement->id) }}" class="btn btn-danger">Télécharger Facture PDF</a>
 
-                                            <button type="submit" class="btn btn-inverse-danger">Supprimer</button>
-                                            <a href="{{ route('download.pdf', $paiement->id) }}" class="btn btn-danger">Télécharger PDF</a>
-                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach

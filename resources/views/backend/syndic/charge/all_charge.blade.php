@@ -45,7 +45,7 @@
                                     <td>{{ $charge->statut }}</td>
                                     <td>
                                         <a href="{{ route('syndic.edit.charge', $charge->id) }}" class="btn btn-inverse-warning">Editer</a>
-                                        <a href="{{ route('syndic.delete.charge', $charge->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
+                                        <a href="{{ route('delete.charge', $charge->id) }}" class="btn btn-inverse-danger" id="delete">Supprimer</a>
                                     </td>
                                 </tr>
                                 @endforeach

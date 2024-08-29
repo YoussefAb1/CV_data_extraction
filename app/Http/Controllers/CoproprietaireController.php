@@ -21,8 +21,23 @@ class CoproprietaireController extends Controller
 {
     public function CoproprietaireDashboard(){
 
-        return view('backend.coproprietaire.index');
-    }
+        $user = Auth::user();
+
+        // Trouver le membre copropriétaire
+        $memberCoproprietaire = $user->memberCoproprietaire;
+
+        // Obtenir les IDs des appartements associés à ce copropriétaire via l'historique
+        $appartementIds = CoproprietaireHistory::where('coproprietaire_id', $memberCoproprietaire->id)
+                                               ->pluck('appartement_id');
+
+        // Obtenir les charges associées à ces appartements
+        $charges = Charge::whereIn('appartement_id', $appartementIds)
+                         ->with(['appartement.immeuble.residence'])
+                         ->get();
+
+        return view('backend.coproprietaire.index', compact('charges'));
+
+       }
 
     public function CoproprietaireLogout(Request $request){
         Auth::guard('web')->logout();
@@ -31,7 +46,7 @@ class CoproprietaireController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/coproprietaire/login');
+        return redirect('/');
     }
 
 
@@ -113,50 +128,47 @@ class CoproprietaireController extends Controller
     }
 
     public function AllCharge()
-    {
-        $user = Auth::user();
-        $coproprietaireId = $user->id;
+{
+    // Récupérer l'utilisateur authentifié
+    $user = Auth::user();
+    $charges = Charge::whereHas('appartement', function($query) use ($user) {
+        $query->whereHas('coproprietaireHistories', function($subQuery) use ($user) {
+            $subQuery->where('coproprietaire_id', $user->memberCoproprietaire->id);
+        });
+    })->with(['appartement.immeuble.residence'])->get();
 
-        // Affichez des informations sur l'utilisateur actuel
+    return view('backend.coproprietaire.charge.all_charge', compact('charges'));
+}
 
-        // Récupérer les IDs des appartements associés au copropriétaire
-        $appartementIds = CoproprietaireHistory::where('coproprietaire_id', $coproprietaireId)->pluck('appartement_id');
 
-        // Affichez les IDs récupérés
+public function AllCotisation()
+{
+    $user = Auth::user();
 
-        // Récupérer les charges associées à ces appartements
-        $charges = Charge::whereIn('appartement_id', $appartementIds)->get();
-
-        // Affichez les charges récupérées
-
-        return view('backend.coproprietaire.charge.all_charge', compact('charges'));
+    // Check if the user has a related Coproprietaire
+    if (!$user->memberCoproprietaire) {
+        // If not, you can redirect back with an error message or handle it appropriately
+        return redirect()->back()->withErrors(['message' => 'Aucun copropriétaire associé trouvé.']);
     }
-    public function AllCotisation()
-    {
-        $user = Auth::user();
-        $coproprietaireId = $user->id;
 
-        // Récupérer les IDs des appartements associés au copropriétaire
-        $appartementIds = CoproprietaireHistory::where('coproprietaire_id', $coproprietaireId)->pluck('appartement_id');
+    $cotisations = Cotisation::whereHas('appartement', function($query) use ($user) {
+        $query->whereHas('coproprietaireHistories', function($subQuery) use ($user) {
+            $subQuery->where('coproprietaire_id', $user->memberCoproprietaire->id);
+        });
+    })->with(['appartement.immeuble.residence'])->get();
 
-        // Récupérer les cotisations associées à ces appartements
-        $cotisations = Cotisation::whereIn('appartement_id', $appartementIds)->get();
-
-        return view('backend.coproprietaire.cotisation.all_cotisation', compact('cotisations'));
-    }
+    return view('backend.coproprietaire.cotisation.all_cotisation', compact('cotisations'));
+}
 
     public function AllPaiement()
     {
         $user = Auth::user();
-        $coproprietaireId = $user->id;
 
-        // Récupérer les IDs des appartements associés au copropriétaire
-        $appartementIds = CoproprietaireHistory::where('coproprietaire_id', $coproprietaireId)->pluck('appartement_id');
+    $paiements = Paiement::whereHas('coproprietaireHistory', function($query) use ($user) {
+        $query->where('coproprietaire_id', $user->memberCoproprietaire->id);
+    })->with(['coproprietaireHistory.appartement.immeuble.residence'])->get();
 
-        // Récupérer les paiements associés à ces appartements
-        $paiements = Paiement::whereIn('appartement_id', $appartementIds)->get();
-
-        return view('backend.coproprietaire.paiement.all_paiement', compact('paiements'));
+    return view('backend.coproprietaire.paiement.all_paiement', compact('paiements'));
     }
 
 

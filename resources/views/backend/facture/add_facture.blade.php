@@ -1,3 +1,4 @@
+
 @extends('admin.admin_dashboard')
 
 @section('admin')
@@ -31,22 +32,6 @@
                                 <label for="date_echeance" class="form-label">Date d'Échéance</label>
                                 <input type="date" name="date_echeance" class="form-control @error('date_echeance') is-invalid @enderror" id="date_echeance" value="{{ old('date_echeance') }}">
                                 @error('date_echeance')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="montant_total" class="form-label">Montant Total</label>
-                                <input type="text" name="montant_total" class="form-control @error('montant_total') is-invalid @enderror" id="montant_total" value="{{ old('montant_total') }}">
-                                @error('montant_total')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description">{{ old('description') }}</textarea>
-                                @error('description')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

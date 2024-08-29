@@ -35,7 +35,7 @@
                                         {{-- <td>{{ $coproprietaire->user->name }}</td> --}}
                                         <td>
                                             <a href="{{ route('syndic.edit.memberCoproprietaire', $coproprietaire->id) }}" class="btn btn-inverse-warning">Éditer</a>
-                                            <a href="{{ route('syndic.delete.memberCoproprietaire', $coproprietaire->id) }}" class="btn btn-inverse-danger">Supprimer</a>
+                                            <a href="{{ route('delete.memberCoproprietaire', $coproprietaire->id) }}" class="btn btn-inverse-danger">Supprimer</a>
                                         </td>
                                     </tr>
                                 @endforeach
